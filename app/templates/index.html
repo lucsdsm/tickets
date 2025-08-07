@@ -1,12 +1,12 @@
-<!DOCTYPE html>
-<html lang="pt-br">
-<head>
-    <meta charset="UTF-8">
-    <title>Desapeguei</title>
-    <style>
-    </style>
-</head>
-<body>
-    <h1> Index </h1>
-</body>
-</html>
+<title> Desapeguei </title>
+
+{% extends "layout.html" %}
+
+
+{% block content %}
+    <div style="text-align: center; background-color: white; padding: 20px; border-radius: 8px;">
+        <h1>Bem-vindo ao Desapeguei! 🎉</h1>
+        <p>Este conteúdo está sendo inserido no layout principal.</p>
+        <p>Observe como o header e o footer são os mesmos definidos em <strong>layout.html</strong>.</p>
+    </div>
+{% endblock %}

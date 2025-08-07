@@ -1,5 +1,8 @@
+name: desapeguei
+
 services:
   web:
+    container_name: web
     build:
       context: ..
       dockerfile: docker/Dockerfile
@@ -10,3 +13,14 @@ services:
     environment:
       - FLASK_APP=run:app
       - FLASK_DEBUG=1
+    depends_on:
+      - css_builder
+
+  css_builder:
+    container_name: tailwind-css-builder
+    image: node:20-alpine
+    command: /app/docker/entrypoint.sh
+    volumes:
+      - ..:/app
+    working_dir: /app
+    user: root

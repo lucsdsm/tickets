@@ -1,0 +1,17 @@
+# Dependências e Ambientes Virtuais
+node_modules/
+venv/
+
+# Cache e arquivos compilados do Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Arquivos de Ambiente
+.env
+
+# Arquivos de configuração de IDEs e do Sistema Operacional
+.vscode/
+.idea/
+.DS_Store
