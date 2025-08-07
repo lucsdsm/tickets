@@ -6,20 +6,31 @@
     <link rel="icon" href="https://cdn-icons-png.flaticon.com/512/11009/11009784.png">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/output.css') }}">
 </head>
-<body class="bg-gray-100 text-gray-900">
+<body class="bg-gray-50 text-gray-800 flex flex-col min-h-screen">
 
-    <header>
-        <h1>Desapeguei</h1>
+    <header class="bg-white border-b border-gray-200">
+        <div class="max-w-5xl mx-auto px-6 py-4 flex justify-between items-center">
+            <a href="{{ url_for('main.home') }}" class="text-2xl font-bold text-gray-900 hover:text-gray-700 transition-colors">
+                Desapeguei
+            </a>
+            <nav class="space-x-6">
+                <a href="{{ url_for('main.home') }}" class="text-gray-600 hover:text-black transition-colors">Home</a>
+            </nav>
+        </div>
     </header>
 
-    <main>
-        {% block content %}
-        {% endblock %}
+    <main class="flex-grow">
+        <div class="max-w-5xl mx-auto px-6 py-8">
+            {% block content %}
+                {% endblock %}
+        </div>
     </main>
 
-    <footer>
-        <p>&copy; 2025 Desapeguei - Todos os direitos reservados.</p>
+    <footer class="bg-gray-800 text-white">
+        <div class="max-w-5xl mx-auto px-6 py-4">
+            <p class="text-center text-gray-400 text-sm">
+                &copy; 2025 Desapeguei - Todos os direitos reservados.
+            </p>
+        </div>
     </footer>
-
-</body>
 </html>
