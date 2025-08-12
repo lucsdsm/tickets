@@ -13,7 +13,7 @@
         }
     </script>
     
-    <link rel="icon" href="https://cdn-icons-png.flaticon.com/512/11009/11009784.png">
+    <link rel="icon" href="https://cdn-icons-png.flaticon.com/512/17701/17701347.png">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/output.css') }}">
 
     <!-- alpine.js for interactivity -->
@@ -37,16 +37,70 @@
         </svg>
     </div>
 
-    <header class="bg-white dark:bg-gray-800 dark:border-gray-700 relative">
-        
+    <!-- toasts de notificações -->
+    <div aria-live="assertive" class="fixed inset-0 flex flex-col items-end justify-end px-4 py-6 pointer-events-none sm:p-6 z-50 space-y-4">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <!-- Notificação Toast Individual -->
+                    <div x-data="{ show: true }" 
+                         x-init="setTimeout(() => show = false, 5000)" 
+                         x-show="show"
+                         x-transition:enter="transform ease-out duration-300 transition"
+                         x-transition:enter-start="translate-y-2 opacity-0 sm:translate-y-0 sm:translate-x-2"
+                         x-transition:enter-end="translate-y-0 opacity-100 sm:translate-x-0"
+                         x-transition:leave="transition ease-in duration-200"
+                         x-transition:leave-start="opacity-100"
+                         x-transition:leave-end="opacity-0"
+                         class="max-w-sm w-full bg-white dark:bg-gray-800 shadow-lg rounded-lg pointer-events-auto ring-1 ring-black ring-opacity-5 overflow-hidden">
+                        <div class="p-4">
+                            <div class="flex items-start">
+                                <div class="flex-shrink-0">
+                                    <!-- Ícone de Sucesso (verde) -->
+                                    {% if category == 'success' %}
+                                    <svg class="h-6 w-6 text-green-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                    </svg>
+                                    <!-- Ícone de Perigo (vermelho) -->
+                                    {% elif category == 'danger' %}
+                                    <svg class="h-6 w-6 text-red-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z" />
+                                    </svg>
+                                    <!-- Ícone de Informação (azul) -->
+                                    {% else %}
+                                    <svg class="h-6 w-6 text-blue-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                                      <path stroke-linecap="round" stroke-linejoin="round" d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z" />
+                                    </svg>
+                                    {% endif %}
+                                </div>
+                                <div class="ml-3 w-0 flex-1 pt-0.5">
+                                    <p class="text-sm font-medium text-gray-900 dark:text-white">{{ message }}</p>
+                                </div>
+                                <div class="ml-4 flex-shrink-0 flex">
+                                    <button @click="show = false" type="button" class="bg-white dark:bg-gray-800 rounded-md inline-flex text-gray-400 hover:text-gray-500 dark:hover:text-gray-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                                        <span class="sr-only">Fechar</span>
+                                        <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                                            <path d="M6.28 5.22a.75.75 0 00-1.06 1.06L8.94 10l-3.72 3.72a.75.75 0 101.06 1.06L10 11.06l3.72 3.72a.75.75 0 101.06-1.06L11.06 10l3.72-3.72a.75.75 0 00-1.06-1.06L10 8.94 6.28 5.22z" />
+                                        </svg>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+    </div>
+
+    <header class="bg-white dark:bg-gray-800 dark:border-gray-700 relative">  
         <div class="mx-auto px-6 py-4 flex justify-around items-center">
 
             <!-- logo -->
             <a href="{{ url_for('main.home') }}" class="flex items-center space-x-3 rtl:space-x-reverse">
-                <img src="https://cdn-icons-png.flaticon.com/512/11009/11009784.png" class="h-8" alt="Desapeguei Logo" />
+                <img src="https://cdn-icons-png.flaticon.com/512/17701/17701347.png" class="h-8" alt="Desapeguei Logo" />
                 <span
                     class="text-2xl font-bold text-gray-900 hover:text-gray-700 transition-colors dark:text-white dark:hover:text-gray-300 align-middle">
-                    desapeguei
+                    tickets
                 </span>
             </a>
     
@@ -172,10 +226,10 @@
         </div>
     </main>
 
-    <footer class="bg-gray-800 text-white">
+    <footer class="bg-white dark:bg-gray-800 dark:border-gray-700">
         <div class="max-w-5xl mx-auto px-6 py-4">
             <p class="text-center text-grey-400 text-sm">
-                &copy; 2025 desapeguei - Todos os direitos reservados.
+                &copy; 2025 tickets - Todos os direitos reservados.
             </p>
         </div>
     </footer>

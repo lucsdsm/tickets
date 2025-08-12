@@ -1,4 +1,4 @@
-name: desapeguei
+name: tickets
 
 services:
   web:
@@ -36,7 +36,7 @@ services:
     environment:
       POSTGRES_USER: admin
       POSTGRES_PASSWORD: admin
-      POSTGRES_DB: desapeguei_db
+      POSTGRES_DB: tickets_db
     ports:
       - "5432:5432"
 
