@@ -1,9 +1,10 @@
 from app import db
 from flask_bcrypt import Bcrypt # para hashing de senhas
+from flask_login import UserMixin # para integração com Flask-Login
 
 bcrypt = Bcrypt() # para hashing de senhas
 
-class User(db.Model):
+class User(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(80), unique=True, nullable=False)
     email = db.Column(db.String(120), unique=True, nullable=False)
