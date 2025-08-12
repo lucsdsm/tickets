@@ -15,12 +15,39 @@ services:
       - FLASK_DEBUG=1
     depends_on:
       - css_builder
+      - db
+    env_file:
+      - ../.env
 
   css_builder:
-    container_name: tailwind-css-builder
+    container_name: tailwind
     image: node:20-alpine
     command: ["sh", "/app/docker/entrypoint.sh"]
     volumes:
       - ..:/app
     working_dir: /app
     user: root
+
+  db:
+    container_name: postgresql
+    image: postgres:15-alpine
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: admin
+      POSTGRES_DB: desapeguei_db
+    ports:
+      - "5432:5432"
+
+  adminer:
+    container_name: adminer
+    image: adminer
+    restart: always
+    ports:
+      - "8080:8080"
+    depends_on:
+      - db 
+
+volumes:
+  postgres_data: {}
