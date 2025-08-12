@@ -19,7 +19,7 @@ services:
   css_builder:
     container_name: tailwind-css-builder
     image: node:20-alpine
-    command: /app/docker/entrypoint.sh
+    command: ["sh", "/app/docker/entrypoint.sh"]
     volumes:
       - ..:/app
     working_dir: /app

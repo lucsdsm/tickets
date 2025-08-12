@@ -4,7 +4,7 @@
   "description": "CSS build for Desapeguei project using Tailwind CSS",
   "scripts": {
     "build": "tailwindcss -i ./app/static/css/input.css -o ./app/static/css/output.css",
-    "watch": "tailwindcss -i ./app/static/css/input.css -o ./app/static/css/output.css --watch --poll"
+    "watch": "tailwindcss --verbose -i ./app/static/css/input.css -o ./app/static/css/output.css --watch --poll"
   },
   "devDependencies": {
     "tailwindcss": "^3.4.1"
