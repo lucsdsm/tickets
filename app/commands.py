@@ -16,6 +16,9 @@ def create_admin():
     # cria o novo usuário admin
     admin_user = User(
         username='admin',
+        first_name='Admin',
+        last_name='Master',
+        password_hash='admin',
         email='admin@tickets.com',
         admin=1
     )

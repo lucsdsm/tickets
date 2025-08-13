@@ -7,9 +7,11 @@ bcrypt = Bcrypt() # para hashing de senhas
 class User(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(80), unique=True, nullable=False)
+    first_name = db.Column(db.String(80), nullable=False)
+    last_name = db.Column(db.String(80), nullable=False)
     email = db.Column(db.String(120), unique=True, nullable=False)
-    password_hash = db.Column(db.String(200), nullable=True)
-    admin = db.Column(db.Integer, nullable=False, default=1)
+    password_hash = db.Column(db.String(200), nullable=False)
+    admin = db.Column(db.Integer, nullable=False, default=0)
 
     # gera um hash a partir de uma senha e o armazena
     def set_password(self, password):

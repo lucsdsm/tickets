@@ -97,7 +97,7 @@
         <div class="mx-auto px-6 py-4 flex justify-around items-center">
 
             <!-- logo -->
-            <a href="" class="flex items-center space-x-3 rtl:space-x-reverse">
+            <a href="#" class="flex items-center space-x-3 rtl:space-x-reverse">
                 <img src="https://cdn-icons-png.flaticon.com/512/17701/17701347.png" class="h-8" alt="Desapeguei Logo" />
                 <span
                     class="text-2xl font-bold text-gray-900 hover:text-gray-700 transition-colors dark:text-white dark:hover:text-gray-300 align-middle">
@@ -182,9 +182,9 @@
                         {% else %}
                             <a href="{{ url_for('auth.login') }}" class="text-white bg-purple-700 hover:bg-purple-800 focus:outline-none focus:ring-purple-300 font-medium rounded-lg text-sm px-3 py-2 text-center dark:bg-purple-600 dark:hover:bg-purple-700 dark:focus:ring-purple-800 disabled:opacity-50 disabled:cursor-not-allowed"> Entrar </a>
                         {% endif %}
-                        <br>
+                        <br> 
                         <!-- toggle de tema -->
-                        <div class="border-t border-gray-200 dark:border-gray-700 pt-2 mt-3 flex justify-center">
+                        <div class="border-t border-gray-200 dark:border-gray-700 pt-2 mt-3 flex justify-center align-middle"> 
                             <div x-data="{
                                 darkMode: localStorage.getItem('theme') === 'dark' || 
                                         (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)
@@ -192,7 +192,7 @@
                                 localStorage.setItem('theme', val ? 'dark' : 'light');
                                 if (val) { document.documentElement.classList.add('dark'); } 
                                 else { document.documentElement.classList.remove('dark'); }
-                            })" :class="{ 'dark': darkMode }">
+                            })" :class="{ 'dark': darkMode }"> <br>
                                 <button @click="isLoading = true; darkMode = !darkMode; setTimeout(() => { isLoading = false }, 500)" type="button"
                                     class="relative w-12 h-12 flex items-center justify-center overflow-hidden rounded-full text-lg text-gray-700 bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-200 dark:hover:bg-gray-600 transition-colors focus:outline-none">
                                     <span class="sr-only"> Alternar tema </span>
@@ -240,7 +240,7 @@
 
     <footer class="bg-white dark:bg-gray-800 dark:border-gray-700">
         <div class="max-w-5xl mx-auto px-6 py-4">
-            <p class="text-center text-grey-400 text-sm">
+            <p class="text-center text-sm font-bold text-gray-900 hover:text-gray-700 transition-colors dark:text-white dark:hover:text-gray-300">
                 &copy; 2025 tickets - Todos os direitos reservados.
             </p>
         </div>
