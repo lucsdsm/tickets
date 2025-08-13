@@ -1,0 +1,8 @@
+docker-compose -f docker/docker-compose.yml up --build -d 
+docker-compose -f docker/docker-compose.yml logs -f web
+docker-compose -f docker/docker-compose.yml down
+
+docker-compose -f docker/docker-compose.yml exec web flask db init # necessário apenas uma vez durante toda a aplicação
+docker-compose -f docker/docker-compose.yml exec web flask db migrate -m "mensagem da migração"
+docker-compose -f docker/docker-compose.yml exec web flask db upgrade
+docker-compose -f docker/docker-compose.yml exec web flask "nome-do-comando"

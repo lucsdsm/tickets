@@ -5,6 +5,8 @@ from flask_migrate import Migrate
 from dotenv import load_dotenv
 from flask_bcrypt import Bcrypt
 from flask_login import LoginManager
+from authlib.integrations.flask_client import OAuth
+from werkzeug.middleware.proxy_fix import ProxyFix
 
 # carrega variáveis de ambiente do arquivo .env
 load_dotenv()
@@ -13,6 +15,7 @@ load_dotenv()
 db = SQLAlchemy() # para ORM
 migrate = Migrate() # para migrações de banco de dados
 bcrypt = Bcrypt() # para hashing de senhas
+oauth = OAuth() # para autenticação OAuth
 
 login_manager = LoginManager() # para gerenciamento de sessões de usuário
 login_manager.login_view = 'auth.login' # rota de login
@@ -24,8 +27,11 @@ def create_app():
 
     app = Flask(__name__)
 
+    # configura o aplicativo para usar o proxyfix (necessitei para acessar o app via smartphone através de tunel aqui do vscode)
+    app.wsgi_app = ProxyFix(app.wsgi_app, x_for=1, x_proto=1, x_host=1, x_port=1, x_prefix=1)
+
     # configurações da aplicação com a url do banco de dados
-    app.config['SECRET_KEY'] = os.getenv('SECRET_KEY', 'minha_chave_secreta')
+    app.config['SECRET_KEY'] = os.getenv('FLASK_SECRET_KEY')
     app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URL')
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
@@ -34,6 +40,19 @@ def create_app():
     migrate.init_app(app, db)
     bcrypt.init_app(app)
     login_manager.init_app(app)
+
+    oauth.init_app(app)
+    
+    # configura o OAuth para o Google
+    oauth.register(
+        name='google',
+        client_id=os.getenv("GOOGLE_OAUTH_CLIENT_ID"),
+        client_secret=os.getenv("GOOGLE_OAUTH_CLIENT_SECRET"),
+        server_metadata_url='https://accounts.google.com/.well-known/openid-configuration',
+        client_kwargs={
+            'scope': 'openid email profile'
+        }
+    )
 
     with app.app_context():
 
@@ -49,7 +68,7 @@ def create_app():
         app.register_blueprint(main.main)
 
         from .routes import auth
-        app.register_blueprint(auth.auth)
+        app.register_blueprint(auth.auth, url_prefix='/auth')
 
         # registra os comandos personalizados
         from . import commands

@@ -16,8 +16,8 @@ def create_admin():
     # cria o novo usuário admin
     admin_user = User(
         username='admin',
-        email='admin@desapeguei.com',
-        access_level=0
+        email='admin@tickets.com',
+        admin=1
     )
     
     # define a senha usando o método set_password
