@@ -82,7 +82,7 @@ def complete_google_register():
         email = session.get('google_oauth_email')
         first_name = session.get('google_oauth_fname')
         last_name = session.get('google_oauth_lname')
-        return render_template('cadastro.html', email=email, first_name=first_name, last_name=last_name)
+        return render_template('cadastro-google.html', email=email, first_name=first_name, last_name=last_name)
 
     # processa o formulário para o método post
     username = request.form.get('username')
@@ -102,7 +102,7 @@ def complete_google_register():
 
     # se houver um erro de validação, renderiza novamente o template com os dados inseridos
     if has_error:
-        return render_template('cadastro.html',
+        return render_template('cadastro-google.html',
                                email=session.get('google_oauth_email'), 
                                username=username,
                                first_name=first_name, 
