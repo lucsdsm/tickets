@@ -1,7 +1,7 @@
 {% extends "layout.html" %}
 {% block content %}
 
-    <div class="max-w-md mx-auto mt-8 bg-white dark:bg-gray-800 p-8 rounded-lg shadow-md">
+    <div class="max-w-md mx-auto bg-white dark:bg-gray-800 p-8 rounded-lg shadow-md">
         <form method="POST" action="{{ url_for('auth.login') }}" @submit="isLoading = true">
             <fieldset class="space-y-6">
                 <legend class="text-2xl font-bold border-b pb-2 mb-4 dark:text-white">Entrar</legend>
@@ -78,7 +78,7 @@
         
         <div class="relative flex py-5 items-center">
             <small class="flex-grow border-t border-gray-300 dark:border-gray-600 pt-3 text-center text-gray-500 dark:text-gray-400">
-                Não tem uma conta? <a class="text-gray-900 dark:text-gray-50" href=""> Registre-se clicando aqui! </a>
+                Não tem uma conta? <a class="text-gray-900 dark:text-gray-50" href="{{ url_for('auth.register') }}"> Registre-se clicando aqui! </a>
             </small>
         </div>
     </div>

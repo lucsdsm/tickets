@@ -59,6 +59,7 @@ def create_app():
         # importa os modelos para que o SQLAlchemy possa reconhecê-los
         from .models import User # importa o modelo User para o login_manager
 
+        # registra o carregador de usuário para o login_manager
         @login_manager.user_loader
         def load_user(user_id):
             return User.query.get(int(user_id))
