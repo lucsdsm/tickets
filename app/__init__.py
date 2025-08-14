@@ -72,8 +72,8 @@ def create_app() -> Flask:
         from .routes import auth
         app.register_blueprint(auth.auth, url_prefix='/auth')
 
-        from .routes import painel
-        app.register_blueprint(painel.painel, url_prefix='/painel')
+        from .routes import panel
+        app.register_blueprint(panel.panel, url_prefix='/panel')
 
         # registra os comandos personalizados
         from . import commands

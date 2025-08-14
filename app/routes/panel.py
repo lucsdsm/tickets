@@ -3,18 +3,18 @@ from flask import Blueprint, render_template, redirect, url_for, flash, request,
 from flask_login import login_user, logout_user, login_required, current_user
 from app.models import User
 
-painel = Blueprint('painel', __name__)
+panel = Blueprint('panel', __name__)
 
-@painel.route('/view')
+@panel.route('/view')
 @login_required
 def view():
     if not current_user.is_admin:
-        flash('Acesso negado. Você não tem permissão para acessar o painel de administração.', 'danger')
+        flash('Acesso negado. Você não tem permissão para acessar o panel de administração.', 'danger')
         return redirect(url_for('main.home'))
 
-    return render_template('painel/index.html', user=current_user)
+    return render_template('panel/index.html', user=current_user)
 
-@painel.route('/users')
+@panel.route('/users')
 @login_required
 def users():
     if not current_user.is_admin:
@@ -22,9 +22,9 @@ def users():
         return redirect(url_for('main.home'))
 
     users = User.query.all()
-    return render_template('painel/usuarios.html', users=users)
+    return render_template('panel/usuarios.html', users=users)
 
-@painel.route('/edit_user/<int:user_id>', methods=['POST'])
+@panel.route('/edit_user/<int:user_id>', methods=['POST'])
 @login_required
 def edit_user(user_id):
     if not current_user.is_admin:
@@ -51,7 +51,7 @@ def edit_user(user_id):
         # não permitir que admin mude sua própria permissão
         if user.id == current_user.id:
             flash('Você não pode alterar suas próprias permissões de administrador.', 'error')
-            return redirect(url_for('painel.users'))
+            return redirect(url_for('panel.users'))
         else:
             user.admin = new_is_admin
 
@@ -61,9 +61,9 @@ def edit_user(user_id):
     except Exception as e:
         flash(f'Erro ao atualizar usuário: {str(e)}', 'danger')
 
-    return redirect(url_for('painel.users'))
+    return redirect(url_for('panel.users'))
 
-@painel.route('/delete_user/<int:user_id>', methods=['POST'])
+@panel.route('/delete_user/<int:user_id>', methods=['POST'])
 @login_required
 def delete_user(user_id):
     if not current_user.is_admin:
@@ -74,7 +74,7 @@ def delete_user(user_id):
 
     if user.id == current_user.id:
         flash('Você não pode excluir sua própria conta.', 'error')
-        return redirect(url_for('painel.users'))
+        return redirect(url_for('panel.users'))
 
     try:
         db.session.delete(user)
@@ -83,4 +83,4 @@ def delete_user(user_id):
     except Exception as e:
         flash(f'Erro ao excluir usuário: {str(e)}', 'danger')
 
-    return redirect(url_for('painel.users'))
+    return redirect(url_for('panel.users'))

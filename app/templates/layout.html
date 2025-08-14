@@ -111,7 +111,7 @@
                     {% if current_user.is_authenticated %}
 
                     {% if current_user.is_admin %}
-                    <a href="{{ url_for('painel.view') }}"
+                    <a href="{{ url_for('panel.view') }}"
                         class="focus:outline-none font-medium rounded-lg text-sm px-3 py-2 text-center text-gray-600 hover:text-black dark:text-gray-300 dark:hover:text-white">
                         Painel de administração
                     </a>
@@ -201,7 +201,7 @@
                             Olá, {{ current_user.username }}!
                         </span> <br> <br>
 
-                        <a href="{{ url_for('painel.view') }}"
+                        <a href="{{ url_for('panel.view') }}"
                             class="focus:outline-none font-medium rounded-lg text-sm py-2 text-center text-gray-600 hover:text-black dark:text-gray-300 dark:hover:text-white">
                             Painel de administração
                         </a>
