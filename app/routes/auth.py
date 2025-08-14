@@ -58,7 +58,7 @@ def register() -> 'Response':
 
         # se houver um erro de validação, renderiza novamente o template com os dados inseridos
         if has_error:
-            return render_template('cadastro-local.html', 
+            return render_template('auth/cadastro-local.html', 
                                    username=username,
                                    email=email,
                                    first_name=first_name, 
@@ -81,7 +81,7 @@ def register() -> 'Response':
         return render_template('dashboard.html')
     
     # se o método for GET, renderiza o template de registro
-    return render_template('cadastro-local.html')
+    return render_template('auth/cadastro-local.html')
 
 @auth.route('/login', methods=['GET', 'POST'])
 def login() -> 'Response': 
@@ -119,7 +119,7 @@ def login() -> 'Response':
             flash('Usuário ou senha inválidos.', 'danger')
     
     # se o método for GET, renderiza o template de login
-    return render_template('login.html')
+    return render_template('auth/login.html')
 
 @auth.route('/logout')
 @login_required
@@ -215,7 +215,7 @@ def complete_google_register() -> 'Response':
         email = session.get('google_oauth_email')
         first_name = session.get('google_oauth_fname')
         last_name = session.get('google_oauth_lname')
-        return render_template('cadastro-google.html', email=email, first_name=first_name, last_name=last_name)
+        return render_template('auth/cadastro-google.html', email=email, first_name=first_name, last_name=last_name)
 
     # processa o formulário para o método post
     username = request.form.get('username')
@@ -244,7 +244,7 @@ def complete_google_register() -> 'Response':
 
     # se houver um erro de validação, renderiza novamente o template com os dados inseridos
     if has_error:
-        return render_template('cadastro-google.html',
+        return render_template('auth/cadastro-google.html',
                                email=session.get('google_oauth_email'), 
                                username=username,
                                first_name=first_name, 

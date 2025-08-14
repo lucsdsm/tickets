@@ -108,13 +108,30 @@
             <!-- menu de navegação -->
             <nav class="hidden md:block absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
                 <div class="flex space-x-8">
-                    
-                    
                     {% if current_user.is_authenticated %}
-                        <span class="text-white bg-purple-700 hover:bg-purple-800 focus:outline-none focus:ring-purple-300 font-medium rounded-lg text-sm px-3 py-2 text-center dark:bg-purple-600 dark:hover:bg-purple-700 dark:focus:ring-purple-800 disabled:opacity-50 disabled:cursor-not-allowed">Olá, {{ current_user.username }}!</span>
-                        <a href="{{ url_for('auth.logout') }}" class="focus:outline-none font-medium rounded-lg text-sm px-3 py-2 text-center disabled:opacity-50 disabled:cursor-not-allowed text-gray-600 hover:text-black dark:text-gray-300 dark:hover:text-white"> Fazer logout ➜] </a>
+
+                    {% if current_user.is_admin %}
+                    <a href="{{ url_for('painel.view') }}"
+                        class="focus:outline-none font-medium rounded-lg text-sm px-3 py-2 text-center text-gray-600 hover:text-black dark:text-gray-300 dark:hover:text-white">
+                        Painel de administração
+                    </a>
+                    {% endif %}
+                    <span
+                        class="text-white bg-purple-700 hover:bg-purple-800 focus:outline-none focus:ring-purple-300 font-medium rounded-lg text-sm px-3 py-2 text-center dark:bg-purple-600 dark:hover:bg-purple-700 dark:focus:ring-purple-800">
+                        Olá, {{ current_user.username }}!
+                    </span>
+                
+                    
+                
+                    <a href="{{ url_for('auth.logout') }}"
+                        class="focus:outline-none font-medium rounded-lg text-sm px-3 py-2 text-center text-gray-600 hover:text-black dark:text-gray-300 dark:hover:text-white">
+                        Fazer logout ➜]
+                    </a>
                     {% else %}
-                        <a href="{{ url_for('auth.login') }}" class="text-white bg-purple-700 hover:bg-purple-800 focus:outline-none focus:ring-purple-300 font-medium rounded-lg text-sm px-3 py-2 text-center dark:bg-purple-600 dark:hover:bg-purple-700 dark:focus:ring-purple-800 disabled:opacity-50 disabled:cursor-not-allowed"> Entrar </a>
+                    <a href="{{ url_for('auth.login') }}"
+                        class="text-white bg-purple-700 hover:bg-purple-800 focus:outline-none focus:ring-purple-300 font-medium rounded-lg text-sm px-3 py-2 text-center dark:bg-purple-600 dark:hover:bg-purple-700 dark:focus:ring-purple-800">
+                        Entrar
+                    </a>
                     {% endif %}
                 </div>
             </nav>
@@ -175,12 +192,31 @@
                     class="absolute top-full right-0 mt-2 w-56 bg-white dark:bg-gray-800 rounded-md shadow-lg ring-1 ring-black ring-opacity-5 z-20 items-center justify-center text-center">
                     <!-- botões no menu sanduíche iche -->
                     <div class="py-2 px-2 space-y-5 items-center m-5">
+                        
                         {% if current_user.is_authenticated %}
-                            <span class="text-white bg-purple-700 hover:bg-purple-800 focus:outline-none focus:ring-purple-300 font-medium rounded-lg text-sm px-3 py-2 text-center dark:bg-purple-600 dark:hover:bg-purple-700 dark:focus:ring-purple-800 disabled:opacity-50 disabled:cursor-not-allowed">Olá, {{ current_user.username }}!</span>
-                            <br> <br>
-                            <a href="{{ url_for('auth.logout') }}" class="focus:outline-none font-medium rounded-lg text-sm px-3 py-2 text-center disabled:opacity-50 disabled:cursor-not-allowed text-gray-600 hover:text-black dark:text-gray-300 dark:hover:text-white"> Fazer logout ➜] </a>
+                        
+                        {% if current_user.is_admin %}
+                        <span
+                            class="text-white bg-purple-700 hover:bg-purple-800 focus:outline-none focus:ring-purple-300 font-medium rounded-lg text-sm px-3 py-2 text-center dark:bg-purple-600 dark:hover:bg-purple-700 dark:focus:ring-purple-800">
+                            Olá, {{ current_user.username }}!
+                        </span> <br> <br>
+
+                        <a href="{{ url_for('painel.view') }}"
+                            class="focus:outline-none font-medium rounded-lg text-sm py-2 text-center text-gray-600 hover:text-black dark:text-gray-300 dark:hover:text-white">
+                            Painel de administração
+                        </a>
+                        {% endif %}
+                        <br> <br>  
+                        
+                        <a href="{{ url_for('auth.logout') }}"
+                            class="focus:outline-none font-medium rounded-lg text-sm px-3 py-2 text-center text-gray-600 hover:text-black dark:text-gray-300 dark:hover:text-white">
+                            Fazer logout ➜]
+                        </a>
                         {% else %}
-                            <a href="{{ url_for('auth.login') }}" class="text-white bg-purple-700 hover:bg-purple-800 focus:outline-none focus:ring-purple-300 font-medium rounded-lg text-sm px-3 py-2 text-center dark:bg-purple-600 dark:hover:bg-purple-700 dark:focus:ring-purple-800 disabled:opacity-50 disabled:cursor-not-allowed"> Entrar </a>
+                        <a href="{{ url_for('auth.login') }}"
+                            class="text-white bg-purple-700 hover:bg-purple-800 focus:outline-none focus:ring-purple-300 font-medium rounded-lg text-sm px-3 py-2 text-center dark:bg-purple-600 dark:hover:bg-purple-700 dark:focus:ring-purple-800">
+                            Entrar
+                        </a>
                         {% endif %}
                         <br> 
                         <!-- toggle de tema -->

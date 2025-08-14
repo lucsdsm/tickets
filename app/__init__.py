@@ -23,7 +23,8 @@ login_manager.login_message = 'Por favor, faça login para acessar esta página.
 login_manager.login_message_category = 'info' # categoria da mensagem de login
 
 # cria a aplicação Flask
-def create_app():
+def create_app() -> Flask:
+    """Cria e configura a aplicação Flask."""
 
     app = Flask(__name__)
 
@@ -70,6 +71,9 @@ def create_app():
 
         from .routes import auth
         app.register_blueprint(auth.auth, url_prefix='/auth')
+
+        from .routes import painel
+        app.register_blueprint(painel.painel, url_prefix='/painel')
 
         # registra os comandos personalizados
         from . import commands

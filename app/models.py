@@ -11,15 +11,38 @@ class User(db.Model, UserMixin):
     last_name = db.Column(db.String(80), nullable=False)
     email = db.Column(db.String(120), unique=True, nullable=False)
     password_hash = db.Column(db.String(200), nullable=False)
-    admin = db.Column(db.Integer, nullable=False, default=0)
+    admin = db.Column(db.Boolean, nullable=False, default=False)
 
+    @property
+    def is_admin(self) -> bool:
+        """Verifica se o nível de acesso do utilizador de administradora.
+
+        Returns:
+            bool: True se o utilizador for um administrador, False caso contrário.
+        """
+
+        return self.admin == True
+    
     # gera um hash a partir de uma senha e o armazena
-    def set_password(self, password):
+    def set_password(self, password) -> None:
+        """Gera um hash a partir da senha fornecida e o armazena no campo password_hash.
+
+        Args:
+            password (str): A senha a ser convertida em hash.
+        """
         self.password_hash = bcrypt.generate_password_hash(password).decode('utf-8')
 
     # verifica se uma senha fornecida corresponde ao hash armazenado
-    def check_password(self, password):
+    def check_password(self, password) -> bool:
+        """Verifica se a senha fornecida corresponde ao hash armazenado.
+
+        Args:
+            password (str): A senha a ser verificada.
+        
+        Returns:
+            bool: True se a senha corresponder ao hash, False caso contrário.
+        """
         return bcrypt.check_password_hash(self.password_hash, password)
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return f'<User {self.username}>'

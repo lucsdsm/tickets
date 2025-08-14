@@ -5,8 +5,8 @@ from .models import User
 
 @click.command(name='create-admin')
 @with_appcontext
-def create_admin():
-    """cria um usuário administrador para testes."""
+def create_admin() -> None:
+    """Cria um usuário admin com credenciais padrão."""
     
     # verifica se o admin já existe
     if User.query.filter_by(username='admin').first():
@@ -20,7 +20,7 @@ def create_admin():
         last_name='Master',
         password_hash='admin',
         email='admin@tickets.com',
-        admin=1
+        admin=True
     )
     
     # define a senha usando o método set_password
