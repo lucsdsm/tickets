@@ -7,7 +7,7 @@ panel = Blueprint('panel', __name__)
 
 @panel.route('/view')
 @login_required
-def view():
+def view() -> 'Response':
     if not current_user.is_admin:
         flash('Acesso negado. Você não tem permissão para acessar o panel de administração.', 'danger')
         return redirect(url_for('main.home'))
@@ -21,8 +21,8 @@ def users():
         flash('Acesso negado. Você não tem permissão para acessar a lista de usuários.', 'danger')
         return redirect(url_for('main.home'))
 
-    users = User.query.all()
-    return render_template('panel/usuarios.html', users=users)
+    users = User.query.order_by(User.id).all()
+    return render_template('panel/users.html', users=users)
 
 @panel.route('/edit_user/<int:user_id>', methods=['POST'])
 @login_required
@@ -47,13 +47,13 @@ def edit_user(user_id):
         user.last_name = new_last_name
     if new_email:
         user.email = new_email
-    if new_is_admin is not None:
-        # não permitir que admin mude sua própria permissão
-        if user.id == current_user.id:
-            flash('Você não pode alterar suas próprias permissões de administrador.', 'error')
+    if user.id == current_user.id:
+        # não permitir o administrador remover sua própria permissão
+        if 'admin' in request.form and user.admin and not (request.form.get('admin') == '1'):
+            flash('Você não pode remover suas permissões de administrador. Por favor, contacte a equipe de desenvolvimento do sistema.', 'danger')
             return redirect(url_for('panel.users'))
-        else:
-            user.admin = new_is_admin
+    else:
+        user.admin = 'admin' in request.form and request.form.get('admin') == '1'
 
     try:
         db.session.commit()
