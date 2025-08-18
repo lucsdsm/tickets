@@ -1,12 +1,14 @@
 from app import db
 from flask import Blueprint, render_template, redirect, url_for, flash, request, session, Response
 from flask_login import login_user, logout_user, login_required, current_user
+from app.decorators import admin_required
 from app.models import User
 
 panel = Blueprint('panel', __name__)
 
 @panel.route('/view')
 @login_required
+@admin_required
 def view() -> 'Response':
     if not current_user.is_admin:
         flash('Acesso negado. Você não tem permissão para acessar o panel de administração.', 'danger')

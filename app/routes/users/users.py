@@ -1,12 +1,14 @@
 from app import db
 from flask import Blueprint, render_template, redirect, url_for, flash, request, session, Response
 from flask_login import login_user, logout_user, login_required, current_user
+from app.decorators import admin_required
 from app.models import User
 
 users = Blueprint('users', __name__)
 
 @users.route('/view')
 @login_required
+@admin_required
 def view():
     if not current_user.is_admin:
         flash('Acesso negado. Você não tem permissão para acessar a lista de usuários.', 'danger')
@@ -17,6 +19,7 @@ def view():
 
 @users.route('/add_user', methods=['GET', 'POST'])
 @login_required
+@admin_required
 def add_user() -> 'Response':
     # verifica se o método da requisição é POST
     if request.method == 'POST':
@@ -80,6 +83,7 @@ def add_user() -> 'Response':
 
 @users.route('/edit_user/<int:user_id>', methods=['POST'])
 @login_required
+@admin_required
 def edit_user(user_id):
     if not current_user.is_admin:
         flash('Acesso negado. Você não tem permissão para editar usuários.', 'danger')
@@ -119,6 +123,7 @@ def edit_user(user_id):
 
 @users.route('/delete_user/<int:user_id>', methods=['POST'])
 @login_required
+@admin_required
 def delete_user(user_id):
     if not current_user.is_admin:
         flash('Acesso negado. Você não tem permissão para excluir usuários.', 'danger')
