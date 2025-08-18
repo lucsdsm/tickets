@@ -20,7 +20,7 @@ def view():
 @users.route('/add_user', methods=['GET', 'POST'])
 @login_required
 @admin_required
-def add_user() -> 'Response':
+def add_user():
     # verifica se o método da requisição é POST
     if request.method == 'POST':
         # obtém os dados do formulário de registro
