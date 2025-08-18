@@ -111,19 +111,19 @@
                     {% if current_user.is_authenticated %}
 
                     {% if current_user.is_admin %}
-                    <a href="{{ url_for('panel.view') }}"
+                    <a href="{{ url_for('panel.view') }}" @click="isLoading = true; setTimeout(() => { isLoading = false }, 500)"
                         class="focus:outline-none font-medium rounded-lg text-sm px-3 py-2 text-center text-gray-600 hover:text-black dark:text-gray-300 dark:hover:text-white">
                         Painel de administração
                     </a>
                     {% endif %}
                     <span
                         class="text-white bg-purple-700 hover:bg-purple-800 focus:outline-none focus:ring-purple-300 font-medium rounded-lg text-sm px-3 py-2 text-center dark:bg-purple-600 dark:hover:bg-purple-700 dark:focus:ring-purple-800">
-                        Olá, {{ current_user.username }}!
+                        Olá, {{ current_user.first_name }} {{ current_user.last_name }}!
                     </span>
                 
                     
                 
-                    <a href="{{ url_for('auth.logout') }}"
+                    <a href="{{ url_for('auth.logout') }}" @click="isLoading = true; setTimeout(() => { isLoading = false }, 500)"
                         class="focus:outline-none font-medium rounded-lg text-sm px-3 py-2 text-center text-gray-600 hover:text-black dark:text-gray-300 dark:hover:text-white">
                         Fazer logout ➜]
                     </a>
@@ -136,18 +136,18 @@
                 </div>
             </nav>
             
-            <!-- toggle de tema -->
-            <div class="hidden md:flex items-center space-x-6" 
-            x-data="{darkMode: localStorage.getItem('theme') === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)}" 
-            x-init="$watch('darkMode', val => {
-                        localStorage.setItem('theme', val ? 'dark' : 'light');
-                        if (val) { document.documentElement.classList.add('dark'); } 
-                        else { document.documentElement.classList.remove('dark'); }
-                    })" :class="{ 'dark': darkMode }">
+            <div class="hidden md:flex items-center space-x-6"
+                x-data="{darkMode: localStorage.getItem('theme') === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)}"
+                x-init="$watch('darkMode', val => {
+                                    localStorage.setItem('theme', val ? 'dark' : 'light');
+                                    if (val) { document.documentElement.classList.add('dark'); } 
+                                    else { document.documentElement.classList.remove('dark'); }
+                                })" :class="{ 'dark': darkMode }">
+                <!-- toggle de tema -->
                 <button @click="isLoading = true; darkMode = !darkMode; setTimeout(() => { isLoading = false }, 500)" type="button"
                     class="relative w-12 h-12 flex items-center justify-center overflow-hidden rounded-full text-lg text-gray-700 bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-200 dark:hover:bg-gray-600 transition-colors focus:outline-none">
                     <span class="sr-only"> Alternar tema </span>
-    
+            
                     <div x-show="darkMode" x-transition:enter="transition-all duration-300 ease-in-out"
                         x-transition:enter-start="opacity-0 transform -rotate-90 scale-75"
                         x-transition:enter-end="opacity-100 transform rotate-0 scale-100"
@@ -160,7 +160,7 @@
                                 d="M21.752 15.002A9.72 9.72 0 0118 15.75c-5.385 0-9.75-4.365-9.75-9.75 0-1.33.266-2.597.748-3.752A9.753 9.753 0 003 11.25C3 16.635 7.365 21 12.75 21a9.753 9.753 0 009.002-5.998z" />
                         </svg>
                     </div>
-    
+            
                     <div x-show="!darkMode" x-transition:enter="transition-all duration-300 ease-in-out"
                         x-transition:enter-start="opacity-0 transform rotate-90 scale-75"
                         x-transition:enter-end="opacity-100 transform rotate-0 scale-100"
@@ -174,6 +174,21 @@
                         </svg>
                     </div>
                 </button>
+
+                <!-- botão de perfil -->
+                <a href="#" title="Ver Perfil"
+                    class="relative w-12 h-12 flex items-center justify-center overflow-hidden rounded-full text-lg text-gray-700 bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-200 dark:hover:bg-gray-600 transition-colors focus:outline-none">
+                
+                    <span class="sr-only"> Ver Perfil </span>
+                
+                    <svg class="w-6 h-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                        stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                            d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z" />
+                    </svg>
+                </a>
+
+                
             </div>
     
             <!-- menu sanduíche iche -->
@@ -198,7 +213,7 @@
                         {% if current_user.is_admin %}
                         <span
                             class="text-white bg-purple-700 hover:bg-purple-800 focus:outline-none focus:ring-purple-300 font-medium rounded-lg text-sm px-3 py-2 text-center dark:bg-purple-600 dark:hover:bg-purple-700 dark:focus:ring-purple-800">
-                            Olá, {{ current_user.username }}!
+                            Olá, {{ current_user.first_name }}!
                         </span> <br> <br>
 
                         <a href="{{ url_for('panel.view') }}"
@@ -218,8 +233,8 @@
                             Entrar
                         </a>
                         {% endif %}
-                        <br> 
-                        <!-- toggle de tema -->
+                        <br>
+                        
                         <div class="border-t border-gray-200 dark:border-gray-700 pt-2 mt-3 flex justify-center align-middle"> 
                             <div x-data="{
                                 darkMode: localStorage.getItem('theme') === 'dark' || 
@@ -229,6 +244,21 @@
                                 if (val) { document.documentElement.classList.add('dark'); } 
                                 else { document.documentElement.classList.remove('dark'); }
                             })" :class="{ 'dark': darkMode }"> <br>
+
+                                <!-- botão de perfil -->
+                                <a href="#" title="Ver Perfil"
+                                    class="relative w-12 h-12 flex items-center justify-center overflow-hidden rounded-full text-lg text-gray-700 bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-200 dark:hover:bg-gray-600 transition-colors focus:outline-none">
+                                
+                                    <span class="sr-only"> Ver Perfil </span>
+                                
+                                    <svg class="w-6 h-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                                        stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                            d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z" />
+                                    </svg>
+                                </a> <br>
+                                
+                                <!-- toggle de tema -->
                                 <button @click="isLoading = true; darkMode = !darkMode; setTimeout(() => { isLoading = false }, 500)" type="button"
                                     class="relative w-12 h-12 flex items-center justify-center overflow-hidden rounded-full text-lg text-gray-700 bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-200 dark:hover:bg-gray-600 transition-colors focus:outline-none">
                                     <span class="sr-only"> Alternar tema </span>

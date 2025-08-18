@@ -92,8 +92,7 @@
                             <td class="px-6 py-4">
                                 <div class="flex items-center justify-center space-x-3">
                                     <div x-show="editId !== {{ user.id }}" class="flex items-center space-x-3">
-                                        <button @click="editId = {{ user.id }}" type="button"
-                                            class="text-blue-600 dark:text-blue-500 hover:text-blue-800 dark:hover:text-blue-400"
+                                        <button @click="editId = {{ user.id }}" type="button" class="text-blue-600 dark:text-blue-500 hover:opacity-75"
                                             title="Editar">
                                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -101,11 +100,11 @@
                                                 </path>
                                             </svg>
                                         </button>
+                                
                                         <form method="post" action="{{ url_for('users.delete_user', user_id=user.id) }}"
-                                            onsubmit="return confirm('Tem certeza que deseja excluir este usuário?');">
-                                            <button type="submit"
-                                                class="text-red-600 dark:text-red-500 hover:text-red-800 dark:hover:text-red-400"
-                                                title="Excluir">
+                                            onsubmit="return confirm('Tem certeza que deseja excluir este usuário?');" class="leading-none">
+                                
+                                            <button type="submit" class="text-red-600 dark:text-red-500 hover:opacity-75" title="Excluir">
                                                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                                         d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16">
@@ -140,7 +139,12 @@
                         </tr>
                         {% endfor %}
                     </tbody>
-                </table>
+                </table> <br>
+                <a href="{{ url_for('panel.view') }}" class="w-1/4 flex justify-center items-center mx-auto px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm text-sm font-medium 
+                    text-gray-700 bg-white hover:bg-gray-50 
+                    dark:text-gray-200 dark:bg-gray-800 dark:hover:bg-gray-600 
+                    transition-colors duration-200"> Voltar
+                </a>
             </div>
 
             <!-- cards para mobile -->
@@ -229,8 +233,14 @@
                         </div>
                     </div>
                 </div>
-                {% endfor %}
+                {% endfor %} <br>
+                <a href="{{ url_for('panel.view') }}" class="w-1/4 flex justify-center items-center mx-auto px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm text-sm font-medium 
+                    text-gray-700 bg-white hover:bg-gray-50 
+                    dark:text-gray-200 dark:bg-gray-800 dark:hover:bg-gray-600 
+                    transition-colors duration-200"> Voltar
+                </a>
             </div>
         </fieldset>
+        
     </div>
 {% endblock %}

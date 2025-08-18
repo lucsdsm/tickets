@@ -26,7 +26,6 @@ def add_user() -> 'Response':
         first_name = request.form['first_name']
         last_name = request.form['last_name']
         password = request.form['password']
-        confirm_password = request.form.get('confirm_password')
 
         # validações
         has_error = False
@@ -36,6 +35,11 @@ def add_user() -> 'Response':
             flash('Todos os campos são obrigatórios.', 'danger')
             has_error = True
 
+        if username:
+            username = username.strip()
+        if email:
+            email = email.strip()
+
         # verificar se o nome de utilizador já está em uso
         if User.query.filter_by(username=username).first():
             flash('Este nome de utilizador já está em uso. Por favor, escolha outro.', 'danger')
@@ -44,11 +48,6 @@ def add_user() -> 'Response':
         # verificar se o email já está em uso
         if User.query.filter_by(email=email).first():
             flash('Este email já está em uso. Por favor, escolha outro.', 'danger')
-            has_error = True
-
-        # verificar se a senha é igual ao campo de confirmação
-        if password != confirm_password:
-            flash('As senhas não coincidem. Por favor, tente novamente.', 'danger')
             has_error = True
 
         # se houver um erro de validação, renderiza novamente o template com os dados inseridos
@@ -73,8 +72,8 @@ def add_user() -> 'Response':
             db.session.add(user)
             db.session.commit()
 
-            flash(f'Usuário {user.username} cadastrado com sucesso com sucess.', 'success')
-            return redirect(url_for('panel.users'))
+            flash(f'Usuário {user.username} cadastrado com sucesso com sucesso.', 'success')
+            return redirect(url_for('users.view'))
 
     return render_template('panel/users/add-user.html')
         
@@ -106,7 +105,7 @@ def edit_user(user_id):
         # não permitir o administrador remover sua própria permissão
         if 'admin' in request.form and user.admin and not (request.form.get('admin') == '1'):
             flash('Você não pode remover suas permissões de administrador. Por favor, contacte a equipe de desenvolvimento do sistema.', 'danger')
-            return redirect(url_for('panel.users'))
+            return redirect(url_for('users.view'))
     else:
         user.admin = 'admin' in request.form and request.form.get('admin') == '1'
 
@@ -116,7 +115,7 @@ def edit_user(user_id):
     except Exception as e:
         flash(f'Erro ao atualizar usuário: {str(e)}', 'danger')
 
-    return redirect(url_for('panel.users'))
+    return redirect(url_for('users.view'))
 
 @users.route('/delete_user/<int:user_id>', methods=['POST'])
 @login_required
@@ -129,7 +128,7 @@ def delete_user(user_id):
 
     if user.id == current_user.id:
         flash('Você não pode excluir sua própria conta.', 'error')
-        return redirect(url_for('panel.users'))
+        return redirect(url_for('users.view'))
 
     try:
         db.session.delete(user)
@@ -138,4 +137,4 @@ def delete_user(user_id):
     except Exception as e:
         flash(f'Erro ao excluir usuário: {str(e)}', 'danger')
 
-    return redirect(url_for('panel.users'))
+    return redirect(url_for('users.view'))
