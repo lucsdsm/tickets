@@ -5,7 +5,7 @@
         <fieldset class="space-y-4">
             <div class="flex justify-between items-center pb-2 mb-4">
                 <h2 class="text-2xl font-bold dark:text-white"> Usuários </h2>
-                <a href="#" 
+                <a href="{{ url_for('users.add_user') }}" 
                 title="Adicionar novo usuário"
                 class="inline-flex items-center justify-center w-10 h-10 text-white bg-purple-600 border border-transparent rounded-full shadow-sm hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 dark:focus:ring-offset-gray-800">
                     <span class="sr-only">Adicionar Usuário</span>                    
@@ -101,7 +101,7 @@
                                                 </path>
                                             </svg>
                                         </button>
-                                        <form method="post" action="{{ url_for('panel.delete_user', user_id=user.id) }}"
+                                        <form method="post" action="{{ url_for('users.delete_user', user_id=user.id) }}"
                                             onsubmit="return confirm('Tem certeza que deseja excluir este usuário?');">
                                             <button type="submit"
                                                 class="text-red-600 dark:text-red-500 hover:text-red-800 dark:hover:text-red-400"
@@ -116,7 +116,7 @@
                                     </div>
                                     <div x-show="editId === {{ user.id }}" class="flex items-center space-x-3">
                                         <form :id="'edit-form-' + {{ user.id }}" method="post"
-                                            action="{{ url_for('panel.edit_user', user_id=user.id) }}">
+                                            action="{{ url_for('users.edit_user', user_id=user.id) }}">
                                             <button type="submit"
                                                 class="text-green-600 dark:text-green-500 hover:text-green-800 dark:hover:text-green-400 flex items-center justify-center"
                                                 title="Salvar">
@@ -127,7 +127,7 @@
                                             </button>
                                         </form>
                                         <button @click="editId = null" type="button"
-                                            class="text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200 flex items-center justify-center"
+                                            class="text-red-600 dark:text-red-500 hover:opacity-75"
                                             title="Cancelar">
                                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -189,8 +189,7 @@
                     </div>
 
 
-                    <div class="border-t dark:border-gray-700 pt-3 mt-3 flex justify-end space-x-3">
-
+                    <div class="pt-3 mt-3 flex justify-end space-x-3">
                         <div x-show="editId !== {{ user.id }}" class="flex items-center space-x-3">
                             <button @click="editId = {{ user.id }}" type="button" class="text-blue-600 dark:text-blue-500 hover:opacity-75"
                                 title="Editar">
@@ -200,7 +199,7 @@
                                     </path>
                                 </svg>
                             </button>
-                            <form method="post" action="{{ url_for('panel.delete_user', user_id=user.id) }}"
+                            <form method="post" action="{{ url_for('users.delete_user', user_id=user.id) }}"
                                 onsubmit="return confirm('Tem certeza que deseja excluir este usuário?');" class="leading-none">
                                 <button type="submit" class="text-red-600 dark:text-red-500 hover:opacity-75" title="Excluir">
                                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -214,14 +213,14 @@
 
                         <div x-show="editId === {{ user.id }}" class="flex items-center space-x-3">
                             <form :id="'edit-form-mobile-' + {{ user.id }}" method="post"
-                                action="{{ url_for('panel.edit_user', user_id=user.id) }}" class="leading-none">
+                                action="{{ url_for('users.edit_user', user_id=user.id) }}" class="leading-none">
                                 <button type="submit" class="text-green-600 dark:text-green-500 hover:opacity-75" title="Salvar">
                                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
                                     </svg>
                                 </button>
                             </form>
-                            <button @click="editId = null" type="button" class="text-gray-600 dark:text-gray-400 hover:opacity-75"
+                            <button @click="editId = null" type="button" class="text-red-600 dark:text-red-500 hover:opacity-75"
                                 title="Cancelar">
                                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>

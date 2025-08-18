@@ -69,11 +69,14 @@ def create_app() -> Flask:
         from .routes import main
         app.register_blueprint(main.main)
 
-        from .routes import auth
+        from .routes.auth import auth
         app.register_blueprint(auth.auth, url_prefix='/auth')
 
-        from .routes import panel
+        from .routes.panel import panel
         app.register_blueprint(panel.panel, url_prefix='/panel')
+
+        from .routes.users import users
+        app.register_blueprint(users.users, url_prefix='/users')
 
         # registra os comandos personalizados
         from . import commands
