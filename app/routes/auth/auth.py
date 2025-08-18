@@ -119,7 +119,7 @@ def login() -> 'Response':
             flash('Usuário ou senha inválidos.', 'danger')
     
     # se o método for GET, renderiza o template de login
-    return render_template('auth/login.html')
+    return render_template('auth/main.html')
 
 @auth.route('/logout')
 @login_required

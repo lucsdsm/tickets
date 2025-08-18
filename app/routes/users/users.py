@@ -15,7 +15,7 @@ def view():
         return redirect(url_for('main.home'))
 
     users = User.query.order_by(User.id).all()
-    return render_template('panel/users/users.html', users=users)
+    return render_template('panel/users/main.html', users=users)
 
 @users.route('/add_user', methods=['GET', 'POST'])
 @login_required

@@ -14,5 +14,5 @@ def view() -> 'Response':
         flash('Acesso negado. Você não tem permissão para acessar o panel de administração.', 'danger')
         return redirect(url_for('main.home'))
 
-    return render_template('panel/index.html', user=current_user)
+    return render_template('panel/main.html', user=current_user)
 

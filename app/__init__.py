@@ -72,6 +72,9 @@ def create_app() -> Flask:
         from .routes.auth import auth
         app.register_blueprint(auth.auth, url_prefix='/auth')
 
+        from .routes.profile import profile
+        app.register_blueprint(profile.profile, url_prefix='/profile')
+
         from .routes.panel import panel
         app.register_blueprint(panel.panel, url_prefix='/panel')
 
