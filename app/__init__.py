@@ -81,6 +81,9 @@ def create_app() -> Flask:
         from .routes.users import users
         app.register_blueprint(users.users, url_prefix='/users')
 
+        from .routes.sectors import sectors
+        app.register_blueprint(sectors.sectors, url_prefix='/sector')
+
         # registra os comandos personalizados
         from . import commands
         app.cli.add_command(commands.create_admin)

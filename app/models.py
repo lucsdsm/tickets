@@ -4,6 +4,11 @@ from flask_login import UserMixin # para integração com Flask-Login
 
 bcrypt = Bcrypt() # para hashing de senhas
 
+user_sectors = db.Table('user_sectors',
+    db.Column('user_id', db.Integer, db.ForeignKey('user.id'), primary_key=True),
+    db.Column('sector_id', db.Integer, db.ForeignKey('sector.id'), primary_key=True)
+)
+
 class User(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(80), unique=True, nullable=False)
@@ -12,6 +17,8 @@ class User(db.Model, UserMixin):
     email = db.Column(db.String(120), unique=True, nullable=False)
     password_hash = db.Column(db.String(200), nullable=False)
     admin = db.Column(db.Boolean, nullable=False, default=False)
+    
+    sectors = db.relationship('Sector', secondary=user_sectors, back_populates='users')
 
     @property
     def is_admin(self) -> bool:
@@ -46,3 +53,12 @@ class User(db.Model, UserMixin):
 
     def __repr__(self) -> str:
         return f'<User {self.username}>'
+    
+class Sector(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(100), unique=True, nullable=False)
+    
+    users = db.relationship('User', secondary=user_sectors, back_populates='sectors')
+
+    def __repr__(self):
+        return f'<Sector {self.name}>'
