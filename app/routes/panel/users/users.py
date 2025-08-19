@@ -3,6 +3,7 @@ from flask import Blueprint, render_template, redirect, url_for, flash, request,
 from flask_login import login_user, logout_user, login_required, current_user
 from app.decorators import admin_required
 from app.models import User
+from app.models import Sector
 
 users = Blueprint('users', __name__)
 
@@ -15,7 +16,8 @@ def view():
         return redirect(url_for('main.home'))
 
     users = User.query.order_by(User.id).all()
-    return render_template('panel/users/main.html', users=users)
+    all_sectors = Sector.query.order_by(Sector.name).all()
+    return render_template('panel/users/main.html', users=users, all_sectors=all_sectors)
 
 @users.route('/add_user', methods=['GET', 'POST'])
 @login_required
@@ -75,7 +77,7 @@ def add_user():
             db.session.add(user)
             db.session.commit()
 
-            flash(f'Usuário {user.username} cadastrado com sucesso com sucesso.', 'success')
+            flash(f'Usuário "{user.username}" cadastrado com sucesso com sucesso.', 'success')
             return redirect(url_for('users.view'))
 
     return render_template('panel/users/add-user.html')
@@ -85,17 +87,12 @@ def add_user():
 @login_required
 @admin_required
 def edit_user(user_id):
-    if not current_user.is_admin:
-        flash('Acesso negado. Você não tem permissão para editar usuários.', 'danger')
-        return redirect(url_for('main.home'))
-
     user = User.query.get_or_404(user_id)
 
     new_username = request.form.get('username')
     new_first_name = request.form.get('first_name')
     new_last_name = request.form.get('last_name')
     new_email = request.form.get('email')
-    new_is_admin = request.form.get('admin') == '1'
 
     if new_username:
         user.username = new_username
@@ -114,8 +111,19 @@ def edit_user(user_id):
         user.admin = 'admin' in request.form and request.form.get('admin') == '1'
 
     try:
+        selected_sector_ids = request.form.getlist('sectors')
+    
+        # converte a lista de ids que são strings para inteiros
+        selected_ids_int = [int(id) for id in selected_sector_ids]
+        
+        # busca os objetos sector correspondentes aos ids selecionados
+        selected_sectors = Sector.query.filter(Sector.id.in_(selected_ids_int)).all()
+        
+        # atribui a nova lista de setores à relação do utilizador
+        user.sectors = selected_sectors
+
         db.session.commit()
-        flash(f'Usuário {user.username} atualizado com sucesso!', 'success')
+        flash(f'Usuário "{user.username}" atualizado com sucesso!', 'success')
     except Exception as e:
         flash(f'Erro ao atualizar usuário: {str(e)}', 'danger')
 
@@ -125,10 +133,6 @@ def edit_user(user_id):
 @login_required
 @admin_required
 def delete_user(user_id):
-    if not current_user.is_admin:
-        flash('Acesso negado. Você não tem permissão para excluir usuários.', 'danger')
-        return redirect(url_for('main.home'))
-
     user = User.query.get_or_404(user_id)
 
     if user.id == current_user.id:
@@ -138,7 +142,7 @@ def delete_user(user_id):
     try:
         db.session.delete(user)
         db.session.commit()
-        flash(f'Usuário {user.username} excluído com sucesso!', 'success')
+        flash(f'Usuário "{user.username}" excluído com sucesso!', 'success')
     except Exception as e:
         flash(f'Erro ao excluir usuário: {str(e)}', 'danger')
 

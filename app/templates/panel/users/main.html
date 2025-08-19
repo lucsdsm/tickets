@@ -1,9 +1,9 @@
 {% extends "layout.html" %}
 
 {% block content %}
-    <div class="mx-auto bg-white dark:bg-gray-800 p-4 md:p-8 rounded-lg shadow-md">
+    <div class="mx-auto bg-white dark:bg-gray-800 p-8 rounded-lg shadow-md items-center justify-center flex">
         <fieldset class="space-y-4">
-            <div class="flex justify-between items-center pb-2 mb-4">
+            <div class="flex justify-between items-center p-4">
                 <h2 class="text-2xl font-bold dark:text-white"> Usuários </h2>
                 <a href="{{ url_for('users.add_user') }}" 
                 title="Adicionar novo usuário"
@@ -25,6 +25,7 @@
                             <th scope="col" class="px-6 py-3"> Primeiro nome </th>
                             <th scope="col" class="px-6 py-3"> Sobrenome </th>
                             <th scope="col" class="px-6 py-3"> Email </th>
+                            <th scope="col" class="px-6 py-3"> Setor(es) </th>
                             <th scope="col" class="px-6 py-3"> Admin </th>
                             <th scope="col" class="px-6 py-3 text-center"> Ações </th>
                         </tr>
@@ -67,6 +68,33 @@
                                 <span x-show="editId !== {{ user.id }}">{{ user.email }}</span>
                                 <input x-show="editId === {{ user.id }}" type="email" name="email" value="{{ user.email }}" form="edit-form-{{ user.id }}"
                                     class="text-center bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2 dark:bg-gray-600 dark:border-gray-500 dark:text-white" />
+                            </td>
+
+                            <td class="px-6 py-4">
+                                <!-- modo de visualização dos setores no desktop -->
+                                <div x-show="editId !== {{ user.id }}" class="flex flex-wrap gap-1 justify-center">
+                                    {% for sector in user.sectors %}
+                                    <span
+                                        class="bg-purple-100 text-purple-800 text-xs font-medium px-2.5 py-0.5 rounded-full dark:bg-purple-900 dark:text-purple-300">
+                                        {{ sector.name }}
+                                    </span>
+                                    {% else %}
+                                    <span class="text-gray-500 text-center"> Nenhum </span>
+                                    {% endfor %}
+                                </div>
+                            
+                                <!-- modo de edição dos setores no desktop -->
+                                <div x-show="editId === {{ user.id }}"
+                                    class="max-h-32 overflow-y-auto space-y-2 p-2 border rounded-md dark:border-gray-600">
+                                    {% for sector in all_sectors %}
+                                    <label class="flex items-center space-x-2 cursor-pointer">
+                                        <input type="checkbox" name="sectors" value="{{ sector.id }}" form="edit-form-{{ user.id }}" {% if sector in
+                                            user.sectors %}checked{% endif %}
+                                            class="w-4 h-4 accent-purple-700 rounded border-2 border-purple-400 focus:ring-2 focus:ring-purple-500 transition-all duration-150">
+                                        <span class="text-sm text-gray-700 dark:text-gray-300">{{ sector.name }}</span>
+                                    </label>
+                                    {% endfor %}
+                                </div>
                             </td>
                 
                             {% if user.id != current_user.id %}
@@ -155,7 +183,7 @@
                         </tr>
                         {% endfor %}
                     </tbody>
-                </table> <br>
+                </table> <br> <br>
                 <a href="{{ url_for('panel.view') }}" class="w-1/4 flex justify-center items-center mx-auto px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm text-sm font-medium 
                     text-gray-700 bg-white hover:bg-gray-50 
                     dark:text-gray-200 dark:bg-gray-800 dark:hover:bg-gray-600 
@@ -164,7 +192,7 @@
             </div>
 
             <!-- cards para mobile -->
-            <div x-data="{ editId: null }" class="md:hidden space-y-4 p-4">
+            <div x-data="{ editId: null }" class="md:hidden space-y-4">
                 {% for user in users %}
                 <div class="bg-gray-50 dark:bg-gray-900 p-4 rounded-lg border dark:border-gray-700 space-y-3">
                     
@@ -200,8 +228,37 @@
                         </div>
                     </div>
 
+                    <div class="grid grid-cols-5 gap-4 items-start pt-1">
+                        <span class="col-span-2 font-bold text-gray-600 dark:text-gray-400"> Setor(es) </span>
+                        <div class="col-span-3">
+                            <!-- modo de visualização dos setores no mobile -->
+                            <div x-show="editId !== {{ user.id }}" class="flex flex-wrap gap-1">
+                                    {% for sector in user.sectors %}
+                                    <span
+                                        class="bg-purple-100 text-purple-800 text-xs font-medium px-2.5 py-0.5 rounded-full dark:bg-purple-900 dark:text-purple-300">
+                                        {{ sector.name }}
+                                    </span>
+                                    {% else %}
+                                    <span class="text-gray-500 text-center"> Nenhum </span>
+                                    {% endfor %}
+                                </div>
+                            <!-- modo de edição dos setores no mobile -->
+                            <div x-show="editId === {{ user.id }}"
+                                class="max-h-32 overflow-y-auto space-y-2 p-2 border rounded-md dark:border-gray-600 bg-white dark:bg-gray-800">
+                                {% for sector in all_sectors %}
+                                <label class="flex items-center space-x-2 cursor-pointer">
+                                    <input type="checkbox" name="sectors" value="{{ sector.id }}" form="edit-form-mobile-{{ user.id }}" {%
+                                        if sector in user.sectors %}checked{% endif %}
+                                        class="w-4 h-4 accent-purple-700 rounded border-2 border-purple-400 focus:ring-2 focus:ring-purple-500 transition-all duration-150">
+                                    <span class="text-sm text-gray-700 dark:text-gray-300">{{ sector.name }}</span>
+                                </label>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+
                     <div class="grid grid-cols-3 gap-4 items-center">
-                        <span class="font-bold text-gray-600 dark:text-gray-400">Admin</span>
+                        <span class="font-bold text-gray-600 dark:text-gray-400"> Admin </span>
                         <div class="col-span-2">
                             <span x-show="editId !== {{ user.id }}" :class="user.admin ? 'text-green-500' : 'text-gray-500'">{{ 'Sim' if user.admin else 'Não' }}</span>
                             <input x-show="editId === {{ user.id }}" type="checkbox" name="admin" value="1" {{ 'checked' if user.admin else '' }} form="edit-form-mobile-{{ user.id }}" class="w-4 h-4 accent-purple-700 rounded border-2 border-purple-400 focus:ring-2 focus:ring-purple-500 transition-all duration-150">
@@ -273,6 +330,5 @@
                 </a>
             </div>
         </fieldset>
-        
     </div>
 {% endblock %}
