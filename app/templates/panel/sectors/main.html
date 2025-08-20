@@ -4,7 +4,7 @@
     <div class="mx-auto bg-white dark:bg-gray-800 p-4 md:p-8 rounded-lg shadow-md">
         <fieldset class="space-y-4">
             <div class="flex justify-between items-center p-4">
-                <h2 class="text-2xl font-bold dark:text-white"> Setores </h2>
+                <legend class="text-2xl pb-2 font-bold border-b dark:text-white"> Setores </legend>
                 <a href="{{ url_for('sectors.add_sector') }}" title="Adicionar novo setor"
                     class="inline-flex items-center justify-center w-10 h-10 text-white bg-purple-600 border border-transparent rounded-full shadow-sm hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 dark:focus:ring-offset-gray-800">
                     <span class="sr-only"> Adicionar setor </span>
@@ -26,7 +26,6 @@
                             <th scope="col" class="px-6 py-3 text-center"> Ações </th>
                         </tr>
                     </thead>
-    
     
                     <tbody x-data="{ editId: null }">
                         {% for sector in sectors %}
@@ -52,7 +51,8 @@
                                 <!-- modo de edição da cor do setor no desktop -->
                                 <input x-show="editId === {{ sector.id }}" type="color" name="color" value="{{ sector.color }}" form="edit-form-{{ sector.id }}" class="h-10 border-transparent w-full block bg-transparent cursor-pointer">
                             </td>
-    
+                            
+                            <!-- ações do setor no desktop -->
                             <td class="px-6 py-4">
                                 <div class="flex items-center justify-center space-x-3">
                                     <div x-show="editId !== {{ sector.id }}" class="flex items-center space-x-3">
@@ -66,13 +66,22 @@
                                                 </path>
                                             </svg>
                                         </button>
+
+                                        <!-- botão para gerenciar usuários no desktop -->
+                                        <a href="{{ url_for('sectors.manage_users', sector_id=sector.id) }}"
+                                            class="text-gray-600 dark:text-gray-400 hover:opacity-75" title="Gerir membros do setor">
     
+                                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.653-.125-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.653.125-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                                            </svg>
+                                        </a>
+    
+                                        <!-- botão para excluir no desktop -->
                                         <form method="post"
                                             action="{{ url_for('sectors.delete_sector', sector_id=sector.id) }}"
                                             onsubmit="return confirm('Tem certeza que deseja excluir este setor?');"
                                             class="leading-none">
-    
-                                            <!-- botão para excluir no desktop -->
+                                            
                                             <button type="submit" class="text-red-600 dark:text-red-500 hover:opacity-75"
                                                 title="Excluir">
                                                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -140,6 +149,7 @@
                         </div>
                     </div>
 
+                    <!-- ações do setor no mobile -->
                     <div class="pt-3 mt-3 flex justify-end space-x-3">
                         <div x-show="editId !== {{ sector.id }}" class="flex items-center space-x-3">
 
@@ -152,6 +162,19 @@
                                     </path>
                                 </svg>
                             </button>
+
+                            <!-- botão para gerenciar usuários no desktop -->
+                            <a href="{{ url_for('sectors.manage_users', sector_id=sector.id) }}"
+                                class="text-gray-600 dark:text-gray-400 hover:opacity-75" title="Gerir membros do setor">
+                            
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.653-.125-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.653.125-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z">
+                                    </path>
+                                </svg>
+                            </a>
+
+
                             <form method="post" action="{{ url_for('sectors.delete_sector', sector_id=sector.id) }}"
                                 onsubmit="return confirm('Tem certeza que deseja excluir este usuário?');" class="leading-none">
 

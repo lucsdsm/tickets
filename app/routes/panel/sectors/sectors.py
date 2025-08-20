@@ -3,6 +3,7 @@ from flask import Blueprint, render_template, redirect, url_for, flash, request,
 from flask_login import login_user, logout_user, login_required, current_user
 from app.decorators import admin_required
 from app.models import Sector
+from app.models import User
 
 sectors = Blueprint('sectors', __name__)
 
@@ -90,3 +91,34 @@ def delete_sector(sector_id):
 
 
     return redirect(url_for('sectors.view'))
+
+@sectors.route('/<int:sector_id>/manage_users', methods=['GET', 'POST'])
+@login_required
+@admin_required
+def manage_users(sector_id):
+    sector = Sector.query.get_or_404(sector_id)
+
+    if request.method == 'POST':
+        # obtém a lista de ids dos usuários do setor
+        selected_user_ids = request.form.getlist('user_ids')
+
+        # converte os ids de strings para inteiros
+        selected_ids_int = [int(id) for id in selected_user_ids]
+
+        # busca os objetos User correspondentes aos ids selecionados
+        selected_users = User.query.filter(User.id.in_(selected_ids_int)).all()
+
+        # substitui a lista de utilizadores do setor pela nova lista
+        # o sqlalchemy trata a adição e remoção nas tabelas de junção
+        sector.users = selected_users
+
+        db.session.commit()
+        flash(f'Membros do setor "{sector.name}" atualizados com sucesso!', 'success')
+        return redirect(url_for('sectors.view'))
+
+    # busca todos os usuários para os listar 
+    all_users = User.query.order_by(User.username).all()
+
+    return render_template('panel/sectors/manage-users.html', 
+                           sector=sector, 
+                           all_users=all_users)
