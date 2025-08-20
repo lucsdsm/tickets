@@ -4,8 +4,15 @@ from flask_login import UserMixin # para integração com Flask-Login
 
 bcrypt = Bcrypt() # para hashing de senhas
 
+# tabela de junção usuário-setor
 user_sectors = db.Table('user_sectors',
     db.Column('user_id', db.Integer, db.ForeignKey('user.id'), primary_key=True),
+    db.Column('sector_id', db.Integer, db.ForeignKey('sector.id'), primary_key=True)
+)
+
+# tabela de junção assunto-setor
+subject_sectors = db.Table('subject_sectors',
+    db.Column('subject_id', db.Integer, db.ForeignKey('subject.id'), primary_key=True),
     db.Column('sector_id', db.Integer, db.ForeignKey('sector.id'), primary_key=True)
 )
 
@@ -60,7 +67,21 @@ class Sector(db.Model):
     color = db.Column(db.String(7), nullable=False, default="#2C2C2C")
     
     users = db.relationship('User', secondary=user_sectors, back_populates='sectors')
+    subjects = db.relationship('Subject', secondary=subject_sectors, back_populates='sectors')
 
     def __repr__(self):
         return f'<Sector {self.name}>'
+    
+class Subject(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(100), unique=True, nullable=False)
+    
+    # Relação para aceder a `subject.sectors`
+    sectors = db.relationship('Sector', secondary=subject_sectors, back_populates='subjects')
+
+    def __repr__(self):
+        return f'<Subject {self.name}>'
+
+    
+
     

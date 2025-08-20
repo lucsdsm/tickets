@@ -82,7 +82,10 @@ def create_app() -> Flask:
         app.register_blueprint(users.users, url_prefix='/users')
 
         from .routes.panel.sectors import sectors
-        app.register_blueprint(sectors.sectors, url_prefix='/sector')
+        app.register_blueprint(sectors.sectors, url_prefix='/sectors')
+
+        from .routes.panel.subjects import subjects
+        app.register_blueprint(subjects.subjects, url_prefix='/subjects')
 
         # registra os comandos personalizados
         from . import commands
