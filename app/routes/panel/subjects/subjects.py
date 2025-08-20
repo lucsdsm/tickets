@@ -25,7 +25,9 @@ def add_subject():
 
         if name:
             selected_sectors = Sector.query.filter(Sector.id.in_(selected_sector_ids)).all()
-            new_subject = Subject(name=name, sectors=selected_sectors)
+            new_subject = Subject(
+                name=name, 
+                sectors=selected_sectors)
 
             db.session.add(new_subject)
             db.session.commit()

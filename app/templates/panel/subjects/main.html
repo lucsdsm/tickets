@@ -57,13 +57,15 @@
                             
                                 <!-- modo de edição dos setores no desktop -->
                                 <div x-show="editId === {{ subject.id }}"
-                                    class="max-h-32 overflow-y-auto space-y-2 p-2 border rounded-md dark:border-gray-600">
+                                    class="max-h-32 overflow-y-auto space-y-2 p-2 border-transparent rounded-md dark:border-gray-600">
                                     {% for sector in all_sectors %}
                                     <label class="flex items-center space-x-2 cursor-pointer">
                                         <input type="checkbox" name="sectors" value="{{ sector.id }}" form="edit-form-{{ subject.id }}" {% if sector in
                                             subject.sectors %}checked{% endif %}
                                             class="w-4 h-4 accent-purple-700 rounded border-2 border-purple-400 focus:ring-2 focus:ring-purple-500 transition-all duration-150">
-                                        <span class="text-sm text-gray-700 dark:text-gray-300">{{ sector.name }}</span>
+                                        <span style="background-color: {{ sector.color }}" class="text-white text-xs font-medium px-2.5 py-0.5 rounded-full">
+                                            {{ sector.name }}
+                                        </span>
                                     </label>
                                     {% endfor %}
                                 </div>

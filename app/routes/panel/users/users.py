@@ -31,6 +31,7 @@ def add_user():
         first_name = request.form['first_name']
         last_name = request.form['last_name']
         password = request.form['password']
+        selected_sector_ids = request.form.getlist('sectors')
 
         # validações
         has_error = False
@@ -65,11 +66,14 @@ def add_user():
 
         # se a validação passar, cria o novo usuário
         else:
+            selected_sectors = Sector.query.filter(Sector.id.in_(selected_sector_ids)).all()
+
             user = User(
                 username=username,
                 email=email,
                 first_name=first_name,
-                last_name=last_name
+                last_name=last_name,
+                sectors=selected_sectors
             )
             
             user.set_password(password)
@@ -80,7 +84,8 @@ def add_user():
             flash(f'Usuário "{user.username}" cadastrado com sucesso com sucesso.', 'success')
             return redirect(url_for('users.view'))
 
-    return render_template('panel/users/add-user.html')
+    sectors = Sector.query.order_by(Sector.name).all()
+    return render_template('panel/users/add-user.html', all_sectors=sectors)
         
 
 @users.route('/edit_user/<int:user_id>', methods=['POST'])
