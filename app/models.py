@@ -57,6 +57,7 @@ class User(db.Model, UserMixin):
 class Sector(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100), unique=True, nullable=False)
+    color = db.Column(db.String(7), nullable=False, default="#2C2C2C")
     
     users = db.relationship('User', secondary=user_sectors, back_populates='sectors')
 

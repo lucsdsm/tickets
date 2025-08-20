@@ -74,8 +74,8 @@
                                 <!-- modo de visualização dos setores no desktop -->
                                 <div x-show="editId !== {{ user.id }}" class="flex flex-wrap gap-1 justify-center">
                                     {% for sector in user.sectors %}
-                                    <span
-                                        class="bg-purple-100 text-purple-800 text-xs font-medium px-2.5 py-0.5 rounded-full dark:bg-purple-900 dark:text-purple-300">
+                                    <span style="background-color: {{ sector.color }}" 
+                                        class="text-white text-xs font-medium px-2.5 py-0.5 rounded-full">
                                         {{ sector.name }}
                                     </span>
                                     {% else %}
@@ -234,8 +234,8 @@
                             <!-- modo de visualização dos setores no mobile -->
                             <div x-show="editId !== {{ user.id }}" class="flex flex-wrap gap-1">
                                     {% for sector in user.sectors %}
-                                    <span
-                                        class="bg-purple-100 text-purple-800 text-xs font-medium px-2.5 py-0.5 rounded-full dark:bg-purple-900 dark:text-purple-300">
+                                    <span style="background-color: {{ sector.color }}" 
+                                        class="text-white text-xs font-medium px-2.5 py-0.5 rounded-full">
                                         {{ sector.name }}
                                     </span>
                                     {% else %}

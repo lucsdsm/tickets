@@ -22,7 +22,8 @@ def view():
 @admin_required
 def add_sector():
     if request.method == 'POST':
-        name = request.form['name']
+        name = request.form.get('name')
+        color = request.form.get('color')
 
         has_error = False
 
@@ -35,12 +36,12 @@ def add_sector():
             has_error = True
 
         if has_error:
-            return render_template('panel/sectors/add-sector.html',
-                                name=name)
+            return render_template('panel/sectors/add-sector.html', name=name)
         
         else:
             sector = Sector(
-                name=name
+                name=name,
+                color=color
             )
 
             db.session.add(sector)
@@ -58,9 +59,13 @@ def edit_sector(sector_id):
     sector = Sector.query.get_or_404(sector_id)
 
     new_sector_name = request.form.get('name')
+    new_sector_color = request.form.get('color')
 
     if new_sector_name:
         sector.name = new_sector_name
+
+    if new_sector_color:
+        sector.color = new_sector_color
 
     try:
         db.session.commit()
