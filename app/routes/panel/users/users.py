@@ -1,7 +1,7 @@
 from app import db
 from flask import Blueprint, render_template, redirect, url_for, flash, request, session, Response
 from flask_login import login_user, logout_user, login_required, current_user
-from sqlalchemy import func
+from sqlalchemy import func, or_
 from app.decorators import admin_required
 from app.models import User
 from app.models import Sector
@@ -14,6 +14,7 @@ users = Blueprint('users', __name__)
 def view():
     sort_by = request.args.get('sort_by', 'id', type=str)
     direction = request.args.get('direction', 'asc', type=str)
+    search_term = request.args.get('search', '', type=str)
 
     # lista de colunas permitidas para evitar injeção de sql
     allowed_columns = ['id', 'username', 'first_name', 'last_name', 'email', 'sectors', 'admin']
@@ -28,6 +29,20 @@ def view():
 
     # constrói a query
     query = User.query
+
+    if search_term:
+        # O '%' é um wildcard. Pesquisa por termos que contenham o texto.
+        search_pattern = f"%{search_term}%"
+        # or_() permite pesquisar em múltiplas colunas
+        query = query.filter(
+            or_(
+                User.username.ilike(search_pattern),
+                User.first_name.ilike(search_pattern),
+                User.last_name.ilike(search_pattern),
+                User.email.ilike(search_pattern)
+            )
+        )
+    
     if sort_by == 'sectors':
         # para ordenar por setor, faz join nas tabelas user e setor. nesse caso faz um left join para recuperar usuários também sem setor.
         # agrupa por utilizador e ordena pelo nome do primeiro setor em ordem alfabética.
@@ -52,7 +67,8 @@ def view():
                            users=users, 
                            all_sectors=all_sectors,
                            sort_by=sort_by,
-                           direction=direction)
+                           direction=direction,
+                           search=search_term)
 
 @users.route('/add_user', methods=['GET', 'POST'])
 @login_required
