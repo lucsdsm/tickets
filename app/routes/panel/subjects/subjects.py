@@ -1,6 +1,7 @@
 from app import db
 from flask import Blueprint, render_template, redirect, url_for, flash, request, session, Response
 from flask_login import login_user, logout_user, login_required, current_user
+from sqlalchemy import func
 from app.decorators import admin_required
 from app.models import Subject
 from app.models import Sector
@@ -11,9 +12,49 @@ subjects = Blueprint('subjects', __name__)
 @login_required
 @admin_required
 def view():
-    subjects = Subject.query.order_by(Subject.name).all()
-    sectors = Sector.query.order_by(Sector.name).all() 
-    return render_template('panel/subjects/main.html', subjects=subjects, all_sectors=sectors)
+    sort_by = request.args.get('sort_by', 'id', type=str)
+    direction = request.args.get('direction', 'asc', type=str)
+
+    # lista de colunas permitidas para evitar injeção de sql
+    allowed_columns = ['id', 'name', 'sectors']
+
+    if sort_by not in allowed_columns:
+        # valor padrão se a coluna não for permitida
+        sort_by = 'id'
+
+    if direction not in ['asc', 'desc']:
+         # valor padrão se a direção for inválida
+        direction = 'asc'
+    
+    # constrói a query
+    query = Subject.query
+    if sort_by == 'sectors':
+        # para ordenar por setor, faz join nas tabelas assunto e setor.
+        # agrupa por utilizador e ordena pelo nome do primeiro setor em ordem alfabética.
+        # para ordenar por setor, faz join nas tabelas user e setor. nesse caso faz um left join para recuperar usuários também sem setor.
+        # agrupa por utilizador e ordena pelo nome do primeiro setor em ordem alfabética.
+        query = query.outerjoin(Subject.sectors).group_by(Subject.id)
+        order_expression = func.min(Sector.name)
+        
+        # .nulls_last() para garantir que os utilizadores sem setor apareçam sempre no final da lista.
+        if direction == 'asc':
+            query = query.order_by(order_expression.asc().nulls_last())
+        else:
+            query = query.order_by(order_expression.desc().nulls_last())
+    else:
+        # ordenação simples.
+        sort_column = getattr(Subject, sort_by)
+        query = query.order_by(sort_column.asc() if direction == 'asc' else sort_column.desc())
+    
+    
+    subjects = query.all()
+    all_sectors = Sector.query.order_by(Sector.name).all()
+
+    return render_template('panel/subjects/main.html', 
+                           subjects=subjects, 
+                           all_sectors=all_sectors,
+                           sort_by=sort_by, 
+                           direction=direction)
 
 @subjects.route('/add_subject', methods=['GET', 'POST'])
 @login_required

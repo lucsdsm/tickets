@@ -11,12 +11,28 @@ sectors = Blueprint('sectors', __name__)
 @login_required
 @admin_required
 def view():
-    if not current_user.is_admin:
-        flash('Acesso negado. Você não tem permissão para acessar a lista de setores.', 'danger')
-        return redirect(url_for('main.home'))
+    sort_by = request.args.get('sort_by', 'id', type=str)
+    direction = request.args.get('direction', 'asc', type=str)
 
-    sectors = Sector.query.order_by(Sector.name).all()
-    return render_template('panel/sectors/main.html', sectors=sectors)
+    # lista de colunas permitidas para evitar injeção de sql
+    allowed_columns = ['id', 'name']
+
+    if sort_by not in allowed_columns:
+        # valor padrão se a coluna não for permitida
+        sort_by = 'id'
+
+    if direction not in ['asc', 'desc']:
+         # valor padrão se a direção for inválida
+        direction = 'asc'
+
+    sort_column = getattr(Sector, sort_by)
+    query = Sector.query.order_by(sort_column.asc() if direction == 'asc' else sort_column.desc())
+
+    sectors = query.all()
+    return render_template('panel/sectors/main.html', 
+                           sectors=sectors, 
+                           sort_by=sort_by, 
+                           direction=direction)
 
 @sectors.route('/add_sector', methods=['GET', 'POST'])
 @login_required

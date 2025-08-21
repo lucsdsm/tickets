@@ -1,337 +1,463 @@
 {% extends "layout.html" %}
 
 {% block content %}
-        <fieldset class="space-y-4">
-            <div class="flex justify-between items-center p-4">
-                <legend class="text-2xl pb-2 font-bold border-b dark:text-white"> Usuários </legend>
-                <a href="{{ url_for('users.add_user') }}" 
-                title="Adicionar novo usuário"
-                class="inline-flex items-center justify-center w-10 h-10 text-white bg-purple-600 border border-transparent rounded-full shadow-sm hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 dark:focus:ring-offset-gray-800">
-                    <span class="sr-only">Adicionar usuário</span>                    
-                    <svg class="w-6 h-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
-                    </svg>
-                </a>
-            </div>
+<fieldset class="space-y-4">
+    <div class="flex justify-between items-center p-4">
+        <legend class="text-2xl pb-2 font-bold border-b dark:text-white"> Usuários </legend>
+        <div class="flex justify-around items-center">
+            <a href="{{ url_for('users.add_user') }}" title="Adicionar novo usuário"
+                class="mx-2 inline-flex items-center justify-center w-10 h-10 text-white bg-purple-600 border border-transparent rounded-full shadow-sm hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 dark:focus:ring-offset-gray-800">
+                <span class="sr-only"> Adicionar usuário </span>
+                <svg class="w-6 h-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                    stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+                </svg>
+            </a>
+        </div>
+        
+    </div>
 
-            <!-- tabela para desktop -->
-            <div class="hidden md:block">
-                <table class="w-full font-thin dark:text-gray-400 text-center">
-                    <thead class="text-gray-700 dark:text-gray-400">
-                        <tr>
-                            <th scope="col" class="w-1/12 px-6 py-3"> ID </th>
-                            <th scope="col" class="w-1/12 px-6 py-3"> Usuário </th>
-                            <th scope="col" class="w-1/12 px-6 py-3"> Primeiro nome </th>
-                            <th scope="col" class="w-1/12 px-6 py-3"> Sobrenome </th>
-                            <th scope="col" class="w-1/12 px-6 py-3"> Email </th>
-                            <th scope="col" class="w-1/6 px-6 py-3"> Setor(es) </th>
-                            <th scope="col" class="w-1/12 px-6 py-3"> Admin </th>
-                            <th scope="col" class="w-1/12 px-6 py-3 text-center"> Ações </th>
-                        </tr>
-                    </thead>
-
-                    <tbody x-data="{ editId: null }">
-                        {% for user in users %}
-                        <tr
-                            class="dark:border-gray-700 hover:bg-gray-200 dark:hover:bg-gray-800"
-                        >
-                            <td class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                {{ user.id }}
-                            </td>
-
-                            <td class="px-6 py-4">
-                                <span x-show="editId !== {{ user.id }}">{{ user.username }}</span>
-                                <input x-show="editId === {{ user.id }}" type="text" name="username" value="{{ user.username }}"
-                                    form="edit-form-{{ user.id }}"
-                                    class="text-center bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2 dark:bg-gray-600 dark:border-gray-500 dark:text-white" />
-                            </td>
-                
-                            <td class="px-6 py-4">
-                                <span x-show="editId !== {{ user.id }}">{{ user.first_name }}</span>
-                                <div x-show="editId === {{ user.id }}" class="flex gap-2">
-                                    <input type="text" name="first_name" value="{{ user.first_name }}" form="edit-form-{{ user.id }}"
-                                        class="text-center bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2 dark:bg-gray-600 dark:border-gray-500 dark:text-white" />
-                                </div>
-                            </td>
-
-                            <td class="px-6 py-4">
-                                <span x-show="editId !== {{ user.id }}">{{ user.last_name }}</span>
-                                <div x-show="editId === {{ user.id }}" class="flex gap-2">
-                                    <input type="text" name="last_name" value="{{ user.last_name }}" form="edit-form-{{ user.id }}"
-                                        class="text-center bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2 dark:bg-gray-600 dark:border-gray-500 dark:text-white" />
-                                </div>
-                            </td>
-                
-                            <td class="px-6 py-4">
-                                <span x-show="editId !== {{ user.id }}">{{ user.email }}</span>
-                                <input x-show="editId === {{ user.id }}" type="email" name="email" value="{{ user.email }}" form="edit-form-{{ user.id }}"
-                                    class="text-center bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2 dark:bg-gray-600 dark:border-gray-500 dark:text-white" />
-                            </td>
-
-                            <td class="px-6 py-4">
-                                <!-- modo de visualização dos setores no desktop -->
-                                <div x-show="editId !== {{ user.id }}" class="flex flex-wrap gap-1 justify-center">
-                                    {% for sector in user.sectors %}
-                                    <span style="background-color: {{ sector.color }}" 
-                                        class="text-white text-xs font-medium px-2.5 py-0.5 rounded-full">
-                                        {{ sector.name }}
-                                    </span>
-                                    {% else %}
-                                    <span class="text-gray-500 text-center"> Nenhum </span>
-                                    {% endfor %}
-                                </div>
+    <!-- tabela para desktop -->
+    <div class="hidden md:block">
+        <table class="w-full font-thin dark:text-gray-400 text-center">
+            <thead class="uppercase text-gray-700 dark:text-gray-400">
+                <tr>
+                    <th scope="col" class="px-6 py-3">
+                        <a href="{{ url_for('users.view', sort_by='id', direction='desc' if sort_by == 'id' and direction == 'asc' else 'asc') }}"
+                            class="flex justify-center items-center hover:text-purple-500 transition-colors dark:text-white dark:hover:text-purple-500">
+                            ID
+                            {% if sort_by == 'id' %}
+                            <svg class="w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                                xmlns="http://www.w3.org/2000/svg">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 9l4-4 4 4m0 6l-4 4-4-4"></path>
                             
-                                <!-- modo de edição dos setores no desktop -->
-                                <div x-show="editId === {{ user.id }}"
-                                    class="max-h-32 overflow-y-auto space-y-2 p-1 border-transparent flex flex-col items-center">
-                                    {% for sector in all_sectors %}
-                                    <label class="flex items-center space-x-2 cursor-pointer">
-                                        <input type="checkbox" name="sectors" value="{{ sector.id }}" form="edit-form-{{ user.id }}" {% if sector in
-                                            user.sectors %}checked{% endif %}
-                                            class="w-4 h-4 accent-purple-700 rounded border-2 border-purple-400 focus:ring-0 transition-all duration-150">
-                                        <span style="background-color: {{ sector.color }}" class="text-white text-xs font-medium px-2.5 py-0.5 rounded-full">
-                                            {{ sector.name }}
-                                        </span>
-                                    </label>
-                                    {% endfor %}
-                                </div>
-                            </td>
-                
-                            {% if user.id != current_user.id %}
-                                <td class="px-6 py-4">
-                                    <span x-show="editId !== {{ user.id }}" :class="user.admin ? 'text-green-500' : 'text-gray-500'">
-                                        {{ 'Sim' if user.admin else 'Não' }}
-                                    </span>
-                                    <input x-show="editId === {{ user.id }}" type="checkbox" name="admin" value="1" {{ 'checked' if user.admin else '' }}
-                                        form="edit-form-{{ user.id }}"
-                                        class="w-4 h-4 accent-purple-700 rounded border-2 border-purple-400 focus:ring-0 ntransition-all duration-150" />
-                                </td>
-                            {% else %}
-                                <td class="px-6 py-4">
-                                    <span x-show="editId !== {{ user.id }}" :class="user.admin ? 'text-green-500' : 'text-gray-500'">
-                                        {{ 'Sim' if user.admin else 'Não' }}
-                                    </span>
-                                    <input disabled checked x-show="editId === {{ user.id }}" type="checkbox" name="admin" value="1" {{ 'checked' if user.admin else '' }}
-                                        form="edit-form-{{ user.id }}"
-                                        class="w-4 h-4 accent-purple-700 rounded border-2 border-purple-400 focus:ring-0 transition-all duration-150" />
-                                </td>
+                                {% if direction == 'asc' %}
+                                <path d="M5 15l7-7 7 7" />{% else %}
+                                <path d="M19 9l-7 7-7-7" />{% endif %}
+                            </svg>
                             {% endif %}
-                
-                            <td class="px-6 py-4">
-                                <div class="flex items-center justify-center space-x-3">
-                                    <div x-show="editId !== {{ user.id }}" class="flex items-center space-x-3">
-
-                                        <!-- botão para resetar senha no desktop -->
-                                        <button @click="generatePassword" type="button" title="Gerar senha aleatória"
-                                            class="text-purple-600 hover:text-purple-800 dark:text-purple-400 dark:hover:text-purple-300">
-                                            <svg class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                                                stroke="currentColor">
-                                                <path stroke-linecap="round" stroke-linejoin="round"
-                                                    d="M15.75 5.25a3 3 0 013 3m3 0a6 6 0 01-7.029 5.912c-.563-.097-1.159.026-1.563.43L10.5 17.25H8.25v2.25H6v2.25H2.25v-2.818c0-.597.237-1.17.659-1.591l6.499-6.499c.404-.404.527-1 .43-1.563A6 6 0 1121.75 8.25z" />
-                                            </svg>
-                                        </button>
-
-                                        <!-- botão para abrir edit inline no desktop -->
-                                        <button @click="editId = {{ user.id }}" type="button" class="text-blue-600 dark:text-blue-500 hover:opacity-75"
-                                            title="Editar">
-                                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                    d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.536L16.732 3.732z">
-                                                </path>
-                                            </svg>
-                                        </button>
-                                
-                                        <form method="post" action="{{ url_for('users.delete_user', user_id=user.id) }}"
-                                            onsubmit="return confirm('Tem certeza que deseja excluir este usuário?');" class="leading-none">
-
-                                            <!-- botão para excluir no desktop -->
-                                            <button type="submit" class="text-red-600 dark:text-red-500 hover:opacity-75" title="Excluir">
-                                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                        d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16">
-                                                    </path>
-                                                </svg>
-                                            </button>
-                                        </form>
-                                    </div>
-                                    <div x-show="editId === {{ user.id }}" class="flex items-center space-x-3">
-                                        <form :id="'edit-form-' + {{ user.id }}" method="post"
-                                            action="{{ url_for('users.edit_user', user_id=user.id) }}">
-                                            <!-- botão para salvar edição inline no desktop -->
-                                            <button type="submit"
-                                                class="text-green-600 dark:text-green-500 hover:text-green-800 dark:hover:text-green-400 flex items-center justify-center"
-                                                title="Salvar">
-                                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                        d="M5 13l4 4L19 7"></path>
-                                                </svg>
-                                            </button>
-                                        </form>
-                                        
-                                        <!-- botão para cancelar edição inline no desktop -->
-                                        <button @click="editId = null" type="button"
-                                            class="text-red-600 dark:text-red-500 hover:opacity-75"
-                                            title="Cancelar">
-                                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                    d="M6 18L18 6M6 6l12 12"></path>
-                                            </svg>
-                                        </button>
-                                    </div>
-                                </div>
-                            </td>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                </table> <br>
-                <a href="{{ url_for('panel.view') }}" class="w-full flex justify-center items-center mx-auto px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm text-sm font-medium 
-                    text-gray-700 bg-white hover:bg-gray-50 
-                    dark:text-gray-200 dark:bg-gray-800 dark:hover:bg-gray-600 
-                    transition-colors duration-200"> Voltar
-                </a>
-            </div>
-
-            <!-- cards para mobile -->
-            <div x-data="{ editId: null }" class="md:hidden space-y-4 justify-center items-center">
-                {% for user in users %}
-                <div class="p-4 rounded-lg border dark:border-gray-700 space-y-3">
+                        </a>
+                    </th>
+                    <th scope="col" class="px-6 py-3"> <a
+                            href="{{ url_for('users.view', sort_by='username', direction='desc' if sort_by == 'username' and direction == 'asc' else 'asc') }}"
+                            class="flex justify-center items-center hover:text-purple-500 transition-colors dark:text-white dark:hover:text-purple-500">
+                            Usuário
+                            {% if sort_by == 'username' %}
+                            <svg class="w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                                xmlns="http://www.w3.org/2000/svg">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 9l4-4 4 4m0 6l-4 4-4-4"></path>
                     
-                    <div class="grid grid-cols-3 gap-4 items-center">
-                        <span class="font-bold text-gray-600 dark:text-gray-400">Usuário</span>
-                        <div class="col-span-2">
-                            <span x-show="editId !== {{ user.id }}">{{ user.username }}</span>
-                            <input x-show="editId === {{ user.id }}" type="text" name="username" value="{{ user.username }}" form="edit-form-mobile-{{ user.id }}" class="text-left bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-purple-500 focus:border-purple-500 block w-full p-2 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                                {% if direction == 'asc' %}
+                                <path d="M5 15l7-7 7 7" />{% else %}
+                                <path d="M19 9l-7 7-7-7" />{% endif %}
+                            </svg>
+                            {% endif %}
+                        </a> 
+                    </th>
+                    <th scope="col" class="px-6 py-3"> <a
+                            href="{{ url_for('users.view', sort_by='first_name', direction='desc' if sort_by == 'first_name' and direction == 'asc' else 'asc') }}"
+                            class="flex justify-center items-center hover:text-purple-500 transition-colors dark:text-white dark:hover:text-purple-500">
+                            Primeiro nome
+                            {% if sort_by == 'first_name' %}
+                            <svg class="w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                                xmlns="http://www.w3.org/2000/svg">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 9l4-4 4 4m0 6l-4 4-4-4"></path>
+                    
+                                {% if direction == 'asc' %}
+                                <path d="M5 15l7-7 7 7" />{% else %}
+                                <path d="M19 9l-7 7-7-7" />{% endif %}
+                            </svg>
+                            {% endif %}
+                        </a> 
+                    </th>
+                    <th scope="col" class="px-6 py-3"> <a
+                            href="{{ url_for('users.view', sort_by='last_name', direction='desc' if sort_by == 'last_name' and direction == 'asc' else 'asc') }}"
+                            class="flex justify-center items-center hover:text-purple-500 transition-colors dark:text-white dark:hover:text-purple-500">
+                            Sobrenome
+                            {% if sort_by == 'last_name' %}
+                            <svg class="w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                                xmlns="http://www.w3.org/2000/svg">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 9l4-4 4 4m0 6l-4 4-4-4"></path>
+                    
+                                {% if direction == 'asc' %}
+                                <path d="M5 15l7-7 7 7" />{% else %}
+                                <path d="M19 9l-7 7-7-7" />{% endif %}
+                            </svg>
+                            {% endif %}
+                        </a> 
+                    </th>
+                    <th scope="col" class="px-6 py-3"> <a
+                            href="{{ url_for('users.view', sort_by='email', direction='desc' if sort_by == 'email' and direction == 'asc' else 'asc') }}"
+                            class="flex justify-center items-center hover:text-purple-500 transition-colors dark:text-white dark:hover:text-purple-500">
+                            E-mail
+                            {% if sort_by == 'email' %}
+                            <svg class="w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                                xmlns="http://www.w3.org/2000/svg">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 9l4-4 4 4m0 6l-4 4-4-4"></path>
+                    
+                                {% if direction == 'asc' %}
+                                <path d="M5 15l7-7 7 7" />{% else %}
+                                <path d="M19 9l-7 7-7-7" />{% endif %}
+                            </svg>
+                            {% endif %}
+                        </a> 
+                    </th>
+                    <th scope="col" class="px-6 py-3"> <a
+                            href="{{ url_for('users.view', sort_by='sectors', direction='desc' if sort_by == 'sectors' and direction == 'asc' else 'asc') }}"
+                            class="flex justify-center items-center hover:text-purple-500 transition-colors dark:text-white dark:hover:text-purple-500">
+                            Setor(es)
+                            {% if sort_by == 'sectors' %}
+                            <svg class="w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                                xmlns="http://www.w3.org/2000/svg">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 9l4-4 4 4m0 6l-4 4-4-4"></path>
+                    
+                                {% if direction == 'asc' %}
+                                <path d="M5 15l7-7 7 7" />{% else %}
+                                <path d="M19 9l-7 7-7-7" />{% endif %}
+                            </svg>
+                            {% endif %}
+                        </a> 
+                    </th>
+                    <th scope="col" class="px-6 py-3"> <a
+                            href="{{ url_for('users.view', sort_by='admin', direction='desc' if sort_by == 'admin' and direction == 'asc' else 'asc') }}"
+                            class="flex justify-center items-center hover:text-purple-500 transition-colors dark:text-white dark:hover:text-purple-500">
+                            ADMINISTRADOR
+                            {% if sort_by == 'admin' %}
+                            <svg class="w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                                xmlns="http://www.w3.org/2000/svg">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 9l4-4 4 4m0 6l-4 4-4-4"></path>
+                    
+                                {% if direction == 'asc' %}
+                                <path d="M5 15l7-7 7 7" />{% else %}
+                                <path d="M19 9l-7 7-7-7" />{% endif %}
+                            </svg>
+                            {% endif %}
+                        </a> 
+                    </th>
+                    <th scope="col" class="w-1/12 px-6 py-3 text-center transition-colors dark:text-white"> Ações </th>
+                </tr>
+            </thead>
+
+            <tbody x-data="{ editId: null }">
+                {% for user in users %}
+                <tr class="dark:border-gray-700 hover:bg-gray-200 dark:hover:bg-gray-800">
+                    <td class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                        {{ user.id }}
+                    </td>
+
+                    <td class="px-6 py-4">
+                        <span x-show="editId !== {{ user.id }}">{{ user.username }}</span>
+                        <input x-show="editId === {{ user.id }}" type="text" name="username" value="{{ user.username }}"
+                            form="edit-form-{{ user.id }}"
+                            class="text-center bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2 dark:bg-gray-600 dark:border-gray-500 dark:text-white" />
+                    </td>
+
+                    <td class="px-6 py-4">
+                        <span x-show="editId !== {{ user.id }}">{{ user.first_name }}</span>
+                        <div x-show="editId === {{ user.id }}" class="flex gap-2">
+                            <input type="text" name="first_name" value="{{ user.first_name }}"
+                                form="edit-form-{{ user.id }}"
+                                class="text-center bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2 dark:bg-gray-600 dark:border-gray-500 dark:text-white" />
                         </div>
-                    </div>
+                    </td>
 
-                    <div class="grid grid-cols-3 gap-4 items-center">
-                        <span class="font-bold text-gray-600 dark:text-gray-400">Primeiro nome</span>
-                        <div class="col-span-2">
-                            <span x-show="editId !== {{ user.id }}">{{ user.first_name }}</span>
-                            <input x-show="editId === {{ user.id }}" type="text" name="first_name" value="{{ user.first_name }}" form="edit-form-mobile-{{ user.id }}" class="text-left bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-purple-500 focus:border-purple-500 block w-full p-2 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                    <td class="px-6 py-4">
+                        <span x-show="editId !== {{ user.id }}">{{ user.last_name }}</span>
+                        <div x-show="editId === {{ user.id }}" class="flex gap-2">
+                            <input type="text" name="last_name" value="{{ user.last_name }}"
+                                form="edit-form-{{ user.id }}"
+                                class="text-center bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2 dark:bg-gray-600 dark:border-gray-500 dark:text-white" />
                         </div>
-                    </div>
+                    </td>
 
-                    <div class="grid grid-cols-3 gap-4 items-center">
-                        <span class="font-bold text-gray-600 dark:text-gray-400">Sobrenome</span>
-                        <div class="col-span-2">
-                            <span x-show="editId !== {{ user.id }}">{{ user.last_name }}</span>
-                            <input x-show="editId === {{ user.id }}" type="text" name="last_name" value="{{ user.last_name }}" form="edit-form-mobile-{{ user.id }}" class="text-left bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-purple-500 focus:border-purple-500 block w-full p-2 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                    <td class="px-6 py-4">
+                        <span x-show="editId !== {{ user.id }}">{{ user.email }}</span>
+                        <input x-show="editId === {{ user.id }}" type="email" name="email" value="{{ user.email }}"
+                            form="edit-form-{{ user.id }}"
+                            class="text-center bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2 dark:bg-gray-600 dark:border-gray-500 dark:text-white" />
+                    </td>
+
+                    <td class="px-6 py-4">
+                        <!-- modo de visualização dos setores no desktop -->
+                        <div x-show="editId !== {{ user.id }}" class="flex flex-wrap gap-1 justify-center">
+                            {% for sector in user.sectors %}
+                            <span style="background-color: {{ sector.color }}"
+                                class="text-white text-xs font-medium px-2.5 py-0.5 rounded-full">
+                                {{ sector.name }}
+                            </span>
+                            {% else %}
+                            <span class="text-gray-500 text-center"> Nenhum </span>
+                            {% endfor %}
                         </div>
-                    </div>
 
-                    <div class="grid grid-cols-3 gap-4 items-center">
-                        <span class="font-bold text-gray-600 dark:text-gray-400">Email</span>
-                        <div class="col-span-2">
-                            <span x-show="editId !== {{ user.id }}" class="truncate">{{ user.email }}</span>
-                            <input x-show="editId === {{ user.id }}" type="email" name="email" value="{{ user.email }}" form="edit-form-mobile-{{ user.id }}" class="text-left bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-purple-500 focus:border-purple-500 block w-full p-2 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                        <!-- modo de edição dos setores no desktop -->
+                        <div x-show="editId === {{ user.id }}"
+                            class="max-h-32 overflow-y-auto space-y-2 p-1 border-transparent flex flex-col items-center">
+                            {% for sector in all_sectors %}
+                            <label class="flex items-center space-x-2 cursor-pointer">
+                                <input type="checkbox" name="sectors" value="{{ sector.id }}"
+                                    form="edit-form-{{ user.id }}" {% if sector in user.sectors %}checked{% endif %}
+                                    class="w-4 h-4 accent-purple-700 rounded border-2 border-purple-400 focus:ring-0 transition-all duration-150">
+                                <span style="background-color: {{ sector.color }}"
+                                    class="text-white text-xs font-medium px-2.5 py-0.5 rounded-full">
+                                    {{ sector.name }}
+                                </span>
+                            </label>
+                            {% endfor %}
                         </div>
-                    </div>
+                    </td>
 
-                    <div class="grid grid-cols-5 gap-4 items-start pt-1">
-                        <span class="col-span-2 font-bold text-gray-600 dark:text-gray-400"> Setor(es) </span>
-                        <div class="col-span-3">
-                            <!-- modo de visualização dos setores no mobile -->
-                            <div x-show="editId !== {{ user.id }}" class="flex flex-wrap gap-1">
-                                    {% for sector in user.sectors %}
-                                    <span style="background-color: {{ sector.color }}" 
-                                        class="text-white text-xs font-medium px-2.5 py-0.5 rounded-full">
-                                        {{ sector.name }}
-                                    </span>
-                                    {% else %}
-                                    <span class="text-gray-500 text-center"> Nenhum </span>
-                                    {% endfor %}
-                                </div>
-                            <!-- modo de edição dos setores no mobile -->
-                            <div x-show="editId === {{ user.id }}"
-                                class="max-h-32 overflow-y-auto space-y-2 p-2 border rounded-md dark:border-gray-600 bg-white dark:bg-gray-800">
-                                {% for sector in all_sectors %}
-                                <label class="flex items-center space-x-2 cursor-pointer">
-                                    <input type="checkbox" name="sectors" value="{{ sector.id }}" form="edit-form-mobile-{{ user.id }}" {%
-                                        if sector in user.sectors %}checked{% endif %}
-                                        class="w-4 h-4 accent-purple-700 rounded border-2 border-purple-400 focus:ring-0 transition-all duration-150">
-                                    <span style="background-color: {{ sector.color }}" 
-                                        class="text-white text-xs font-medium px-2.5 py-0.5 rounded-full">
-                                        {{ sector.name }}
-                                    </span>
-                                </label>
-                                {% endfor %}
-                            </div>
-                        </div>
-                    </div>
+                    {% if user.id != current_user.id %}
+                    <td class="px-6 py-4">
+                        <span x-show="editId !== {{ user.id }}"
+                            :class="user.admin ? 'text-green-500' : 'text-gray-500'">
+                            {{ 'Sim' if user.admin else 'Não' }}
+                        </span>
+                        <input x-show="editId === {{ user.id }}" type="checkbox" name="admin" value="1" {{ 'checked' if
+                            user.admin else '' }} form="edit-form-{{ user.id }}"
+                            class="w-4 h-4 accent-purple-700 rounded border-2 border-purple-400 focus:ring-0 ntransition-all duration-150" />
+                    </td>
+                    {% else %}
+                    <td class="px-6 py-4">
+                        <span x-show="editId !== {{ user.id }}"
+                            :class="user.admin ? 'text-green-500' : 'text-gray-500'">
+                            {{ 'Sim' if user.admin else 'Não' }}
+                        </span>
+                        <input disabled checked x-show="editId === {{ user.id }}" type="checkbox" name="admin" value="1"
+                            {{ 'checked' if user.admin else '' }} form="edit-form-{{ user.id }}"
+                            class="w-4 h-4 accent-purple-700 rounded border-2 border-purple-400 focus:ring-0 transition-all duration-150" />
+                    </td>
+                    {% endif %}
 
-                    <div class="grid grid-cols-3 gap-4 items-center">
-                        <span class="font-bold text-gray-600 dark:text-gray-400"> Admin </span>
-                        <div class="col-span-2">
-                            <span x-show="editId !== {{ user.id }}" :class="user.admin ? 'text-green-500' : 'text-gray-500'">{{ 'Sim' if user.admin else 'Não' }}</span>
-                            <input x-show="editId === {{ user.id }}" type="checkbox" name="admin" value="1" {{ 'checked' if user.admin else '' }} form="edit-form-mobile-{{ user.id }}" class="w-4 h-4 accent-purple-700 rounded border-2 border-purple-400 focus:ring-0 transition-all duration-150">
-                        </div>
-                    </div>
+                    <td class="px-6 py-4">
+                        <div class="flex items-center justify-center space-x-3">
+                            <div x-show="editId !== {{ user.id }}" class="flex items-center space-x-3">
 
+                                <!-- botão para resetar senha no desktop -->
+                                <button @click="generatePassword" type="button" title="Gerar senha aleatória"
+                                    class="text-purple-600 hover:text-purple-800 dark:text-purple-400 dark:hover:text-purple-300">
+                                    <svg class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" fill="none"
+                                        viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                            d="M15.75 5.25a3 3 0 013 3m3 0a6 6 0 01-7.029 5.912c-.563-.097-1.159.026-1.563.43L10.5 17.25H8.25v2.25H6v2.25H2.25v-2.818c0-.597.237-1.17.659-1.591l6.499-6.499c.404-.404.527-1 .43-1.563A6 6 0 1121.75 8.25z" />
+                                    </svg>
+                                </button>
 
-                    <div class="pt-3 mt-3 flex justify-end space-x-3">
-                        <div x-show="editId !== {{ user.id }}" class="flex items-center space-x-3">
-
-                            <!-- botão para resetar senha no mobile -->
-                            <button @click="generatePassword" type="button" title="Gerar senha aleatória"
-                                class="text-purple-600 hover:text-purple-800 dark:text-purple-400 dark:hover:text-purple-300">
-                                <svg class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                                    stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round"
-                                        d="M15.75 5.25a3 3 0 013 3m3 0a6 6 0 01-7.029 5.912c-.563-.097-1.159.026-1.563.43L10.5 17.25H8.25v2.25H6v2.25H2.25v-2.818c0-.597.237-1.17.659-1.591l6.499-6.499c.404-.404.527-1 .43-1.563A6 6 0 1121.75 8.25z" />
-                                </svg>
-                            </button>
-
-                            <!-- botão para editar no mobile -->
-                            <button @click="editId = {{ user.id }}" type="button" class="text-blue-600 dark:text-blue-500 hover:opacity-75"
-                                title="Editar">
-                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.536L16.732 3.732z">
-                                    </path>
-                                </svg>
-                            </button>
-                            <form method="post" action="{{ url_for('users.delete_user', user_id=user.id) }}"
-                                onsubmit="return confirm('Tem certeza que deseja excluir este usuário?');" class="leading-none">
-
-                                <!-- botão para excluir no mobile -->
-                                <button type="submit" class="text-red-600 dark:text-red-500 hover:opacity-75" title="Excluir">
+                                <!-- botão para abrir edit inline no desktop -->
+                                <button @click="editId = {{ user.id }}" type="button"
+                                    class="text-blue-600 dark:text-blue-500 hover:opacity-75" title="Editar">
                                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16">
+                                            d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.536L16.732 3.732z">
                                         </path>
                                     </svg>
                                 </button>
-                            </form>
-                        </div>
 
-                        <div x-show="editId === {{ user.id }}" class="flex items-center space-x-3">
-                            <form :id="'edit-form-mobile-' + {{ user.id }}" method="post"
-                                action="{{ url_for('users.edit_user', user_id=user.id) }}" class="leading-none">
-                                <!-- botão para salvar edição inline no mobile -->
-                                <button type="submit" class="text-green-600 dark:text-green-500 hover:opacity-75" title="Salvar">
+                                <form method="post" action="{{ url_for('users.delete_user', user_id=user.id) }}"
+                                    onsubmit="return confirm('Tem certeza que deseja excluir este usuário?');"
+                                    class="leading-none">
+
+                                    <!-- botão para excluir no desktop -->
+                                    <button type="submit" class="text-red-600 dark:text-red-500 hover:opacity-75"
+                                        title="Excluir">
+                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16">
+                                            </path>
+                                        </svg>
+                                    </button>
+                                </form>
+                            </div>
+                            <div x-show="editId === {{ user.id }}" class="flex items-center space-x-3">
+                                <form :id="'edit-form-' + {{ user.id }}" method="post"
+                                    action="{{ url_for('users.edit_user', user_id=user.id) }}">
+                                    <!-- botão para salvar edição inline no desktop -->
+                                    <button type="submit"
+                                        class="text-green-600 dark:text-green-500 hover:text-green-800 dark:hover:text-green-400 flex items-center justify-center"
+                                        title="Salvar">
+                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M5 13l4 4L19 7"></path>
+                                        </svg>
+                                    </button>
+                                </form>
+
+                                <!-- botão para cancelar edição inline no desktop -->
+                                <button @click="editId = null" type="button"
+                                    class="text-red-600 dark:text-red-500 hover:opacity-75" title="Cancelar">
                                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M6 18L18 6M6 6l12 12"></path>
                                     </svg>
                                 </button>
-                            </form>
-                            <!-- botão para cancelar edição inline no mobile -->
-                            <button @click="editId = null" type="button" class="text-red-600 dark:text-red-500 hover:opacity-75"
-                                title="Cancelar">
-                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-                                </svg>
-                            </button>
+                            </div>
                         </div>
-                    </div>
-                </div>
+                    </td>
+                </tr>
                 {% endfor %}
-                <a href="{{ url_for('panel.view') }}" class="w-full flex justify-center items-center mx-auto px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm text-sm font-medium 
+            </tbody>
+        </table> <br>
+        <a href="{{ url_for('panel.view') }}" class="w-full flex justify-center items-center mx-auto px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm text-sm font-medium 
                     text-gray-700 bg-white hover:bg-gray-50 
                     dark:text-gray-200 dark:bg-gray-800 dark:hover:bg-gray-600 
                     transition-colors duration-200"> Voltar
-                </a>
-            </div>
-        </fieldset>
+        </a>
     </div>
+
+    <!-- cards para mobile -->
+    <div x-data="{ editId: null }" class="md:hidden space-y-4 justify-center items-center">
+        {% for user in users %}
+        <div class="p-4 rounded-lg border dark:border-gray-700 space-y-3">
+
+            <div class="grid grid-cols-3 gap-4 items-center">
+                <span class="font-bold text-gray-600 dark:text-gray-400">Usuário</span>
+                <div class="col-span-2">
+                    <span x-show="editId !== {{ user.id }}">{{ user.username }}</span>
+                    <input x-show="editId === {{ user.id }}" type="text" name="username" value="{{ user.username }}"
+                        form="edit-form-mobile-{{ user.id }}"
+                        class="text-left bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-purple-500 focus:border-purple-500 block w-full p-2 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                </div>
+            </div>
+
+            <div class="grid grid-cols-3 gap-4 items-center">
+                <span class="font-bold text-gray-600 dark:text-gray-400">Primeiro nome</span>
+                <div class="col-span-2">
+                    <span x-show="editId !== {{ user.id }}">{{ user.first_name }}</span>
+                    <input x-show="editId === {{ user.id }}" type="text" name="first_name" value="{{ user.first_name }}"
+                        form="edit-form-mobile-{{ user.id }}"
+                        class="text-left bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-purple-500 focus:border-purple-500 block w-full p-2 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                </div>
+            </div>
+
+            <div class="grid grid-cols-3 gap-4 items-center">
+                <span class="font-bold text-gray-600 dark:text-gray-400">Sobrenome</span>
+                <div class="col-span-2">
+                    <span x-show="editId !== {{ user.id }}">{{ user.last_name }}</span>
+                    <input x-show="editId === {{ user.id }}" type="text" name="last_name" value="{{ user.last_name }}"
+                        form="edit-form-mobile-{{ user.id }}"
+                        class="text-left bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-purple-500 focus:border-purple-500 block w-full p-2 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                </div>
+            </div>
+
+            <div class="grid grid-cols-3 gap-4 items-center">
+                <span class="font-bold text-gray-600 dark:text-gray-400">Email</span>
+                <div class="col-span-2">
+                    <span x-show="editId !== {{ user.id }}" class="truncate">{{ user.email }}</span>
+                    <input x-show="editId === {{ user.id }}" type="email" name="email" value="{{ user.email }}"
+                        form="edit-form-mobile-{{ user.id }}"
+                        class="text-left bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-purple-500 focus:border-purple-500 block w-full p-2 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                </div>
+            </div>
+
+            <div class="grid grid-cols-5 gap-4 items-start pt-1">
+                <span class="col-span-2 font-bold text-gray-600 dark:text-gray-400"> Setor(es) </span>
+                <div class="col-span-3">
+                    <!-- modo de visualização dos setores no mobile -->
+                    <div x-show="editId !== {{ user.id }}" class="flex flex-wrap gap-1">
+                        {% for sector in user.sectors %}
+                        <span style="background-color: {{ sector.color }}"
+                            class="text-white text-xs font-medium px-2.5 py-0.5 rounded-full">
+                            {{ sector.name }}
+                        </span>
+                        {% else %}
+                        <span class="text-gray-500 text-center"> Nenhum </span>
+                        {% endfor %}
+                    </div>
+                    <!-- modo de edição dos setores no mobile -->
+                    <div x-show="editId === {{ user.id }}"
+                        class="max-h-32 overflow-y-auto space-y-2 p-2 border rounded-md dark:border-gray-600 bg-white dark:bg-gray-800">
+                        {% for sector in all_sectors %}
+                        <label class="flex items-center space-x-2 cursor-pointer">
+                            <input type="checkbox" name="sectors" value="{{ sector.id }}"
+                                form="edit-form-mobile-{{ user.id }}" {% if sector in user.sectors %}checked{% endif %}
+                                class="w-4 h-4 accent-purple-700 rounded border-2 border-purple-400 focus:ring-0 transition-all duration-150">
+                            <span style="background-color: {{ sector.color }}"
+                                class="text-white text-xs font-medium px-2.5 py-0.5 rounded-full">
+                                {{ sector.name }}
+                            </span>
+                        </label>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-3 gap-4 items-center">
+                <span class="font-bold text-gray-600 dark:text-gray-400"> Admin </span>
+                <div class="col-span-2">
+                    <span x-show="editId !== {{ user.id }}" :class="user.admin ? 'text-green-500' : 'text-gray-500'">{{
+                        'Sim' if user.admin else 'Não' }}</span>
+                    <input x-show="editId === {{ user.id }}" type="checkbox" name="admin" value="1" {{ 'checked' if
+                        user.admin else '' }} form="edit-form-mobile-{{ user.id }}"
+                        class="w-4 h-4 accent-purple-700 rounded border-2 border-purple-400 focus:ring-0 transition-all duration-150">
+                </div>
+            </div>
+
+
+            <div class="pt-3 mt-3 flex justify-end space-x-3">
+                <div x-show="editId !== {{ user.id }}" class="flex items-center space-x-3">
+
+                    <!-- botão para resetar senha no mobile -->
+                    <button @click="generatePassword" type="button" title="Gerar senha aleatória"
+                        class="text-purple-600 hover:text-purple-800 dark:text-purple-400 dark:hover:text-purple-300">
+                        <svg class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                            stroke-width="1.5" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                d="M15.75 5.25a3 3 0 013 3m3 0a6 6 0 01-7.029 5.912c-.563-.097-1.159.026-1.563.43L10.5 17.25H8.25v2.25H6v2.25H2.25v-2.818c0-.597.237-1.17.659-1.591l6.499-6.499c.404-.404.527-1 .43-1.563A6 6 0 1121.75 8.25z" />
+                        </svg>
+                    </button>
+
+                    <!-- botão para editar no mobile -->
+                    <button @click="editId = {{ user.id }}" type="button"
+                        class="text-blue-600 dark:text-blue-500 hover:opacity-75" title="Editar">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.536L16.732 3.732z">
+                            </path>
+                        </svg>
+                    </button>
+                    <form method="post" action="{{ url_for('users.delete_user', user_id=user.id) }}"
+                        onsubmit="return confirm('Tem certeza que deseja excluir este usuário?');" class="leading-none">
+
+                        <!-- botão para excluir no mobile -->
+                        <button type="submit" class="text-red-600 dark:text-red-500 hover:opacity-75" title="Excluir">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16">
+                                </path>
+                            </svg>
+                        </button>
+                    </form>
+                </div>
+
+                <div x-show="editId === {{ user.id }}" class="flex items-center space-x-3">
+                    <form :id="'edit-form-mobile-' + {{ user.id }}" method="post"
+                        action="{{ url_for('users.edit_user', user_id=user.id) }}" class="leading-none">
+                        <!-- botão para salvar edição inline no mobile -->
+                        <button type="submit" class="text-green-600 dark:text-green-500 hover:opacity-75"
+                            title="Salvar">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M5 13l4 4L19 7"></path>
+                            </svg>
+                        </button>
+                    </form>
+                    <!-- botão para cancelar edição inline no mobile -->
+                    <button @click="editId = null" type="button" class="text-red-600 dark:text-red-500 hover:opacity-75"
+                        title="Cancelar">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M6 18L18 6M6 6l12 12"></path>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+        <a href="{{ url_for('panel.view') }}" class="w-full flex justify-center items-center mx-auto px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm text-sm font-medium 
+                    text-gray-700 bg-white hover:bg-gray-50 
+                    dark:text-gray-200 dark:bg-gray-800 dark:hover:bg-gray-600 
+                    transition-colors duration-200"> Voltar
+        </a>
+    </div>
+</fieldset>
 {% endblock %}
