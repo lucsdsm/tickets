@@ -1,7 +1,6 @@
 {% extends "layout.html" %}
 
 {% block content %}
-    <div class="mx-auto bg-white dark:bg-gray-800 p-8 rounded-lg shadow-md items-center justify-center flex">
         <fieldset class="space-y-4">
             <div class="flex justify-between items-center p-4">
                 <legend class="text-2xl pb-2 font-bold border-b dark:text-white"> Usuários </legend>
@@ -16,26 +15,25 @@
             </div>
 
             <!-- tabela para desktop -->
-            <div class="hidden md:block overflow-x-auto">
-                <table class="w-full font-thin dark:text-gray-400 text-center items-center justify-center">
-                    <thead class="text-gray-700 bg-gray-0 dark:bg-gray-800 dark:text-gray-400">
+            <div class="hidden md:block">
+                <table class="w-full font-thin dark:text-gray-400 text-center">
+                    <thead class="text-gray-700 dark:text-gray-400">
                         <tr>
-                            <th scope="col" class="px-6 py-3"> ID </th>
-                            <th scope="col" class="px-6 py-3"> Usuário </th>
-                            <th scope="col" class="px-6 py-3"> Primeiro nome </th>
-                            <th scope="col" class="px-6 py-3"> Sobrenome </th>
-                            <th scope="col" class="px-6 py-3"> Email </th>
-                            <th scope="col" class="px-6 py-3"> Setor(es) </th>
-                            <th scope="col" class="px-6 py-3"> Admin </th>
-                            <th scope="col" class="px-6 py-3 text-center"> Ações </th>
+                            <th scope="col" class="w-1/12 px-6 py-3"> ID </th>
+                            <th scope="col" class="w-1/12 px-6 py-3"> Usuário </th>
+                            <th scope="col" class="w-1/12 px-6 py-3"> Primeiro nome </th>
+                            <th scope="col" class="w-1/12 px-6 py-3"> Sobrenome </th>
+                            <th scope="col" class="w-1/12 px-6 py-3"> Email </th>
+                            <th scope="col" class="w-1/6 px-6 py-3"> Setor(es) </th>
+                            <th scope="col" class="w-1/12 px-6 py-3"> Admin </th>
+                            <th scope="col" class="w-1/12 px-6 py-3 text-center"> Ações </th>
                         </tr>
                     </thead>
-
 
                     <tbody x-data="{ editId: null }">
                         {% for user in users %}
                         <tr
-                            class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-200 dark:hover:bg-gray-900"
+                            class="dark:border-gray-700 hover:bg-gray-200 dark:hover:bg-gray-800"
                         >
                             <td class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                                 {{ user.id }}
@@ -85,12 +83,12 @@
                             
                                 <!-- modo de edição dos setores no desktop -->
                                 <div x-show="editId === {{ user.id }}"
-                                    class="max-h-32 overflow-y-auto space-y-2 p-2 border rounded-md border-transparent">
+                                    class="max-h-32 overflow-y-auto space-y-2 p-1 border-transparent flex flex-col items-center">
                                     {% for sector in all_sectors %}
                                     <label class="flex items-center space-x-2 cursor-pointer">
                                         <input type="checkbox" name="sectors" value="{{ sector.id }}" form="edit-form-{{ user.id }}" {% if sector in
                                             user.sectors %}checked{% endif %}
-                                            class="w-4 h-4 accent-purple-700 rounded border-2 border-purple-400 focus:ring-2 focus:ring-purple-500 transition-all duration-150">
+                                            class="w-4 h-4 accent-purple-700 rounded border-2 border-purple-400 focus:ring-0 transition-all duration-150">
                                         <span style="background-color: {{ sector.color }}" class="text-white text-xs font-medium px-2.5 py-0.5 rounded-full">
                                             {{ sector.name }}
                                         </span>
@@ -106,7 +104,7 @@
                                     </span>
                                     <input x-show="editId === {{ user.id }}" type="checkbox" name="admin" value="1" {{ 'checked' if user.admin else '' }}
                                         form="edit-form-{{ user.id }}"
-                                        class="w-4 h-4 accent-purple-700 rounded border-2 border-purple-400 focus:ring-2 focus:ring-purple-500 transition-all duration-150" />
+                                        class="w-4 h-4 accent-purple-700 rounded border-2 border-purple-400 focus:ring-0 ntransition-all duration-150" />
                                 </td>
                             {% else %}
                                 <td class="px-6 py-4">
@@ -115,7 +113,7 @@
                                     </span>
                                     <input disabled checked x-show="editId === {{ user.id }}" type="checkbox" name="admin" value="1" {{ 'checked' if user.admin else '' }}
                                         form="edit-form-{{ user.id }}"
-                                        class="w-4 h-4 accent-purple-700 rounded border-2 border-purple-400 focus:ring-2 focus:ring-purple-500 transition-all duration-150" />
+                                        class="w-4 h-4 accent-purple-700 rounded border-2 border-purple-400 focus:ring-0 transition-all duration-150" />
                                 </td>
                             {% endif %}
                 
@@ -185,8 +183,8 @@
                         </tr>
                         {% endfor %}
                     </tbody>
-                </table> <br> <br>
-                <a href="{{ url_for('panel.view') }}" class="w-1/4 flex justify-center items-center mx-auto px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm text-sm font-medium 
+                </table> <br>
+                <a href="{{ url_for('panel.view') }}" class="w-full flex justify-center items-center mx-auto px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm text-sm font-medium 
                     text-gray-700 bg-white hover:bg-gray-50 
                     dark:text-gray-200 dark:bg-gray-800 dark:hover:bg-gray-600 
                     transition-colors duration-200"> Voltar
@@ -194,9 +192,9 @@
             </div>
 
             <!-- cards para mobile -->
-            <div x-data="{ editId: null }" class="md:hidden space-y-4">
+            <div x-data="{ editId: null }" class="md:hidden space-y-4 justify-center items-center">
                 {% for user in users %}
-                <div class="bg-gray-50 dark:bg-gray-900 p-4 rounded-lg border dark:border-gray-700 space-y-3">
+                <div class="p-4 rounded-lg border dark:border-gray-700 space-y-3">
                     
                     <div class="grid grid-cols-3 gap-4 items-center">
                         <span class="font-bold text-gray-600 dark:text-gray-400">Usuário</span>
@@ -251,7 +249,7 @@
                                 <label class="flex items-center space-x-2 cursor-pointer">
                                     <input type="checkbox" name="sectors" value="{{ sector.id }}" form="edit-form-mobile-{{ user.id }}" {%
                                         if sector in user.sectors %}checked{% endif %}
-                                        class="w-4 h-4 accent-purple-700 rounded border-2 border-purple-400 focus:ring-2 focus:ring-purple-500 transition-all duration-150">
+                                        class="w-4 h-4 accent-purple-700 rounded border-2 border-purple-400 focus:ring-0 transition-all duration-150">
                                     <span style="background-color: {{ sector.color }}" 
                                         class="text-white text-xs font-medium px-2.5 py-0.5 rounded-full">
                                         {{ sector.name }}
@@ -266,7 +264,7 @@
                         <span class="font-bold text-gray-600 dark:text-gray-400"> Admin </span>
                         <div class="col-span-2">
                             <span x-show="editId !== {{ user.id }}" :class="user.admin ? 'text-green-500' : 'text-gray-500'">{{ 'Sim' if user.admin else 'Não' }}</span>
-                            <input x-show="editId === {{ user.id }}" type="checkbox" name="admin" value="1" {{ 'checked' if user.admin else '' }} form="edit-form-mobile-{{ user.id }}" class="w-4 h-4 accent-purple-700 rounded border-2 border-purple-400 focus:ring-2 focus:ring-purple-500 transition-all duration-150">
+                            <input x-show="editId === {{ user.id }}" type="checkbox" name="admin" value="1" {{ 'checked' if user.admin else '' }} form="edit-form-mobile-{{ user.id }}" class="w-4 h-4 accent-purple-700 rounded border-2 border-purple-400 focus:ring-0 transition-all duration-150">
                         </div>
                     </div>
 
@@ -327,8 +325,8 @@
                         </div>
                     </div>
                 </div>
-                {% endfor %} <br>
-                <a href="{{ url_for('panel.view') }}" class="w-1/4 flex justify-center items-center mx-auto px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm text-sm font-medium 
+                {% endfor %}
+                <a href="{{ url_for('panel.view') }}" class="w-full flex justify-center items-center mx-auto px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm text-sm font-medium 
                     text-gray-700 bg-white hover:bg-gray-50 
                     dark:text-gray-200 dark:bg-gray-800 dark:hover:bg-gray-600 
                     transition-colors duration-200"> Voltar
