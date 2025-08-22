@@ -10,19 +10,29 @@ sectors = Blueprint('sectors', __name__)
 @sectors.route('/view')
 @login_required
 @admin_required
-def view():
+def view() -> Response:
+    """Exibe a lista de setores.
+
+    Esta rota é protegida por login_required e admin_required, o que significa que o utilizador
+    deve estar autenticado e ser um administrador para acessar esta rota.
+
+    Returns:
+        Response: Um objeto de resposta do Flask que renderiza a lista de setores.
+    """
+
+    # obtém os parâmetros de ordenação da requisição
     sort_by = request.args.get('sort_by', 'id', type=str)
     direction = request.args.get('direction', 'asc', type=str)
 
     # lista de colunas permitidas para evitar injeção de sql
     allowed_columns = ['id', 'name']
 
-    if sort_by not in allowed_columns:
-        # valor padrão se a coluna não for permitida
+    # valor padrão se a coluna não for permitida
+    if sort_by not in allowed_columns: 
         sort_by = 'id'
 
-    if direction not in ['asc', 'desc']:
-         # valor padrão se a direção for inválida
+    # valor padrão se a direção for inválida
+    if direction not in ['asc', 'desc']: 
         direction = 'asc'
 
     sort_column = getattr(Sector, sort_by)
@@ -37,7 +47,17 @@ def view():
 @sectors.route('/add_sector', methods=['GET', 'POST'])
 @login_required
 @admin_required
-def add_sector():
+def add_sector() -> Response:
+    """Adiciona um novo setor.
+
+    Esta rota lida com os métodos GET e POST. 
+    Para GET, renderiza o formulário de adição de setor.
+    Para POST, processa os dados do formulário e cria um novo setor.
+
+    Returns:
+        Response: Um objeto de resposta do Flask que redireciona para a lista de setores após a criação.
+    """
+
     if request.method == 'POST':
         name = request.form.get('name')
         color = request.form.get('color')
@@ -72,7 +92,17 @@ def add_sector():
 @sectors.route('/edit_sector/<int:sector_id>', methods=['POST'])
 @login_required
 @admin_required
-def edit_sector(sector_id):
+def edit_sector(sector_id) -> Response:
+    """Edita um setor existente.
+
+    Esta rota lida com os métodos GET e POST.
+    Para GET, renderiza o formulário de edição de setor.
+    Para POST, processa os dados do formulário e atualiza o setor existente.
+
+    Returns:
+        Response: Um objeto de resposta do Flask que redireciona para a lista de setores após a edição.
+    """
+
     sector = Sector.query.get_or_404(sector_id)
 
     new_sector_name = request.form.get('name')
@@ -95,7 +125,15 @@ def edit_sector(sector_id):
 @sectors.route('/delete_sector/<int:sector_id>', methods=['POST'])
 @login_required
 @admin_required
-def delete_sector(sector_id):
+def delete_sector(sector_id) -> Response:
+    """Exclui um setor existente.
+
+    Esta rota lida com o método POST para excluir um setor.
+    O setor a ser excluído é identificado pelo seu ID.
+
+    Returns:
+        Response: Um objeto de resposta do Flask que redireciona para a lista de setores após a exclusão.
+    """
     sector = Sector.query.get_or_404(sector_id)
 
     try:
@@ -111,7 +149,17 @@ def delete_sector(sector_id):
 @sectors.route('/<int:sector_id>/manage_users', methods=['GET', 'POST'])
 @login_required
 @admin_required
-def manage_users(sector_id):
+def manage_users(sector_id) -> Response:
+    """Gerencia os usuários de um setor.
+
+    Esta rota lida com os métodos GET e POST.
+    Para GET, renderiza o formulário de gerenciamento de usuários.
+    Para POST, processa os dados do formulário e atualiza os usuários do setor.
+
+    Returns:
+        Response: Um objeto de resposta do Flask que redireciona para a lista de setores após a atualização.
+    """
+
     sector = Sector.query.get_or_404(sector_id)
 
     if request.method == 'POST':

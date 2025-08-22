@@ -9,8 +9,9 @@ auth = Blueprint('auth', __name__)
 def register() -> 'Response':
     """Processa o formulário de registro do utilizador.
 
-    Esta rota lida com os métodos GET e POST. Para GET, simplesmente renderiza
-    o template de registro. Para POST, valida os dados do formulário,
+    Esta rota lida com os métodos GET e POST. 
+    Para GET, simplesmente renderiza o template de registro. 
+    Para POST, valida os dados do formulário,
     cria um novo utilizador na base de dados e inicia uma sessão para o
     utilizador recém-registrado.
 

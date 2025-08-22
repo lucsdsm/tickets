@@ -8,12 +8,15 @@ profile = Blueprint('profile', __name__)
 
 @profile.route('/view')
 @login_required
-def view():
+def view() -> Response:
+    """Exibe o perfil do utilizador."""
+
     return render_template('profile/main.html')
 
 @profile.route('/change_password', methods=['GET', 'POST'])
 @login_required
-def change_password():
+def change_password() -> Response:
+    """Altera a senha do utilizador."""
     if request.method == 'POST':
         old_password = request.form['old_password']
         password = request.form['password']

@@ -11,7 +11,16 @@ subjects = Blueprint('subjects', __name__)
 @subjects.route('/view')
 @login_required
 @admin_required
-def view():
+def view() -> Response:
+    """Exibe a lista de assuntos.
+
+    Esta rota é protegida por login_required e admin_required, o que significa que o utilizador
+    deve estar autenticado e ser um administrador para acessar esta rota.
+
+    Returns:
+        Response: Um objeto de resposta do Flask que renderiza a lista de assuntos.
+    """
+
     sort_by = request.args.get('sort_by', 'id', type=str)
     direction = request.args.get('direction', 'asc', type=str)
 
@@ -59,7 +68,17 @@ def view():
 @subjects.route('/add_subject', methods=['GET', 'POST'])
 @login_required
 @admin_required
-def add_subject():
+def add_subject() -> Response:
+    """Adiciona um novo assunto.
+
+    Esta rota lida com os métodos GET e POST. 
+    Para GET, renderiza o formulário de adição de assunto.
+    Para POST, processa os dados do formulário e cria um novo assunto.
+
+    Returns:
+        Response: Um objeto de resposta do Flask que redireciona para a lista de assuntos após a criação.
+    """
+
     if request.method == 'POST':
         name = request.form.get('name')
         selected_sector_ids = request.form.getlist('sectors')
@@ -86,7 +105,17 @@ def add_subject():
 @subjects.route('/edit/<int:subject_id>', methods=['POST'])
 @login_required
 @admin_required
-def edit_subject(subject_id):
+def edit_subject(subject_id) -> Response:
+    """Edita um assunto existente.
+
+    Esta rota lida com os métodos GET e POST.
+    Para GET, renderiza o formulário de edição de assunto.
+    Para POST, processa os dados do formulário e atualiza o assunto existente.
+
+    Returns:
+        Response: Um objeto de resposta do Flask que redireciona para a lista de assuntos após a edição.
+    """
+
     subject_to_edit = Subject.query.get_or_404(subject_id)
 
     name = request.form.get('name')
@@ -106,7 +135,16 @@ def edit_subject(subject_id):
 @subjects.route('/delete/<int:subject_id>', methods=['POST'])
 @login_required
 @admin_required
-def delete_subject(subject_id):
+def delete_subject(subject_id) -> Response:
+    """Exclui um assunto existente.
+
+    Esta rota lida com o método POST para excluir um assunto.
+    O assunto a ser excluído é identificado pelo seu ID.
+
+    Returns:
+        Response: Um objeto de resposta do Flask que redireciona para a lista de assuntos após a exclusão.
+    """
+
     subject_to_delete = Subject.query.get_or_404(subject_id)
     db.session.delete(subject_to_delete)
     db.session.commit()

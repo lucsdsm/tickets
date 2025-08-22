@@ -11,7 +11,16 @@ users = Blueprint('users', __name__)
 @users.route('/view')
 @login_required
 @admin_required
-def view():
+def view() -> Response:
+    """Exibe uma lista de utilizadores.
+
+    Esta rota exibe uma lista de utilizadores com opções de pesquisa e ordenação.
+    Os utilizadores podem ser filtrados por nome, email e outros critérios.
+
+    Returns:
+        Response: Template de visualização de utilizadores.
+    """
+
     sort_by = request.args.get('sort_by', 'id', type=str)
     direction = request.args.get('direction', 'asc', type=str)
     search_term = request.args.get('search', '', type=str)
@@ -73,7 +82,16 @@ def view():
 @users.route('/add_user', methods=['GET', 'POST'])
 @login_required
 @admin_required
-def add_user():
+def add_user() -> Response:
+    """Adiciona um novo utilizador.
+
+    Esta rota lida com os métodos GET e POST. Para GET, exibe o formulário de adição de utilizador.
+    Para POST, processa os dados do formulário e adiciona o utilizador ao sistema.
+
+    Returns:
+        Response: Redireciona para a lista de utilizadores após a adição.
+    """
+
     # verifica se o método da requisição é POST
     if request.method == 'POST':
         # obtém os dados do formulário de registro
@@ -142,7 +160,15 @@ def add_user():
 @users.route('/edit_user/<int:user_id>', methods=['POST'])
 @login_required
 @admin_required
-def edit_user(user_id):
+def edit_user(user_id) -> Response:
+    """Edita um utilizador existente.
+
+    Esta rota lida com o método POST e processa os dados do formulário e atualiza o utilizador no sistema.
+
+    Returns:
+        Response: Redireciona para a lista de utilizadores após a edição.
+    """
+
     user = User.query.get_or_404(user_id)
 
     new_username = request.form.get('username')
@@ -188,7 +214,15 @@ def edit_user(user_id):
 @users.route('/delete_user/<int:user_id>', methods=['POST'])
 @login_required
 @admin_required
-def delete_user(user_id):
+def delete_user(user_id) -> Response:
+    """Exclui um utilizador existente.
+
+    Esta rota lida com o método POST e processa a solicitação de exclusão de um utilizador.
+
+    Returns:
+        Response: Redireciona para a lista de utilizadores após a exclusão.
+    """
+
     user = User.query.get_or_404(user_id)
 
     if user.id == current_user.id:

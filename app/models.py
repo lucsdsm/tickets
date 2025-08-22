@@ -17,6 +17,8 @@ subject_sectors = db.Table('subject_sectors',
 )
 
 class User(db.Model, UserMixin):
+    """Modelo de dados para o utilizador."""
+
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(80), unique=True, nullable=False)
     first_name = db.Column(db.String(80), nullable=False)
@@ -62,6 +64,7 @@ class User(db.Model, UserMixin):
         return f'<User {self.username}>'
     
 class Sector(db.Model):
+    """Modelo de dados para o setor."""
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100), unique=True, nullable=False)
     color = db.Column(db.String(7), nullable=False, default="#2C2C2C")
@@ -73,6 +76,7 @@ class Sector(db.Model):
         return f'<Sector {self.name}>'
     
 class Subject(db.Model):
+    """Modelo de dados para o assunto."""
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100), unique=True, nullable=False)
     
