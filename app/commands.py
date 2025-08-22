@@ -6,6 +6,7 @@ from faker import Faker
 from .models import User
 from .models import Sector
 from .models import Subject
+from .models import Status
 
 @click.command(name='create-admin')
 @with_appcontext
@@ -198,3 +199,29 @@ def seed_subjects() -> None:
     # Guarda todas as novas criações e associações na base de dados
     db.session.commit()
     print("Povoamento da base de dados concluído com sucesso.")
+
+@click.command(name='seed-statuses')
+@with_appcontext
+def seed_statuses() -> None:
+    """Cria uma lista de statuses iniciais se eles não existirem."""
+    
+    # Lista de statuses iniciais com cores associadas
+    initial_statuses = [
+        ("Aberto", "#E5FF00"),        # Amarelo
+        ("Aguardando", "#D97706"),    # Laranja
+        ("Em Progresso", "#2563EB"),  # Azul
+        ("Editado", "#24C9FB"),       # Azul Claro
+        ("Resolvido", "#16A34A"),     # Verde
+        ("Fechado", "#6B7280")        # Cinza
+    ]
+    
+    print("A verificar e a criar statuses iniciais...")
+    
+    for name, color in initial_statuses:
+        if not Status.query.filter_by(name=name).first():
+            new_status = Status(name=name, color=color)
+            db.session.add(new_status)
+            print(f'A criar status: "{name}" com a cor "{color}"')
+    
+    db.session.commit()
+    print("Povoamento dos statuses concluído com sucesso.")

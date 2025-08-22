@@ -87,10 +87,14 @@ def create_app() -> Flask:
         from .routes.panel.subjects import subjects
         app.register_blueprint(subjects.subjects, url_prefix='/subjects')
 
+        from .routes.panel.statuses import statuses
+        app.register_blueprint(statuses.statuses, url_prefix='/statuses')
+
         # registra os comandos personalizados
         from . import commands
         app.cli.add_command(commands.create_admin)
         app.cli.add_command(commands.seed_users)
         app.cli.add_command(commands.seed_subjects)
+        app.cli.add_command(commands.seed_statuses)
 
         return app

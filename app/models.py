@@ -86,6 +86,11 @@ class Subject(db.Model):
     def __repr__(self):
         return f'<Subject {self.name}>'
 
-    
+class Status(db.Model):
+    """Modelo de dados para o status."""
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(100), unique=True, nullable=False)
+    color = db.Column(db.String(7), nullable=False, default="#2C2C2C")
 
-    
+    def __repr__(self):
+        return f'<Status {self.name}>'
