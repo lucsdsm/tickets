@@ -65,10 +65,10 @@ def view() -> Response:
                            sort_by=sort_by, 
                            direction=direction)
 
-@subjects.route('/add_subject', methods=['GET', 'POST'])
+@subjects.route('/add', methods=['GET', 'POST'])
 @login_required
 @admin_required
-def add_subject() -> Response:
+def add() -> Response:
     """Adiciona um novo assunto.
 
     Esta rota lida com os métodos GET e POST. 
@@ -105,7 +105,7 @@ def add_subject() -> Response:
 @subjects.route('/edit/<int:subject_id>', methods=['POST'])
 @login_required
 @admin_required
-def edit_subject(subject_id) -> Response:
+def edit(subject_id) -> Response:
     """Edita um assunto existente.
 
     Esta rota lida com os métodos GET e POST.
@@ -135,7 +135,7 @@ def edit_subject(subject_id) -> Response:
 @subjects.route('/delete/<int:subject_id>', methods=['POST'])
 @login_required
 @admin_required
-def delete_subject(subject_id) -> Response:
+def delete(subject_id) -> Response:
     """Exclui um assunto existente.
 
     Esta rota lida com o método POST para excluir um assunto.

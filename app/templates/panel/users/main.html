@@ -49,7 +49,7 @@
                 </button>
             </form>
         
-            <a href="{{ url_for('users.add_user') }}" title="Adicionar novo usuário"
+            <a href="{{ url_for('users.add') }}" title="Adicionar novo usuário"
                 class="flex-shrink-0 inline-flex items-center justify-center w-10 h-10 text-white bg-purple-600 border border-transparent rounded-full shadow-sm hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 dark:focus:ring-offset-gray-800">
                 <span class="sr-only">Adicionar usuário</span>
                 <svg class="w-6 h-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
@@ -297,7 +297,7 @@
                                     </svg>
                                 </button>
 
-                                <form method="post" action="{{ url_for('users.delete_user', user_id=user.id) }}"
+                                <form method="post" action="{{ url_for('users.delete', user_id=user.id) }}"
                                     onsubmit="return confirm('Tem certeza que deseja excluir este usuário?');"
                                     class="leading-none">
 
@@ -314,7 +314,7 @@
                             </div>
                             <div x-show="editId === {{ user.id }}" class="flex items-center space-x-3">
                                 <form :id="'edit-form-' + {{ user.id }}" method="post"
-                                    action="{{ url_for('users.edit_user', user_id=user.id) }}">
+                                    action="{{ url_for('users.edit', user_id=user.id) }}">
                                     <!-- botão para salvar edição inline no desktop -->
                                     <button type="submit"
                                         class="text-green-600 dark:text-green-500 hover:text-green-800 dark:hover:text-green-400 flex items-center justify-center"
@@ -459,7 +459,7 @@
                             </path>
                         </svg>
                     </button>
-                    <form method="post" action="{{ url_for('users.delete_user', user_id=user.id) }}"
+                    <form method="post" action="{{ url_for('users.delete', user_id=user.id) }}"
                         onsubmit="return confirm('Tem certeza que deseja excluir este usuário?');" class="leading-none">
 
                         <!-- botão para excluir no mobile -->
@@ -475,7 +475,7 @@
 
                 <div x-show="editId === {{ user.id }}" class="flex items-center space-x-3">
                     <form :id="'edit-form-mobile-' + {{ user.id }}" method="post"
-                        action="{{ url_for('users.edit_user', user_id=user.id) }}" class="leading-none">
+                        action="{{ url_for('users.edit', user_id=user.id) }}" class="leading-none">
                         <!-- botão para salvar edição inline no mobile -->
                         <button type="submit" class="text-green-600 dark:text-green-500 hover:opacity-75"
                             title="Salvar">

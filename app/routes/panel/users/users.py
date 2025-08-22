@@ -79,10 +79,10 @@ def view() -> Response:
                            direction=direction,
                            search=search_term)
 
-@users.route('/add_user', methods=['GET', 'POST'])
+@users.route('/add', methods=['GET', 'POST'])
 @login_required
 @admin_required
-def add_user() -> Response:
+def add() -> Response:
     """Adiciona um novo usuário.
 
     Esta rota lida com os métodos GET e POST. Para GET, exibe o formulário de adição de usuário.
@@ -157,10 +157,10 @@ def add_user() -> Response:
     return render_template('panel/users/add-user.html', all_sectors=sectors)
         
 
-@users.route('/edit_user/<int:user_id>', methods=['POST'])
+@users.route('/edit/<int:user_id>', methods=['POST'])
 @login_required
 @admin_required
-def edit_user(user_id) -> Response:
+def edit(user_id) -> Response:
     """Edita um usuário existente.
 
     Esta rota lida com o método POST e processa os dados do formulário e atualiza o usuário no sistema.
@@ -211,10 +211,10 @@ def edit_user(user_id) -> Response:
 
     return redirect(url_for('users.view'))
 
-@users.route('/delete_user/<int:user_id>', methods=['POST'])
+@users.route('/delete/<int:user_id>', methods=['POST'])
 @login_required
 @admin_required
-def delete_user(user_id) -> Response:
+def delete(user_id) -> Response:
     """Exclui um usuário existente.
 
     Esta rota lida com o método POST e processa a solicitação de exclusão de um usuário.

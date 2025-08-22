@@ -1,8 +1,8 @@
-<!-- app/templates/panel/sectors/manage_users.html -->
+<!-- app/templates/panel/sectors/manage.html -->
 {% extends "layout.html" %}
 {% block content %}
 <div class="max-w-2xl mx-auto mt-8 bg-white dark:bg-gray-800 p-8 rounded-lg shadow-md">
-    <form method="POST" action="{{ url_for('sectors.manage_users', sector_id=sector.id) }}">
+    <form method="POST" action="{{ url_for('sectors.manage', sector_id=sector.id) }}">
         <fieldset>
             <legend class="text-2xl font-bold border-b pb-2 mb-6 dark:text-white">
                 Membros do(a) <span style="color: {{ sector.color }};">{{ sector.name }}</span>

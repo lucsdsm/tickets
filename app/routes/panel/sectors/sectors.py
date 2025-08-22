@@ -44,10 +44,10 @@ def view() -> Response:
                            sort_by=sort_by, 
                            direction=direction)
 
-@sectors.route('/add_sector', methods=['GET', 'POST'])
+@sectors.route('/add', methods=['GET', 'POST'])
 @login_required
 @admin_required
-def add_sector() -> Response:
+def add() -> Response:
     """Adiciona um novo setor.
 
     Esta rota lida com os métodos GET e POST. 
@@ -89,10 +89,10 @@ def add_sector() -> Response:
     
     return render_template('panel/sectors/add-sector.html')
 
-@sectors.route('/edit_sector/<int:sector_id>', methods=['POST'])
+@sectors.route('/edit/<int:sector_id>', methods=['POST'])
 @login_required
 @admin_required
-def edit_sector(sector_id) -> Response:
+def edit(sector_id) -> Response:
     """Edita um setor existente.
 
     Esta rota lida com os métodos GET e POST.
@@ -122,10 +122,10 @@ def edit_sector(sector_id) -> Response:
 
     return redirect(url_for('sectors.view'))
 
-@sectors.route('/delete_sector/<int:sector_id>', methods=['POST'])
+@sectors.route('/delete/<int:sector_id>', methods=['POST'])
 @login_required
 @admin_required
-def delete_sector(sector_id) -> Response:
+def delete(sector_id) -> Response:
     """Exclui um setor existente.
 
     Esta rota lida com o método POST para excluir um setor.
@@ -146,10 +146,10 @@ def delete_sector(sector_id) -> Response:
 
     return redirect(url_for('sectors.view'))
 
-@sectors.route('/<int:sector_id>/manage_users', methods=['GET', 'POST'])
+@sectors.route('/<int:sector_id>/manage', methods=['GET', 'POST'])
 @login_required
 @admin_required
-def manage_users(sector_id) -> Response:
+def manage(sector_id) -> Response:
     """Gerencia os usuários de um setor.
 
     Esta rota lida com os métodos GET e POST.

@@ -43,10 +43,10 @@ def view() -> Response:
                            sort_by=sort_by, 
                            direction=direction)
 
-@statuses.route('/add_status', methods=['GET', 'POST'])
+@statuses.route('/add', methods=['GET', 'POST'])
 @login_required
 @admin_required
-def add_status() -> Response:
+def add() -> Response:
     """Cria um novo status.
 
     Esta rota é protegida por login_required e admin_required, o que significa que o usuário
@@ -70,10 +70,10 @@ def add_status() -> Response:
 
     return render_template('panel/statuses/add-status.html')
 
-@statuses.route('/edit_status/<int:status_id>', methods=['GET', 'POST'])
+@statuses.route('/edit/<int:status_id>', methods=['GET', 'POST'])
 @login_required
 @admin_required
-def edit_status(status_id: int) -> Response:
+def edit(status_id: int) -> Response:
     """Edita um status existente.
 
     Esta rota é protegida por login_required e admin_required, o que significa que o usuário
@@ -101,10 +101,10 @@ def edit_status(status_id: int) -> Response:
 
     return render_template('panel/statuses/edit-status.html', status=status)
 
-@statuses.route('/delete_status/<int:status_id>', methods=['POST'])
+@statuses.route('/delete/<int:status_id>', methods=['POST'])
 @login_required
 @admin_required
-def delete_status(status_id: int) -> Response:
+def delete(status_id: int) -> Response:
     """Deleta um status existente.
 
     Esta rota é protegida por login_required e admin_required, o que significa que o usuário

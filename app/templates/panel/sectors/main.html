@@ -4,7 +4,7 @@
 <fieldset class="space-y-4">
     <div class="flex justify-between items-center p-4">
         <legend class="text-2xl pb-2 font-bold border-b dark:text-white"> Setores </legend>
-        <a href="{{ url_for('sectors.add_sector') }}" title="Adicionar novo setor"
+        <a href="{{ url_for('sectors.add') }}" title="Adicionar novo setor"
             class="inline-flex items-center justify-center w-10 h-10 text-white bg-purple-600 border border-transparent rounded-full shadow-sm hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 dark:focus:ring-offset-gray-800">
             <span class="sr-only"> Adicionar setor </span>
             <svg class="w-6 h-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
@@ -100,7 +100,7 @@
                                 </button>
 
                                 <!-- botão para gerenciar usuários no desktop -->
-                                <a href="{{ url_for('sectors.manage_users', sector_id=sector.id) }}"
+                                <a href="{{ url_for('sectors.manage', sector_id=sector.id) }}"
                                     class="text-gray-600 dark:text-gray-400 hover:opacity-75"
                                     title="Gerir membros do setor">
 
@@ -113,7 +113,7 @@
                                 </a>
 
                                 <!-- botão para excluir no desktop -->
-                                <form method="post" action="{{ url_for('sectors.delete_sector', sector_id=sector.id) }}"
+                                <form method="post" action="{{ url_for('sectors.delete', sector_id=sector.id) }}"
                                     onsubmit="return confirm('Tem certeza que deseja excluir este setor?');"
                                     class="leading-none">
 
@@ -129,7 +129,7 @@
                             </div>
                             <div x-show="editId === {{ sector.id }}" class="flex items-center space-x-3">
                                 <form :id="'edit-form-' + {{ sector.id }}" method="post"
-                                    action="{{ url_for('sectors.edit_sector', sector_id=sector.id) }}">
+                                    action="{{ url_for('sectors.edit', sector_id=sector.id) }}">
                                     <!-- botão para salvar edição inline no desktop -->
                                     <button type="submit"
                                         class="text-green-600 dark:text-green-500 hover:text-green-800 dark:hover:text-green-400 flex items-center justify-center"
@@ -204,7 +204,7 @@
                     </button>
 
                     <!-- botão para gerenciar usuários no desktop -->
-                    <a href="{{ url_for('sectors.manage_users', sector_id=sector.id) }}"
+                    <a href="{{ url_for('sectors.manage', sector_id=sector.id) }}"
                         class="text-gray-600 dark:text-gray-400 hover:opacity-75" title="Gerir membros do setor">
 
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"
@@ -216,7 +216,7 @@
                     </a>
 
 
-                    <form method="post" action="{{ url_for('sectors.delete_sector', sector_id=sector.id) }}"
+                    <form method="post" action="{{ url_for('sectors.delete', sector_id=sector.id) }}"
                         onsubmit="return confirm('Tem certeza que deseja excluir este usuário?');" class="leading-none">
 
                         <!-- botão para excluir no mobile -->
@@ -232,7 +232,7 @@
 
                 <div x-show="editId === {{ sector.id }}" class="flex items-center space-x-3">
                     <form :id="'edit-form-mobile-' + {{ sector.id }}" method="post"
-                        action="{{ url_for('sectors.edit_sector', sector_id=sector.id) }}" class="leading-none">
+                        action="{{ url_for('sectors.edit', sector_id=sector.id) }}" class="leading-none">
                         <!-- botão para salvar edição inline no mobile -->
                         <button type="submit" class="text-green-600 dark:text-green-500 hover:opacity-75"
                             title="Salvar">
