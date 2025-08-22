@@ -85,18 +85,22 @@
             </div>
         </div>
 
-        <div class="mt-2 max-h-60 overflow-y-auto space-y-2 p-2 border rounded-md dark:border-gray-600">
-            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300"> Setor(es) associados </label>
-            {% for sector in all_sectors %}
-            <label class="flex items-center space-x-2 cursor-pointer">
-                <input type="checkbox" name="sectors" value="{{ sector.id }}"
-                    class="w-4 h-4 accent-purple-700 rounded border-2 border-purple-400 focus:ring-0 transition-all duration-150">
-                <span style="background-color: {{ sector.color }}"
-                    class="text-white text-xs font-medium px-2.5 py-0.5 rounded-full">
-                    {{ sector.name }}
-                </span>
-            </label>
-            {% endfor %}
+        <div>
+            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"> Setor(es) associados </label>
+            <div class="max-h-60 overflow-y-auto p-2 border rounded-md dark:border-gray-600">
+                <div class="flex flex-wrap gap-x-6 gap-y-2">
+                    {% for sector in all_sectors %}
+                    <label class="flex items-center space-x-2 cursor-pointer">
+                        <input type="checkbox" name="sectors" value="{{ sector.id }}"
+                            class="w-4 h-4 accent-purple-700 rounded border-2 border-purple-400 focus:ring-0 transition-all duration-150">
+                        <span style="background-color: {{ sector.color }}"
+                            class="text-white text-xs font-medium px-2.5 py-0.5 rounded-full">
+                            {{ sector.name }}
+                        </span>
+                    </label>
+                    {% endfor %}
+                </div>
+            </div>
         </div>
     </fieldset>
 

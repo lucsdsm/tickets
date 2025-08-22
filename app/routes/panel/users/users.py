@@ -40,7 +40,7 @@ def view() -> Response:
     query = User.query
 
     if search_term:
-        # O '%' é um wildcard. Pesquisa por termos que contenham o texto.
+        # o '%' é um wildcard, pesquisa por termos que contenham o texto.
         search_pattern = f"%{search_term}%"
         # or_() permite pesquisar em múltiplas colunas
         query = query.filter(
