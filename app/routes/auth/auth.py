@@ -7,13 +7,13 @@ auth = Blueprint('auth', __name__)
 
 @auth.route('/register', methods=['GET', 'POST'])
 def register() -> 'Response':
-    """Processa o formulário de registro do utilizador.
+    """Processa o formulário de registro do usuário.
 
     Esta rota lida com os métodos GET e POST. 
     Para GET, simplesmente renderiza o template de registro. 
     Para POST, valida os dados do formulário,
-    cria um novo utilizador na base de dados e inicia uma sessão para o
-    utilizador recém-registrado.
+    cria um novo usuário na base de dados e inicia uma sessão para o
+    usuário recém-registrado.
 
     Returns:
         Response: Um objeto de resposta do Flask. Pode ser o template de registro
@@ -42,9 +42,9 @@ def register() -> 'Response':
             flash('Todos os campos são obrigatórios.', 'danger')
             has_error = True
 
-        # verificar se o nome de utilizador já está em uso
+        # verificar se o nome de usuário já está em uso
         if User.query.filter_by(username=username).first():
-            flash('Este nome de utilizador já está em uso. Por favor, escolha outro.', 'danger')
+            flash('Este nome de usuário já está em uso. Por favor, escolha outro.', 'danger')
             has_error = True
 
         # verificar se o email já está em uso
@@ -76,7 +76,7 @@ def register() -> 'Response':
         db.session.add(user)
         db.session.commit()
 
-        # faz o login do novo utilizador e redireciona
+        # faz o login do novo usuário e redireciona
         login_user(user)
         flash(f'Registro concluído com sucesso! Bem-vindo, {user.username}!', 'success')
         return render_template('dashboard.html')
@@ -86,12 +86,12 @@ def register() -> 'Response':
 
 @auth.route('/login', methods=['GET', 'POST'])
 def login() -> 'Response': 
-    """Processa o formulário de login do utilizador.
+    """Processa o formulário de login do usuário.
 
     Esta rota lida com os métodos GET e POST. Para GET, simplesmente renderiza
-    o template de login. Para POST, valida as credenciais do utilizador
+    o template de login. Para POST, valida as credenciais do usuário
     (email e senha) contra a base de dados. Se as credenciais forem
-    válidas, inicia uma sessão para o utilizador. Caso contrário, exibe
+    válidas, inicia uma sessão para o usuário. Caso contrário, exibe
     uma mensagem de erro.
 
     Returns:
@@ -125,11 +125,11 @@ def login() -> 'Response':
 @auth.route('/logout')
 @login_required
 def logout() -> 'Response':
-    """Desconecta o utilizador da sessão atual.
+    """Desconecta o usuário da sessão atual.
 
-    Esta rota é protegida por login_required, o que significa que o utilizador
+    Esta rota é protegida por login_required, o que significa que o usuário
     deve estar autenticado para acessar esta rota. Quando acessada, a sessão
-    do utilizador é encerrada e o utilizador é redirecionado para a página inicial
+    do usuário é encerrada e o usuário é redirecionado para a página inicial
     com uma mensagem de sucesso.
 
     Returns:
@@ -144,8 +144,8 @@ def logout() -> 'Response':
 def google_login() -> 'Response':
     """Inicia o processo de autenticação com a Google.
 
-    Esta rota redireciona o utilizador para a página de autenticação da Google.
-    O utilizador será redirecionado de volta para a rota de callback após a autenticação.
+    Esta rota redireciona o usuário para a página de autenticação da Google.
+    O usuário será redirecionado de volta para a rota de callback após a autenticação.
 
     Returns:
         Response: Um objeto de resposta do Flask que redireciona para a página de autenticação da Google.
@@ -158,9 +158,9 @@ def google_login() -> 'Response':
 def google_callback() -> 'Response':
     """Processa o callback da autenticação com a Google.
 
-    Esta rota é chamada pela Google após o utilizador autenticar-se. Ela obtém
-    as informações do utilizador e verifica se o utilizador já existe na base de dados.
-    Se o utilizador existir, faz o login. Caso contrário, redireciona para a página de registro
+    Esta rota é chamada pela Google após o usuário autenticar-se. Ela obtém
+    as informações do usuário e verifica se o usuário já existe na base de dados.
+    Se o usuário existir, faz o login. Caso contrário, redireciona para a página de registro
     para completar o registro.
 
     Returns:
@@ -169,7 +169,7 @@ def google_callback() -> 'Response':
     try:
         # obtém o token de acesso
         token = oauth.google.authorize_access_token()
-        # usa o token para obter as informações do utilizador
+        # usa o token para obter as informações do usuário
         user_info = oauth.google.userinfo()
         email = user_info['email']
     except Exception as e:
@@ -179,13 +179,13 @@ def google_callback() -> 'Response':
     # verifica se o usuário já existe no banco de dados
     user = User.query.filter_by(email=email).first()
 
-    # se o utilizador já existe, faz o login normalmente
+    # se o usuário já existe, faz o login normalmente
     if user:
         login_user(user)
         flash(f'Bem-vindo de volta, {user.username}!', 'success')
         return redirect(url_for('main.home'))
     
-    # se o utilizador não existe, cria um novo registro
+    # se o usuário não existe, cria um novo registro
     else:
         session['google_oauth_email'] = user_info['email']
         session['google_oauth_fname'] = user_info.get('given_name', '')
@@ -197,11 +197,11 @@ def google_callback() -> 'Response':
 @auth.route('/complete-google-register', methods=['GET', 'POST'])
 def complete_google_register() -> 'Response':
 
-    """Completa o registro do utilizador após a autenticação com a Google.
+    """Completa o registro do usuário após a autenticação com a Google.
     
     Esta rota lida com os métodos GET e POST. Para GET, renderiza o formulário de registro
     pré-preenchido com os dados obtidos da Google. Para POST, processa o formulário,
-    valida os dados e cria um novo utilizador na base de dados.
+    valida os dados e cria um novo usuário na base de dados.
     
     Returns:
         Response: Um objeto de resposta do Flask. Pode ser o template de registro renderizado ou um redirecionamento para a página inicial.
@@ -233,9 +233,9 @@ def complete_google_register() -> 'Response':
         flash('Todos os campos são obrigatórios.', 'danger')
         has_error = True
 
-    # verificar se o nome de utilizador já está em uso
+    # verificar se o nome de usuário já está em uso
     if User.query.filter_by(username=username).first():
-        flash('Este nome de utilizador já está em uso. Por favor, escolha outro.', 'danger')
+        flash('Este nome de usuário já está em uso. Por favor, escolha outro.', 'danger')
         has_error = True
     
     # verificar se a senha é igual ao campo de confirmação
@@ -268,7 +268,7 @@ def complete_google_register() -> 'Response':
     session.pop('google_oauth_fname', None)
     session.pop('google_oauth_lname', None)
 
-    # faz o login do novo utilizador e redireciona
+    # faz o login do novo usuário e redireciona
     login_user(user)
     flash(f'registro concluído com sucesso! Bem-vindo, {user.username}!', 'success')
     return render_template('dashboard.html')

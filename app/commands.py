@@ -1,6 +1,8 @@
 import click
-from flask.cli import with_appcontext
+import random
 from . import db
+from flask.cli import with_appcontext
+from faker import Faker
 from .models import User
 from .models import Sector
 from .models import Subject
@@ -33,6 +35,59 @@ def create_admin() -> None:
     db.session.commit()
     
     print("usuário 'admin' criado com sucesso.")
+
+@click.command(name='seed-users')
+@with_appcontext
+def seed_users():
+    """Cria 20 usuários de teste e associa-os a setores existentes."""
+    
+    # verifica se já existem usuários suficientes (além do admin)
+    if User.query.count() > 1:
+        print("A base de dados já parece estar povoada com usuários.")
+        return
+
+    # inicializa o Faker
+    fake = Faker('pt_BR')
+
+    # busca todos os setores existentes para fazer a associação
+    all_sectors = Sector.query.all()
+    if not all_sectors:
+        print("Erro: Não foram encontrados setores na base de dados. Execute 'flask seed-subjects' primeiro.")
+        return
+
+    print("Criando 20 usuários de teste...")
+    for i in range(20):
+        first_name = fake.first_name()
+        last_name = fake.last_name()
+        username = f"{first_name.lower()}.{last_name.lower()}{random.randint(1, 99)}"
+
+        # remove acentuação
+        username = username.normalize('NFKD').encode('ascii', 'ignore').decode('utf-8')
+        email = f"{username}@fakemail.com"
+
+        # garante que o email e o username sejam únicos
+        if User.query.filter_by(email=email).first() or User.query.filter_by(username=username).first():
+            continue # salta esta iteração se já existir
+
+        new_user = User(
+            username=username,
+            email=email,
+            first_name=first_name,
+            last_name=last_name,
+            admin=False # nenhum dos usuários falsos será admin
+        )
+        new_user.set_password('fake') # senha padrão
+
+        # associa o usuário a um número aleatório de setores (entre 1 e 3)
+        num_sectors = random.randint(1, min(3, len(all_sectors)))
+        selected_sectors = random.sample(all_sectors, num_sectors)
+        new_user.sectors.extend(selected_sectors)
+        
+        db.session.add(new_user)
+        print(f"Criando usuário: {username}")
+
+    db.session.commit()
+    print("20 usuários de teste criados e associados a setores com sucesso.")
 
 @click.command(name='seed-subjects')
 @with_appcontext

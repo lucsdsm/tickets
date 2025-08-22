@@ -12,7 +12,7 @@ panel = Blueprint('panel', __name__)
 def view() -> 'Response':
     """Exibe o painel de administração.
     
-    Esta rota é protegida por login_required e admin_required, o que significa que o utilizador
+    Esta rota é protegida por login_required e admin_required, o que significa que o usuário
     deve estar autenticado e ser um administrador para acessar esta rota.
 
     Returns:

@@ -6,7 +6,7 @@ main = Blueprint('main', __name__)
 
 @main.route('/')
 def home() -> Response:
-    """Exibe a página inicial ou o painel do utilizador logado."""
+    """Exibe a página inicial ou o painel do usuário logado."""
 
     # se o usuário estiver logado, redireciona para a página de tickets
     if current_user.is_authenticated:

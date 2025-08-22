@@ -14,7 +14,7 @@ subjects = Blueprint('subjects', __name__)
 def view() -> Response:
     """Exibe a lista de assuntos.
 
-    Esta rota é protegida por login_required e admin_required, o que significa que o utilizador
+    Esta rota é protegida por login_required e admin_required, o que significa que o usuário
     deve estar autenticado e ser um administrador para acessar esta rota.
 
     Returns:
@@ -39,13 +39,13 @@ def view() -> Response:
     query = Subject.query
     if sort_by == 'sectors':
         # para ordenar por setor, faz join nas tabelas assunto e setor.
-        # agrupa por utilizador e ordena pelo nome do primeiro setor em ordem alfabética.
+        # agrupa por usuário e ordena pelo nome do primeiro setor em ordem alfabética.
         # para ordenar por setor, faz join nas tabelas user e setor. nesse caso faz um left join para recuperar usuários também sem setor.
-        # agrupa por utilizador e ordena pelo nome do primeiro setor em ordem alfabética.
+        # agrupa por usuário e ordena pelo nome do primeiro setor em ordem alfabética.
         query = query.outerjoin(Subject.sectors).group_by(Subject.id)
         order_expression = func.min(Sector.name)
         
-        # .nulls_last() para garantir que os utilizadores sem setor apareçam sempre no final da lista.
+        # .nulls_last() para garantir que os usuários sem setor apareçam sempre no final da lista.
         if direction == 'asc':
             query = query.order_by(order_expression.asc().nulls_last())
         else:

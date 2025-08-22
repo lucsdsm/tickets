@@ -13,7 +13,7 @@ sectors = Blueprint('sectors', __name__)
 def view() -> Response:
     """Exibe a lista de setores.
 
-    Esta rota é protegida por login_required e admin_required, o que significa que o utilizador
+    Esta rota é protegida por login_required e admin_required, o que significa que o usuário
     deve estar autenticado e ser um administrador para acessar esta rota.
 
     Returns:
@@ -172,7 +172,7 @@ def manage_users(sector_id) -> Response:
         # busca os objetos User correspondentes aos ids selecionados
         selected_users = User.query.filter(User.id.in_(selected_ids_int)).all()
 
-        # substitui a lista de utilizadores do setor pela nova lista
+        # substitui a lista de usuários do setor pela nova lista
         # o sqlalchemy trata a adição e remoção nas tabelas de junção
         sector.users = selected_users
 

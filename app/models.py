@@ -17,7 +17,7 @@ subject_sectors = db.Table('subject_sectors',
 )
 
 class User(db.Model, UserMixin):
-    """Modelo de dados para o utilizador."""
+    """Modelo de dados para o usuário."""
 
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(80), unique=True, nullable=False)
@@ -31,10 +31,10 @@ class User(db.Model, UserMixin):
 
     @property
     def is_admin(self) -> bool:
-        """Verifica se o nível de acesso do utilizador de administradora.
+        """Verifica se o nível de acesso do usuário de administradora.
 
         Returns:
-            bool: True se o utilizador for um administrador, False caso contrário.
+            bool: True se o usuário for um administrador, False caso contrário.
         """
 
         return self.admin == True

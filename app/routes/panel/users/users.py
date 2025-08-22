@@ -12,13 +12,13 @@ users = Blueprint('users', __name__)
 @login_required
 @admin_required
 def view() -> Response:
-    """Exibe uma lista de utilizadores.
+    """Exibe uma lista de usuários.
 
-    Esta rota exibe uma lista de utilizadores com opções de pesquisa e ordenação.
-    Os utilizadores podem ser filtrados por nome, email e outros critérios.
+    Esta rota exibe uma lista de usuários com opções de pesquisa e ordenação.
+    Os usuários podem ser filtrados por nome, email e outros critérios.
 
     Returns:
-        Response: Template de visualização de utilizadores.
+        Response: Template de visualização de usuários.
     """
 
     sort_by = request.args.get('sort_by', 'id', type=str)
@@ -54,11 +54,11 @@ def view() -> Response:
     
     if sort_by == 'sectors':
         # para ordenar por setor, faz join nas tabelas user e setor. nesse caso faz um left join para recuperar usuários também sem setor.
-        # agrupa por utilizador e ordena pelo nome do primeiro setor em ordem alfabética.
+        # agrupa por usuário e ordena pelo nome do primeiro setor em ordem alfabética.
         query = query.outerjoin(User.sectors).group_by(User.id)
         order_expression = func.min(Sector.name)
         
-        # .nulls_last() para garantir que os utilizadores sem setor apareçam sempre no final da lista.
+        # .nulls_last() para garantir que os usuários sem setor apareçam sempre no final da lista.
         if direction == 'asc':
             query = query.order_by(order_expression.asc().nulls_last())
         else:
@@ -83,13 +83,13 @@ def view() -> Response:
 @login_required
 @admin_required
 def add_user() -> Response:
-    """Adiciona um novo utilizador.
+    """Adiciona um novo usuário.
 
-    Esta rota lida com os métodos GET e POST. Para GET, exibe o formulário de adição de utilizador.
-    Para POST, processa os dados do formulário e adiciona o utilizador ao sistema.
+    Esta rota lida com os métodos GET e POST. Para GET, exibe o formulário de adição de usuário.
+    Para POST, processa os dados do formulário e adiciona o usuário ao sistema.
 
     Returns:
-        Response: Redireciona para a lista de utilizadores após a adição.
+        Response: Redireciona para a lista de usuários após a adição.
     """
 
     # verifica se o método da requisição é POST
@@ -115,9 +115,9 @@ def add_user() -> Response:
         if email:
             email = email.strip()
 
-        # verificar se o nome de utilizador já está em uso
+        # verificar se o nome de usuário já está em uso
         if User.query.filter_by(username=username).first():
-            flash('Este nome de utilizador já está em uso. Por favor, escolha outro.', 'danger')
+            flash('Este nome de usuário já está em uso. Por favor, escolha outro.', 'danger')
             has_error = True
 
         # verificar se o email já está em uso
@@ -161,12 +161,12 @@ def add_user() -> Response:
 @login_required
 @admin_required
 def edit_user(user_id) -> Response:
-    """Edita um utilizador existente.
+    """Edita um usuário existente.
 
-    Esta rota lida com o método POST e processa os dados do formulário e atualiza o utilizador no sistema.
+    Esta rota lida com o método POST e processa os dados do formulário e atualiza o usuário no sistema.
 
     Returns:
-        Response: Redireciona para a lista de utilizadores após a edição.
+        Response: Redireciona para a lista de usuários após a edição.
     """
 
     user = User.query.get_or_404(user_id)
@@ -201,7 +201,7 @@ def edit_user(user_id) -> Response:
         # busca os objetos sector correspondentes aos ids selecionados
         selected_sectors = Sector.query.filter(Sector.id.in_(selected_ids_int)).all()
         
-        # atribui a nova lista de setores à relação do utilizador
+        # atribui a nova lista de setores à relação do usuário
         user.sectors = selected_sectors
 
         db.session.commit()
@@ -215,12 +215,12 @@ def edit_user(user_id) -> Response:
 @login_required
 @admin_required
 def delete_user(user_id) -> Response:
-    """Exclui um utilizador existente.
+    """Exclui um usuário existente.
 
-    Esta rota lida com o método POST e processa a solicitação de exclusão de um utilizador.
+    Esta rota lida com o método POST e processa a solicitação de exclusão de um usuário.
 
     Returns:
-        Response: Redireciona para a lista de utilizadores após a exclusão.
+        Response: Redireciona para a lista de usuários após a exclusão.
     """
 
     user = User.query.get_or_404(user_id)
