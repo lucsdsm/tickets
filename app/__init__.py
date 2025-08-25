@@ -90,11 +90,15 @@ def create_app() -> Flask:
         from .routes.panel.statuses import statuses
         app.register_blueprint(statuses.statuses, url_prefix='/statuses')
 
+        from .routes.panel.priorities import priorities
+        app.register_blueprint(priorities.priorities, url_prefix='/priorities')
+
         # registra os comandos personalizados
         from . import commands
         app.cli.add_command(commands.create_admin)
         app.cli.add_command(commands.seed_users)
         app.cli.add_command(commands.seed_subjects)
         app.cli.add_command(commands.seed_statuses)
+        app.cli.add_command(commands.seed_priorities)
 
         return app

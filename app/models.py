@@ -1,6 +1,7 @@
 from app import db
 from flask_bcrypt import Bcrypt # para hashing de senhas
 from flask_login import UserMixin # para integração com Flask-Login
+from datetime import datetime
 
 bcrypt = Bcrypt() # para hashing de senhas
 
@@ -27,7 +28,10 @@ class User(db.Model, UserMixin):
     password_hash = db.Column(db.String(200), nullable=False)
     admin = db.Column(db.Boolean, nullable=False, default=False)
     
+    # Relações
     sectors = db.relationship('Sector', secondary=user_sectors, back_populates='users')
+    created_tickets = db.relationship('Ticket', foreign_keys='Ticket.creator_id', back_populates='creator', lazy='dynamic')
+    assigned_tickets = db.relationship('Ticket', foreign_keys='Ticket.assignee_id', back_populates='assignee', lazy='dynamic')
 
     @property
     def is_admin(self) -> bool:
@@ -69,8 +73,10 @@ class Sector(db.Model):
     name = db.Column(db.String(100), unique=True, nullable=False)
     color = db.Column(db.String(7), nullable=False, default="#2C2C2C")
     
+    # Relações
     users = db.relationship('User', secondary=user_sectors, back_populates='sectors')
     subjects = db.relationship('Subject', secondary=subject_sectors, back_populates='sectors')
+    tickets = db.relationship('Ticket', foreign_keys='Ticket.sector_id', back_populates='sector', lazy='dynamic')
 
     def __repr__(self):
         return f'<Sector {self.name}>'
@@ -80,8 +86,9 @@ class Subject(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100), unique=True, nullable=False)
     
-    # Relação para aceder a `subject.sectors`
+    # Relações
     sectors = db.relationship('Sector', secondary=subject_sectors, back_populates='subjects')
+    tickets = db.relationship('Ticket', foreign_keys='Ticket.subject_id', back_populates='subject', lazy='dynamic')
 
     def __repr__(self):
         return f'<Subject {self.name}>'
@@ -90,7 +97,49 @@ class Status(db.Model):
     """Modelo de dados para o status."""
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100), unique=True, nullable=False)
-    color = db.Column(db.String(7), nullable=False, default="#2C2C2C")
+    symbol = db.Column(db.String(10), nullable=False, default="●")
+
+    # Relações
+    tickets = db.relationship('Ticket', foreign_keys='Ticket.status_id', back_populates='status', lazy='dynamic')
 
     def __repr__(self):
         return f'<Status {self.name}>'
+
+class Priority(db.Model):
+    """Modelo de dados para a prioridade."""
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(100), unique=True, nullable=False)
+    color = db.Column(db.String(7), nullable=False, default="#FFFFFF")
+
+    # Relações
+    tickets = db.relationship('Ticket', foreign_keys='Ticket.priority_id', back_populates='priority', lazy='dynamic')
+
+    def __repr__(self):
+        return f'<Priority {self.name}>'
+
+class Ticket(db.Model):
+    """Modelo de dados para o ticket."""
+    id = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.String(100), nullable=False)
+    description = db.Column(db.Text, nullable=False)
+    created_at = db.Column(db.DateTime, nullable=False, server_default=db.func.now())
+    updated_at = db.Column(db.DateTime, nullable=False, server_default=db.func.now(), onupdate=db.func.now())
+
+    # Chaves estrangeiras
+    creator_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    assignee_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=True)
+    sector_id = db.Column(db.Integer, db.ForeignKey('sector.id'), nullable=False)
+    subject_id = db.Column(db.Integer, db.ForeignKey('subject.id'), nullable=False)
+    status_id = db.Column(db.Integer, db.ForeignKey('status.id'), nullable=False)
+    priority_id = db.Column(db.Integer, db.ForeignKey('priority.id'), nullable=False)
+
+    # Relações
+    creator = db.relationship('User', foreign_keys=[creator_id], back_populates='created_tickets')
+    assignee = db.relationship('User', foreign_keys=[assignee_id], back_populates='assigned_tickets')
+    sector = db.relationship('Sector', foreign_keys=[sector_id], back_populates='tickets')
+    subject = db.relationship('Subject', foreign_keys=[subject_id], back_populates='tickets')
+    status = db.relationship('Status', foreign_keys=[status_id], back_populates='tickets')
+    priority = db.relationship('Priority', foreign_keys=[priority_id], back_populates='tickets')
+
+    def __repr__(self):
+        return f'<Ticket {self.title}>'

@@ -7,6 +7,7 @@ from .models import User
 from .models import Sector
 from .models import Subject
 from .models import Status
+from .models import Priority
 
 @click.command(name='create-admin')
 @with_appcontext
@@ -163,14 +164,14 @@ def seed_subjects() -> None:
         ]
     }
     
-    print("A verificar e a criar dados iniciais...")
+    print("Verificando e criando dados iniciais...")
     
     # cria os setores
     for sector_name in initial_data.keys():
         if not Sector.query.filter_by(name=sector_name).first():
             new_sector = Sector(name=sector_name)
             db.session.add(new_sector)
-            print(f'A criar setor: "{sector_name}"')
+            print(f'Criando setor: "{sector_name}"')
     # guarda os novos setores na base de dados antes de continuar
     db.session.commit()
 
@@ -189,7 +190,7 @@ def seed_subjects() -> None:
             if not subject:
                 subject = Subject(name=subject_name)
                 db.session.add(subject)
-                print(f'A criar assunto: "{subject_name}"')
+                print(f'Criando assunto: "{subject_name}"')
             
             # associa o assunto ao setor, se a associação ainda não existir
             if sector not in subject.sectors:
@@ -207,21 +208,45 @@ def seed_statuses() -> None:
     
     # Lista de statuses iniciais com cores associadas
     initial_statuses = [
-        ("Aberto", "#E5FF00"),        # Amarelo
-        ("Aguardando", "#D97706"),    # Laranja
-        ("Em Progresso", "#2563EB"),  # Azul
-        ("Editado", "#24C9FB"),       # Azul Claro
-        ("Resolvido", "#16A34A"),     # Verde
-        ("Fechado", "#6B7280")        # Cinza
+        ("Aberto", "🆕"),        
+        ("Aguardando", "🕙"),    
+        ("Em Progresso", "💭"),  
+        ("Editado", "✏️"),       
+        ("Resolvido", "✅"),     
+        ("Fechado", "🔒")       
     ]
     
-    print("A verificar e a criar statuses iniciais...")
+    print("Verificando e criando statuses iniciais...")
     
-    for name, color in initial_statuses:
+    for name, symbol in initial_statuses:
         if not Status.query.filter_by(name=name).first():
-            new_status = Status(name=name, color=color)
+            new_status = Status(name=name, symbol=symbol)
             db.session.add(new_status)
-            print(f'A criar status: "{name}" com a cor "{color}"')
-    
+            print(f'Criando status: "{name}" com o símbolo "{symbol}"')
+
     db.session.commit()
     print("Povoamento dos statuses concluído com sucesso.")
+
+@click.command(name='seed-priorities')
+@with_appcontext
+def seed_priorities() -> None:
+    """Cria uma lista de prioridades iniciais se elas não existirem."""
+
+    # Lista de prioridades iniciais com cores associadas
+    initial_priorities = [
+        ("Baixa", "#28A745"),
+        ("Média", "#FFC107"),
+        ("Alta", "#DC3545"),
+        ("Urgente", "#555555")
+    ]
+
+    print("Verificando e criando prioridades iniciais...")
+
+    for name, color in initial_priorities:
+        if not Priority.query.filter_by(name=name).first():
+            new_priority = Priority(name=name, color=color)
+            db.session.add(new_priority)
+            print(f'Criando prioridade: "{name}" com a cor "{color}"')
+
+    db.session.commit()
+    print("Povoamento das prioridades concluído com sucesso.")

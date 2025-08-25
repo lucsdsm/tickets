@@ -58,10 +58,10 @@ def add() -> Response:
     
     if request.method == 'POST':
         name = request.form.get('name')
-        color = request.form.get('color')
+        symbol = request.form.get('symbol')
 
         if name:
-            new_status = Status(name=name, color=color)
+            new_status = Status(name=name, symbol=symbol)
             db.session.add(new_status)
             db.session.commit()
             flash('Status criado com sucesso!', 'success')
@@ -89,11 +89,11 @@ def edit(status_id: int) -> Response:
 
     if request.method == 'POST':
         name = request.form.get('name')
-        color = request.form.get('color')
+        symbol = request.form.get('symbol')
 
         if name:
             status.name = name
-            status.color = color
+            status.symbol = symbol
             db.session.commit()
             flash('Status editado com sucesso!', 'success')
             return redirect(url_for('statuses.view'))
