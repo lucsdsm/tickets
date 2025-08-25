@@ -69,6 +69,9 @@ def create_app() -> Flask:
         from .routes import main
         app.register_blueprint(main.main)
 
+        from .routes.dashboard import dashboard
+        app.register_blueprint(dashboard.dashboard, url_prefix='/dashboard')
+
         from .routes.auth import auth
         app.register_blueprint(auth.auth, url_prefix='/auth')
 
@@ -77,6 +80,7 @@ def create_app() -> Flask:
 
         from .routes.panel import panel
         app.register_blueprint(panel.panel, url_prefix='/panel')
+
 
         from .routes.panel.users import users
         app.register_blueprint(users.users, url_prefix='/users')

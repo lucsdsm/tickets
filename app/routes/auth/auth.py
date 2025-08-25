@@ -79,7 +79,7 @@ def register() -> 'Response':
         # faz o login do novo usuário e redireciona
         login_user(user)
         flash(f'Registro concluído com sucesso! Bem-vindo, {user.username}!', 'success')
-        return render_template('dashboard.html')
+        return render_template('dashboard/main.html')
     
     # se o método for GET, renderiza o template de registro
     return render_template('auth/local-register.html')
@@ -115,7 +115,7 @@ def login() -> 'Response':
         if user and user.check_password(password):
             login_user(user)
             flash('Login realizado com sucesso!', 'success')
-            return render_template('dashboard.html')
+            return render_template('dashboard/main.html')
         else:
             flash('Usuário ou senha inválidos.', 'danger')
     
@@ -271,4 +271,4 @@ def complete_google_register() -> 'Response':
     # faz o login do novo usuário e redireciona
     login_user(user)
     flash(f'registro concluído com sucesso! Bem-vindo, {user.username}!', 'success')
-    return render_template('dashboard.html')
+    return render_template('dashboard/main.html')

@@ -154,6 +154,10 @@
                         </div>
                     </td>
                 </tr>
+                {% else %}
+                <tr>
+                    <td colspan="5" class="text-center py-4"> Nenhuma prioridade cadastrada ainda 😪. </td>
+                </tr>
                 {% endfor %}
             </tbody>
         </table> <br>
@@ -241,6 +245,10 @@
                 </div>
             </div>
         </div>
+        {% else %}
+            <tr>
+                <td colspan="1" class="text-center py-4"> Nenhuma prioridade cadastrada ainda 😪. </td>
+            </tr>
         {% endfor %}
         <a href="{{ url_for('panel.view') }}" class="w-full flex justify-center items-center mx-auto px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm text-sm font-medium 
                     text-gray-700 bg-white hover:bg-gray-50 

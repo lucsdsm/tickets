@@ -237,7 +237,7 @@ def seed_priorities() -> None:
         ("Baixa", "#28A745"),
         ("Média", "#FFC107"),
         ("Alta", "#DC3545"),
-        ("Urgente", "#555555")
+        ("Urgente", "#000000")
     ]
 
     print("Verificando e criando prioridades iniciais...")
