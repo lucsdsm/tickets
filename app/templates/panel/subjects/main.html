@@ -1,7 +1,7 @@
 {% extends "layout.html" %}
 
 {% block content %}
-<fieldset class="space-y-4">
+<fieldset class="space-y-4 max-h-full overflow-auto custom-scrollbar p-4 bg-white dark:bg-gray-800 rounded-lg shadow-md">
     <div class="flex flex-col md:flex-row md:justify-between md:items-center p-4">
         <legend class="text-2xl pb-2 font-bold border-b dark:text-white"> Assuntos </legend>
     
@@ -88,19 +88,19 @@
             <tbody x-data="{ editId: null }">
                 {% for subject in subjects %}
                 <tr
-                    class="dark:border-gray-700 hover:bg-gray-200 dark:hover:bg-gray-800">
-                    <td class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white first:rounded-l-lg">
+                    class="dark:border-gray-700 hover:bg-gray-200 dark:hover:bg-gray-700">
+                    <td class="px-6 py-4 font-bold whitespace-nowrap dark:text-white first:rounded-l-lg last:rounded-r-lg">
                         {{ subject.id }}
                     </td>
 
-                    <td class="px-6 py-4">
+                   <td class="px-6 py-4 font-normal whitespace-nowrap dark:text-white">
                         <span x-show="editId !== {{ subject.id }}">{{ subject.name }}</span>
                         <input x-show="editId === {{ subject.id }}" type="text" name="name" value="{{ subject.name }}"
                             form="edit-form-{{ subject.id }}"
                             class="text-center bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2 dark:bg-gray-600 dark:border-gray-500 dark:text-white" />
                     </td>
 
-                    <td class="px-6 py-4">
+                    <td class="px-6 py-4 font-normal whitespace-nowrap dark:text-white">
                         <!-- modo de visualização dos setores no desktop -->
                         <div x-show="editId !== {{ subject.id }}" class="flex flex-wrap gap-1 justify-center">
                             {% for sector in subject.sectors %}

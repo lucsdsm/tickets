@@ -10,5 +10,5 @@ def home() -> Response:
     # se o usuário estiver logado, redireciona para a página de tickets
     if current_user.is_authenticated:
         return redirect(url_for('dashboard.view'))
-    # caso contrário, renderiza a página inicial
-    return render_template('index.html')
+    # caso contrário, renderiza a página de login
+    return redirect(url_for('auth.login'))
