@@ -63,8 +63,9 @@ def seed_users():
         last_name = fake.last_name()
         username = f"{first_name.lower()}.{last_name.lower()}{random.randint(1, 99)}"
 
-        # remove acentuação
-        username = username.normalize('NFKD').encode('ascii', 'ignore').decode('utf-8')
+        # remove acentuação e espaços
+        normalize = str.maketrans('', '', 'áàãâéêíóôõúç ')
+        username = username.translate(normalize)
         email = f"{username}@fakemail.com"
 
         # garante que o email e o username sejam únicos

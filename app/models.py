@@ -123,7 +123,9 @@ class Ticket(db.Model):
     title = db.Column(db.String(100), nullable=False)
     description = db.Column(db.Text, nullable=False)
     created_at = db.Column(db.DateTime, nullable=False, server_default=db.func.now())
+    assigned_at = db.Column(db.DateTime, nullable=True)
     updated_at = db.Column(db.DateTime, nullable=False, server_default=db.func.now(), onupdate=db.func.now())
+    closed_at = db.Column(db.DateTime, nullable=True)
 
     # Chaves estrangeiras
     creator_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)

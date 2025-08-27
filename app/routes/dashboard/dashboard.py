@@ -24,5 +24,53 @@ def view() -> Response:
         Response: Template de visualização de tickets.
     """
 
+    # Chamados abertos pelo usuário atual.
+    # Encontra os status que não são "Resolvido".
+    open_statuses = Status.query.filter(Status.name != 'Resolvido').all()
+    # Obtém os IDs dos status encontrados.
+    open_status_ids = [s.id for s in open_statuses]
+    # Faz a contagem de tickets abertos pelo usuário atual que tenham um desses status.
+    open_user_tickets_count = Ticket.query.filter(
+        Ticket.creator_id == current_user.id,
+        Ticket.status_id.in_(open_status_ids)
+    ).count()
+
+    # Chamados atribuídos ao usuário atual.
+    ###
+    # Encontra o status "Em Progresso" e "Editado".
+    working_statuses = Status.query.filter(Status.name.in_(['Em Progresso', 'Editado'])).all()
+    # Obtém os IDs dos status encontrados.
+    working_status_ids = [s.id for s in working_statuses]
+    # Faz a contagem de tickets atribuídos ao usuário atual que tenham um desses status.
+    assigned_user_tickets_count = Ticket.query.filter(
+        Ticket.assignee_id == current_user.id,
+        Ticket.status_id.in_(working_status_ids)
+    ).count()
+    ###
+
+    # Chamados abertos no setor do usuário atual.
+    ###
+    # Obtém a lista ed Ids de todos os setores do usuário atual.
+    user_sector_ids = [sector.id for sector in current_user.sectors]
+    # Encontra o status "Aberto" e "Aguardando".
+    open_statuses = Status.query.filter(Status.name.in_(['Aberto', 'Aguardando'])).all()
+    # Obtém os IDs dos status encontrados.
+    open_status_ids = [s.id for s in open_statuses]
+    # Faz a contagem dos tickets que pertencem a qualquer um desses setores.
+    sector_user_tickets_count = 0
+    # Só executa a query se o usuário pertencer a algum setor.
+    if user_sector_ids:
+        sector_user_tickets_count = Ticket.query.filter(
+            Ticket.sector_id.in_(user_sector_ids),
+            Ticket.status_id.in_(open_status_ids)
+        ).count()
+    ###
+
     tickets = db.session.query(Ticket).all()
-    return render_template("dashboard/main.html", tickets=tickets)
+
+
+    return render_template("dashboard/main.html", 
+                           tickets=tickets,
+                           open_user_tickets_count=open_user_tickets_count,
+                           assigned_user_tickets_count=assigned_user_tickets_count,
+                           sector_user_tickets_count=sector_user_tickets_count)
