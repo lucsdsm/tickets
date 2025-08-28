@@ -1,0 +1,196 @@
+{% extends "layout.html" %}
+{% block content %}
+
+<form method="POST" action="{{ url_for('tickets.add' )}}" class="w-full lg:w-1/2 mx-auto bg-white dark:bg-gray-800 p-8 rounded-lg shadow-md"
+    x-data="{ 
+          isSectorOpen: false,
+          selectedSector: '',
+          selectedSectorName: 'Selecione um setor...',
+          selectedSectorColor: null,
+
+          isSubjectOpen: false,
+          subjects: [],
+          selectedSubject: '',
+          selectedSubjectName: 'Selecione um assunto...',
+
+          isPriorityOpen: false,
+          priorities: [],
+          selectedPriority: '',
+          selectedPriorityName: 'Selecione uma prioridade...',
+          selectedPriorityColor: null,
+
+          fetchSubjects() {
+              if (!this.selectedSector) {
+                  this.subjects = [];
+                  return;
+              }
+              // Reseta a seleção de assunto quando o setor muda
+              this.selectedSubject = '';
+              this.selectedSubjectName = 'Selecione um assunto...';
+
+            fetch(`/tickets/get-subjects-for-sector/${this.selectedSector}`)
+                .then(response => response.json())
+                .then(data => {
+                    this.subjects = data;
+            });
+          }
+      }">
+    <fieldset class="space-y-6">
+        <legend class="text-2xl font-bold border-b pb-2 mb-4 dark:text-white"> Criar ticket </legend>
+
+        <!-- título -->
+        <div>
+            <label for="title" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"> Título </label>
+            <input type="text" name="title" id="title" value="{{ title }}" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg 
+                          focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 
+                          dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white" required>
+        </div>
+
+        <!-- descrição -->
+        <div>
+            <label for="description" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"> Descrição
+            </label>
+            <textarea name="description" id="description" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg 
+                             focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 
+                             dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white"
+                required>{{ description }}</textarea>
+        </div>
+
+        <!-- setor -->
+        <div @click.away="isSectorOpen = false" class="relative custom-scrollbar">
+            <label for="sector_id" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Setor</label>
+            <!-- input oculto que guarda o id do setor -->
+            <input type="hidden" name="sector_id" x-model="selectedSector">
+
+            <!-- botão que abre o dropdown -->
+            <button type="button" @click="isSectorOpen = !isSectorOpen" class="relative w-full cursor-pointer rounded-lg bg-white dark:bg-gray-700 
+                           py-2.5 pl-3 pr-10 text-left border border-gray-300 dark:border-gray-600 
+                           focus:outline-none focus:ring-2 focus:ring-purple-500 text-sm">
+                <span class="flex items-center">
+                    <span x-show="selectedSectorColor" :style="{ 'background-color': selectedSectorColor }"
+                        class="inline-block h-2 w-2 flex-shrink-0 rounded-full mr-3"></span>
+                    <span class="block truncate" x-text="selectedSectorName"></span>
+                </span>
+                <span class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
+                    <svg class="h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"
+                        fill="currentColor" aria-hidden="true">
+                        <path fill-rule="evenodd" d="M10 3a.75.75 0 01.55.24l3.25 3.5a.75.75 0 11-1.1 1.02L10 4.852 7.3 7.76a.75.75 0 01-1.1-1.02l3.25-3.5A.75.75 0 0110 3zm-3.76  9.24a.75.75 0 011.06.04l2.7 2.92 2.7-2.92a.75.75 0 111.1 1.02l-3.25 3.5a.75.75 0 01-1.1 0l-3.25-3.5a.75.75 0 01.04-1.06z" clip-rule="evenodd" />
+                    </svg>
+                </span>
+            </button>
+
+            <!-- painel com opções -->
+            <div x-show="isSectorOpen" x-transition class="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white 
+                        dark:bg-gray-700 py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 
+                        focus:outline-none sm:text-sm">
+                {% for sector in all_sectors %}
+                <div @click="selectedSector = {{ sector.id }}; 
+                                 selectedSectorName = '{{ sector.name }}'; 
+                                 selectedSectorColor = '{{ sector.color }}'; 
+                                 isSectorOpen = false; 
+                                 fetchSubjects();" class="relative cursor-pointer select-none py-2 pl-3 pr-9 
+                                text-gray-900 dark:text-gray-200 
+                                hover:bg-gray-100 dark:hover:bg-gray-600">
+                    <div class="flex items-center">
+                        <span style="background-color: {{ sector.color }};"
+                            class="inline-block h-2 w-2 flex-shrink-0 rounded-full"></span>
+                        <span class="ml-3 block truncate">{{ sector.name }}</span>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- assunto -->
+        <div @click.away="isSubjectOpen = false" class="relative">
+            <label for="subject_id" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Assunto</label>
+            <input type="hidden" name="subject_id" x-model="selectedSubject">
+
+            <button type="button" @click="isSubjectOpen = !isSubjectOpen" :disabled="!selectedSector" class="relative w-full cursor-pointer rounded-lg bg-white dark:bg-gray-700 py-2.5 pl-3 pr-10 text-left border border-gray-300 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-purple-500 text-sm disabled:bg-gray-200 dark:disabled:bg-gray-600 disabled:cursor-not-allowed">
+                <span class="block truncate" x-text="selectedSubjectName"></span>
+                <span class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
+                    <svg class="h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"
+                        fill="currentColor" aria-hidden="true">
+                        <path fill-rule="evenodd" d="M10 3a.75.75 0 01.55.24l3.25 3.5a.75.75 0 11-1.1 1.02L10 4.852 7.3 7.76a.75.75 0 01-1.1-1.02l3.25-3.5A.75.75 0 0110 3zm-3.76 9.24a.75.75 0 011.06.04l2.7 2.92 2.7-2.92a.75.75 0 111.1 1.02l-3.25 3.5a.75.75 0 01-1.1 0l-3.25-3.5a.75.75 0 01.04-1.06z" clip-rule="evenodd" />
+                    </svg>
+                </span>
+            </button>
+
+            <div x-show="isSubjectOpen" x-transition class="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white 
+                        dark:bg-gray-700 py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 
+                        focus:outline-none sm:text-sm">
+                <template x-if="subjects.length === 0">
+                    <div class="cursor-default select-none py-2 px-4 text-gray-500">Nenhum assunto disponível</div>
+                </template>
+                <template x-for="subject in subjects" :key="subject.id">
+                    <div @click="selectedSubject = subject.id; 
+                                 selectedSubjectName = subject.name; 
+                                 isSubjectOpen = false" class="relative cursor-pointer select-none py-2 pl-3 pr-9 
+                                text-gray-900 dark:text-gray-200 
+                                hover:bg-purple-100 dark:hover:bg-purple-900">
+                        <span class="ml-3 block truncate" x-text="subject.name"></span>
+                    </div>
+                </template>
+            </div>
+        </div>
+
+        <!-- prioridade -->
+        <div @click.away="isPriorityOpen = false" class="relative custom-scrollbar">
+            <label for="priority_id" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Prioridade</label>
+            <!-- input oculto que guarda o id da prioridade -->
+            <input type="hidden" name="priority_id" x-model="selectedPriority">
+        
+            <!-- botão que abre o dropdown -->
+            <button type="button" @click="isPriorityOpen = !isPriorityOpen" class="relative w-full cursor-pointer rounded-lg bg-white dark:bg-gray-700 
+                           py-2.5 pl-3 pr-10 text-left border border-gray-300 dark:border-gray-600 
+                           focus:outline-none focus:ring-2 focus:ring-purple-500 text-sm">
+                <span class="flex items-center">
+                    <span x-show="selectedPriorityColor" :style="{ 'background-color': selectedPriorityColor }"
+                        class="inline-block h-2 w-2 flex-shrink-0 rounded-full mr-3"></span>
+                    <span class="block truncate" x-text="selectedPriorityName"></span>
+                </span>
+                <span class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
+                    <svg class="h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"
+                        fill="currentColor" aria-hidden="true">
+                        <path fill-rule="evenodd"
+                            d="M10 3a.75.75 0 01.55.24l3.25 3.5a.75.75 0 11-1.1 1.02L10 4.852 7.3 7.76a.75.75 0 01-1.1-1.02l3.25-3.5A.75.75 0 0110 3zm-3.76 9.24a.75.75 0 011.06.04l2.7 2.92 2.7-2.92a.75.75 0 111.1 1.02l-3.25 3.5a.75.75 0 01-1.1 0l-3.25-3.5a.75.75 0 01.04-1.06z"
+                            clip-rule="evenodd" />
+                    </svg>
+                </span>
+            </button>
+        
+            <!-- painel com opções -->
+            <div x-show="isPriorityOpen" x-transition class="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white 
+                                dark:bg-gray-700 py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 
+                                focus:outline-none sm:text-sm">
+                {% for priority in all_priorities %}
+                <div @click="selectedPriority = {{ priority.id }}; 
+                                 selectedPriorityName = '{{ priority.name }}'; 
+                                 selectedPriorityColor = '{{ priority.color }}'; 
+                                 isPriorityOpen = false;" class="relative cursor-pointer select-none py-2 pl-3 pr-9 
+                            text-gray-900 dark:text-gray-200 
+                            hover:bg-gray-100 dark:hover:bg-gray-600">
+                    <div class="flex items-center">
+                        <span style="background-color: {{ priority.color }};"
+                            class="inline-block h-2 w-2 flex-shrink-0 rounded-full"></span>
+                        <span class="ml-3 block truncate">{{ priority.name }}</span>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <div class="mt-8">
+            <button type="submit"
+                class="mt-8 w-full flex justify-center items-center text-white bg-purple-700 hover:bg-purple-800 focus:ring-4 focus:outline-none focus:ring-purple-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-purple-600 dark:hover:bg-purple-700 dark:focus:ring-purple-800 disabled:opacity-50 disabled:cursor-not-allowed">
+                Adicionar </button>
+            <a href="{{ url_for('dashboard.view') }}" class="mt-4 w-full flex justify-center items-center px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm text-sm font-medium 
+                          text-gray-700 bg-white hover:bg-gray-50 
+                          dark:text-gray-200 dark:bg-gray-800 dark:hover:bg-gray-600 
+                          transition-colors duration-200"> Voltar
+            </a>
+        </div>
+    </fieldset>
+</form>
+
+{% endblock %}

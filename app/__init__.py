@@ -72,6 +72,9 @@ def create_app() -> Flask:
         from .routes.dashboard import dashboard
         app.register_blueprint(dashboard.dashboard, url_prefix='/dashboard')
 
+        from .routes.dashboard import tickets
+        app.register_blueprint(tickets.tickets, url_prefix='/tickets')
+
         from .routes.auth import auth
         app.register_blueprint(auth.auth, url_prefix='/auth')
 
