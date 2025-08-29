@@ -13,7 +13,7 @@ from app.models import Priority
 
 tickets = Blueprint('tickets', __name__)
 
-@tickets.route('/ticket/add', methods=['GET', 'POST'])
+@tickets.route('/tickets/add', methods=['GET', 'POST'])
 @login_required
 def add() -> Response:
     """Exibe o formulário para adicionar um novo ticket."""

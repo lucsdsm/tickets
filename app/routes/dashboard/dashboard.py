@@ -25,6 +25,7 @@ def view() -> Response:
     """
 
     # Chamados abertos pelo usuário atual.
+    ###
     # Encontra os status que não são "Resolvido".
     open_statuses = Status.query.filter(Status.name != 'Resolvido').all()
     # Obtém os IDs dos status encontrados.
@@ -34,6 +35,7 @@ def view() -> Response:
         Ticket.creator_id == current_user.id,
         Ticket.status_id.in_(open_status_ids)
     ).count()
+    ###
 
     # Chamados atribuídos ao usuário atual.
     ###
@@ -67,10 +69,12 @@ def view() -> Response:
     ###
 
     tickets = db.session.query(Ticket).all()
+    # Filtrar os tickets para incluir apenas aqueles do setor do usuário:
+    tickets_on_sector = [ticket for ticket in tickets if ticket.sector_id in user_sector_ids]
 
 
     return render_template("dashboard/main.html", 
-                           tickets=tickets,
+                           tickets_on_sector=tickets_on_sector,
                            open_user_tickets_count=open_user_tickets_count,
                            assigned_user_tickets_count=assigned_user_tickets_count,
                            sector_user_tickets_count=sector_user_tickets_count)
