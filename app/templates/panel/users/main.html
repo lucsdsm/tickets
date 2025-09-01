@@ -252,7 +252,7 @@
                             <label class="flex items-center space-x-2 cursor-pointer w-full">
                                 <input type="checkbox" name="sectors" value="{{ sector.id }}" form="edit-form-{{ user.id }}" {% if sector in
                                     user.sectors %}checked{% endif %}
-                                    class="w-4 h-4 accent-purple-700 rounded border-2 border-purple-400 focus:ring-0 transition-all duration-150">
+                                    class="w-4 h-4 accent-purple-700 rounded-full border-2 border-purple-400 focus:ring-0 transition-all duration-150">
                                 <span style="background-color: {{ sector.color }}"
                                     class="text-white text-xs font-medium px-2.5 py-0.5 rounded-full whitespace-nowrap">
                                     {{ sector.name }}

@@ -1,0 +1,297 @@
+{% extends "layout.html" %}
+
+{% block content %}
+
+<fieldset class="w-full h-full flex flex-col space-y-4 bg-gray-50 dark:bg-gray-900 p-2 rounded-lg self-start mb-2">
+
+    <div class="grid grid-cols-1 lg:grid-cols-1 gap-8 mb-2">
+        <div class="flex flex-col md:flex-row items-center md:items-center gap-4 w-full md:w-auto mt-4 md:mt-0">
+            <div class="flex w-full md:w-auto items-center gap-4 justify-end">
+
+                <!-- botão de voltar -->
+                <a href="{{ url_for('dashboard.view') }}" title="Voltar"
+                    class="flex-shrink-0 inline-flex items-center justify-center w-10 h-10 text-white bg-purple-600 border border-transparent rounded-full shadow-sm hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 dark:focus:ring-offset-gray-800">
+                    <span class="sr-only"> Voltar </span>
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+                    </svg>
+                </a>
+                
+            </div>
+        </div>
+    </div>
+
+    <!-- grid principal com duas colunas -->
+    <div class="grid grid-cols lg:grid-cols-2 gap-8 mb-2">
+
+        <!-- primeira coluna do grid -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-6">
+
+            <!-- título do ticket -->
+            <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md flex flex-wrap items-center">
+                <div class="bg-purple-100 dark:bg-purple-900 p-3 rounded-full space-x-4 flex-shrink-0">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                        stroke="currentColor" class="size-6">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                            d="M16.5 6v.75m0 3v.75m0 3v.75m0 3V18m-9-5.25h5.25M7.5 15h3M3.375 5.25c-.621 0-1.125.504-1.125 1.125v3.026a2.999 2.999 0 0 1 0 5.198v3.026c0 .621.504 1.125 1.125 1.125h17.25c.621 0 1.125-.504 1.125-1.125v-3.026a2.999 2.999 0 0 1 0-5.198V6.375c0-.621-.504-1.125-1.125-1.125H3.375Z" />
+                    </svg>
+        
+                </div>
+        
+                <div class="space-x-4">
+                    <p class="text-sm text-gray-500 dark:text-gray-400 ml-4 break-words"> Título </p>
+                    <p class="text-normal font-bold dark:text-white ml-4 break-words"> {{ ticket.title }} </p>
+                </div>
+            </div>
+            
+            <!-- setor do ticket -->
+            <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md flex flex-wrap items-center">
+                <div class="bg-blue-100 dark:bg-blue-900 p-3 rounded-full flex-shrink-0">
+                    <svg class="w-6 h-6 text-gray-500 dark:text-gray-400 group-hover:text-purple-600 dark:group-hover:text-purple-400 transition-colors duration-200"
+                        xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                        stroke="currentColor">
+                        <circle cx="12" cy="6" r="2" stroke-linecap="round" stroke-linejoin="round" />
+                        <path d="M12 8v3" stroke-linecap="round" stroke-linejoin="round" />
+                        <path d="M12 11H7" stroke-linecap="round" stroke-linejoin="round" />
+                        <path d="M12 11h5" stroke-linecap="round" stroke-linejoin="round" />
+                        <circle cx="7" cy="17" r="2" stroke-linecap="round" stroke-linejoin="round" />
+                        <circle cx="17" cy="17" r="2" stroke-linecap="round" stroke-linejoin="round" />
+                    </svg>
+                </div>
+        
+                <div class="space-x-4">
+                    <p class="text-sm text-gray-500 dark:text-gray-400 ml-4 break-words"> Setor </p>
+                    <span style="background-color: {{ ticket.sector.color }}"
+                        class="align-middle text-white text-xs font-medium px-2.5 py-0.5 rounded-full break-words">
+                        {{ ticket.sector.name }}
+                    </span>
+                </div>
+            </div>
+
+            <!-- assunto do ticket -->
+            <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md flex flex-wrap items-center">
+                <div class="bg-green-100 dark:bg-green-900 p-3 rounded-full flex-shrink-0">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                        stroke="currentColor" class="size-6">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                            d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607ZM10.5 7.5v6m3-3h-6" />
+                    </svg>
+                </div>
+        
+                <div class="space-x-4 min-w-0 flex-1">
+                    <p class="text-sm text-gray-500 dark:text-gray-400 ml-4 break-words"> Assunto </p>
+                    <p class="text-normal font-bold dark:text-white ml-4 break-words"> {{ ticket.subject.name }} </p>
+                </div>
+            </div>
+
+            <!-- criador do ticket -->
+            <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md flex flex-wrap items-center">
+                <div class="bg-green-100 dark:bg-green-900 p-3 rounded-full flex-shrink-0">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                        stroke="currentColor" class="size-6">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                            d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z" />
+                    </svg>
+                </div>
+        
+                <div class="space-x-4 min-w-0 flex-1">
+                    <p class="text-sm text-gray-500 dark:text-gray-400 ml-4 break-words"> Criado por </p>
+                    <p class="text-normal font-bold dark:text-white ml-4 break-words"> {{ ticket.creator.first_name }} {{
+                        ticket.creator.last_name }} </p>
+                </div>
+            </div>
+
+            <!-- criado em do ticket -->
+            <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md flex flex-wrap items-center">
+                <div class="bg-yellow-100 dark:bg-yellow-800 p-3 rounded-full flex-shrink-0">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                        stroke="currentColor" class="size-6">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                            d="M12 6v6h4.5m4.5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+                    </svg>
+                </div>
+        
+                <div class="space-x-4 min-w-0 flex-1">
+                    <p class="text-sm text-gray-500 dark:text-gray-400 ml-4 break-words"> Criado em </p>
+                    <p class="text-normal font-bold dark:text-white ml-4 break-words" x-data="{ localTime: '' }" x-init="
+                            localTime = new Date($el.dataset.utc + 'Z').toLocaleString('pt-BR', {
+                                day: '2-digit',
+                                month: '2-digit',
+                                year: 'numeric',
+                                hour: '2-digit',
+                                minute: '2-digit',
+                                hour12: false
+                            }).replace(',', ' às')" x-text="localTime" data-utc="{{ ticket.created_at.isoformat() }}">
+                    </p>
+                </div>
+            </div>
+
+            <!-- atualizado em do ticket -->
+            <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md flex flex-wrap items-center">
+                <div class="bg-red-100 dark:bg-red-900 p-3 rounded-full flex-shrink-0">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
+                        class="size-6">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                            d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0 3.181 3.183a8.25 8.25 0 0 0 13.803-3.7M4.031 9.865a8.25 8.25 0 0 1 13.803-3.7l3.181 3.182m0-4.991v4.99" />
+                    </svg>
+            
+                </div>
+            
+                <div class="space-x-4 min-w-0 flex-1">
+                    <p class="text-sm text-gray-500 dark:text-gray-400 ml-4 break-words"> Última vez atualizado </p>
+                    <p class="text-normal font-bold dark:text-white ml-4 break-words" x-data="{ localTime: '' }" x-init="
+                                localTime = new Date($el.dataset.utc + 'Z').toLocaleString('pt-BR', {
+                                    day: '2-digit',
+                                    month: '2-digit',
+                                    year: 'numeric',
+                                    hour: '2-digit',
+                                    minute: '2-digit',
+                                    hour12: false
+                                }).replace(',', ' às')" x-text="localTime" data-utc="{{ ticket.updated_at.isoformat() }}">
+                    </p>
+                </div>
+            </div>
+
+            <!-- atribuições do ticket -->
+            {% if ticket.assignee_id %}
+            <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md flex flex-wrap items-center">
+                <div class="bg-pink-100 dark:bg-pink-900 p-3 rounded-full flex-shrink-0">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
+                        class="size-6">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                            d="M10.05 4.575a1.575 1.575 0 1 0-3.15 0v3m3.15-3v-1.5a1.575 1.575 0 0 1 3.15 0v1.5m-3.15 0 .075 5.925m3.075.75V4.575m0 0a1.575 1.575 0 0 1 3.15 0V15M6.9 7.575a1.575 1.575 0 1 0-3.15 0v8.175a6.75 6.75 0 0 0 6.75 6.75h2.018a5.25 5.25 0 0 0 3.712-1.538l1.732-1.732a5.25 5.25 0 0 0 1.538-3.712l.003-2.024a.668.668 0 0 1 .198-.471 1.575 1.575 0 1 0-2.228-2.228 3.818 3.818 0 0 0-1.12 2.687M6.9 7.575V12m6.27 4.318A4.49 4.49 0 0 1 16.35 15m.002 0h-.002" />
+                    </svg>
+                </div>
+            
+                <div class="space-x-4 min-w-0 flex-1">
+                    <p class="text-sm text-gray-500 dark:text-gray-400 ml-4 break-words"> Aceito por </p>
+                    <p class="text-normal font-bold dark:text-white ml-4 break-words"> {{ ticket.assignee.first_name }} {{
+                        ticket.assignee.last_name }} </p>
+                </div>
+            </div>
+            {% endif %}
+
+            <!-- quando foi atribuído o ticket -->
+            {% if ticket.assigned_at %}
+            <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md flex flex-wrap items-center">
+                <div class="bg-gray-100 dark:bg-gray-900 p-3 rounded-full flex-shrink-0">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
+                        class="size-6">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+                    </svg>
+                </div>
+            
+                <div class="space-x-4 min-w-0 flex-1">
+                    <p class="text-sm text-gray-500 dark:text-gray-400 ml-4 break-words"> Aceito em </p>
+                    <p class="text-normal font-bold dark:text-white ml-4 break-words" x-data="{ localTime: '' }" x-init="
+                                localTime = new Date($el.dataset.utc + 'Z').toLocaleString('pt-BR', {
+                                    day: '2-digit',
+                                    month: '2-digit',
+                                    year: 'numeric',
+                                    hour: '2-digit',
+                                    minute: '2-digit',
+                                    hour12: false
+                                }).replace(',', ' às')" x-text="localTime" data-utc="{{ ticket.assigned_at.isoformat() }}">
+                    </p>
+                </div>
+            </div>
+            {% endif %}
+            
+            <!-- status do ticket -->
+            <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md flex flex-wrap items-center">
+                <div class="bg-indigo-100 dark:bg-indigo-900 p-3 rounded-full flex-shrink-0">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
+                        class="size-6">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                            d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+                    </svg>
+                </div>
+            
+                <div class="space-x-4 min-w-0 flex-1">
+                    <p class="text-sm text-gray-500 dark:text-gray-400 ml-4 break-words"> Status </p>
+                    <p class="text-normal font-bold dark:text-white ml-4 break-words"> {{ ticket.status.name }} </p>
+                </div>
+            </div>
+            
+            <!-- prioridade do ticket -->
+            <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md flex flex-wrap items-center"
+                style="border: 2px solid {{ ticket.priority.color }};">
+                <div class="bg-transparent-100 dark:bg-transparent-900 p-3 rounded-full flex-shrink-0">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
+                        class="size-6">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                            d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 0 1 3 19.875v-6.75ZM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 0 1-1.125-1.125V8.625ZM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 0 1-1.125-1.125V4.125Z" />
+                    </svg>
+                </div>
+            
+                <div class="space-x-4 min-w-0 flex-1">
+                    <p class="text-sm text-gray-500 dark:text-gray-400 ml-4 break-words"> Prioridade </p>
+                    <p class="text-normal font-bold dark:text-white ml-4 break-words"> {{ ticket.priority.name }} </p>
+                </div>
+            </div>
+
+            <!-- quando foi fechado o ticket -->
+            {% if ticket.closed_at %}
+            <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md flex flex-wrap items-center">
+                <div class="bg-fuchsia-100 dark:bg-fuchsia-900 p-3 rounded-full flex-shrink-0">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
+                        class="size-6">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                            d="M15.75 9V5.25A2.25 2.25 0 0 0 13.5 3h-6a2.25 2.25 0 0 0-2.25 2.25v13.5A2.25 2.25 0 0 0 7.5 21h6a2.25 2.25 0 0 0 2.25-2.25V15M12 9l-3 3m0 0 3 3m-3-3h12.75" />
+                    </svg>
+                </div>
+            
+                <div class="space-x-4 min-w-0 flex-1">
+                    <p class="text-sm text-gray-500 dark:text-gray-400 ml-4 break-words"> Finalizado em </p>
+                    <p class="text-normal font-bold dark:text-white ml-4 break-words" x-data="{ localTime: '' }" x-init="
+                                localTime = new Date($el.dataset.utc + 'Z').toLocaleString('pt-BR', {
+                                    day: '2-digit',
+                                    month: '2-digit',
+                                    year: 'numeric',
+                                    hour: '2-digit',
+                                    minute: '2-digit',
+                                    hour12: false
+                                }).replace(',', ' às')" x-text="localTime" data-utc="{{ ticket.closed_at.isoformat() }}">
+                    </p>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+
+        <!-- segunda coluna do grid -->
+        <div class="grid grid-cols-1 lg:grid-cols-1 gap-8 mb-6">
+            <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md flex flex-wrap items-center"> 
+                
+            </div>
+        </div>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-2">
+        <!-- descrição do ticket -->
+        <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md flex flex-wrap items-center">
+            <div class="bg-rose-100 dark:bg-rose-900 p-3 rounded-full flex-shrink-0">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                    stroke="currentColor" class="size-6">
+                    <path stroke-linecap="round" stroke-linejoin="round"
+                        d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m5.231 13.481L15 17.25m-4.5-15H5.625c-.621 0-1.125.504-1.125 1.125v16.5c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Zm3.75 11.625a2.625 2.625 0 1 1-5.25 0 2.625 2.625 0 0 1 5.25 0Z" />
+                </svg>
+            </div>
+    
+            <div class="space-x-4 min-w-0 flex-1">
+                <p class="text-sm text-gray-500 dark:text-gray-400 ml-4 break-words"> Descrição </p>
+                <p class="text-md font-normal dark:text-white ml-4 break-words text-justify"> {{ ticket.description }} </p>
+            </div>
+        </div>
+
+        <!-- espaço para anexos -->
+        <div class="grid grid-cols-1 lg:grid-cols-1 gap-8">
+            <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md flex flex-wrap items-center"> 
+                
+            </div>
+        </div>
+        
+    </div> <br>
+
+</fieldset>
+
+{% endblock %}

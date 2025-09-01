@@ -1,5 +1,5 @@
 from app import db
-from flask import Blueprint, render_template, redirect, url_for, flash, request, session, Response, jsonify
+from flask import Blueprint, render_template, redirect, url_for, flash, request, session, Response, jsonify, abort
 from datetime import datetime
 from flask_login import login_user, logout_user, login_required, current_user
 from sqlalchemy import func, or_
@@ -12,6 +12,20 @@ from app.models import Status
 from app.models import Priority
 
 tickets = Blueprint('tickets', __name__)
+
+@tickets.route('/tickets/<int:ticket_id>')
+@login_required
+def view_ticket(ticket_id: int) -> Response:
+    """Exibe os detalhes de um ticket específico, apenas se o usuário tiver acesso."""
+    ticket = Ticket.query.get_or_404(ticket_id)
+
+    # Verifica se o usuário tem permissão para acessar o ticket
+    ## Se o usuário não for o criador, o responsável ou um administrador, redireciona de volta para o dashboard com um erro.
+    if ticket.creator_id != current_user.id and ticket.assignee_id != current_user.id and not current_user.is_admin:
+        flash('Você não tem permissão para acessar este ticket.', 'danger')
+        return redirect(url_for('dashboard.view'))
+    
+    return render_template('dashboard/tickets/view-ticket.html', ticket=ticket)
 
 @tickets.route('/tickets/add', methods=['GET', 'POST'])
 @login_required
