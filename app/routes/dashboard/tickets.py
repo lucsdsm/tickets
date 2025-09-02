@@ -69,3 +69,20 @@ def get_subjects_for_sector(sector_id):
     subjects_list = [{'id': subject.id, 'name': subject.name} for subject in sector.subjects]
     return jsonify(subjects_list)
 
+@tickets.route('/tickets/assign/<int:ticket_id>', methods=['POST'])
+@login_required
+def assign_ticket(ticket_id: int) -> Response:
+    """Atribui um ticket a um usuário específico."""
+    ticket = Ticket.query.get_or_404(ticket_id)
+
+    if ticket.assignee_id is not None:
+        flash('Este ticket já está atribuído.', 'warning')
+        return redirect(url_for('dashboard.view'))
+    
+    ticket.status_id = 3
+    ticket.assignee_id = current_user.id
+    ticket.assigned_at = datetime.utcnow()
+    ticket.updated_at = datetime.utcnow()
+    db.session.commit()
+    flash('Ticket atribuído com sucesso!', 'success')
+    return redirect(url_for('dashboard.view'))

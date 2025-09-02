@@ -69,12 +69,17 @@ def view() -> Response:
     ###
 
     tickets = db.session.query(Ticket).all()
-    # Filtrar os tickets para incluir apenas aqueles do setor do usuário:
-    tickets_on_sector = [ticket for ticket in tickets if ticket.sector_id in user_sector_ids]
+
+    # Filtrar os tickets para incluir apenas àqueles criados ou aceitos pelo usuário.
+    user_tickets = [ticket for ticket in tickets if ticket.creator_id == current_user.id or ticket.assignee_id == current_user.id]
+
+    # Filtrar os tickets para incluir apenas aqueles do setor do usuário que estejam com status_id = 1 ou = 2:
+    sector_user_tickets = [ticket for ticket in tickets if ticket.sector_id in user_sector_ids and ticket.status_id in [1, 2]]
 
 
-    return render_template("dashboard/main.html", 
-                           tickets_on_sector=tickets_on_sector,
+    return render_template("dashboard/main.html",
+                           user_tickets=user_tickets,
+                           sector_user_tickets=sector_user_tickets,
                            open_user_tickets_count=open_user_tickets_count,
                            assigned_user_tickets_count=assigned_user_tickets_count,
                            sector_user_tickets_count=sector_user_tickets_count)
