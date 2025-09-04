@@ -145,3 +145,20 @@ class Ticket(db.Model):
 
     def __repr__(self):
         return f'<Ticket {self.title}>'
+    
+class TicketMessage(db.Model):
+    """Modelo de dados para as mensagens dos tickets."""
+    id = db.Column(db.Integer, primary_key=True)
+    message = db.Column(db.Text, nullable=False)
+    created_at = db.Column(db.DateTime, nullable=False, server_default=db.func.now())
+
+    # Chaves estrangeiras
+    ticket_id = db.Column(db.Integer, db.ForeignKey('ticket.id'), nullable=False)
+    author_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+
+    # Relações
+    ticket = db.relationship('Ticket', foreign_keys=[ticket_id], backref=db.backref('messages', lazy='dynamic'))
+    author = db.relationship('User', foreign_keys=[author_id])
+
+    def __repr__(self):
+        return f'<TicketMessage {self.id}>'

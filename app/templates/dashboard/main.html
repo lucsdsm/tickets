@@ -85,121 +85,135 @@
                 <thead class="uppercase text-gray-700 dark:text-gray-400">
                     <tr>
                         <th scope="col" class="px-6 py-3">
-                            <a href="#"
+                            <a href="{{ url_for('dashboard.view', sort_by='id', direction='desc' if sort_by == 'id' and direction == 'asc' else 'asc') }}"
                                 class="flex justify-center items-center hover:text-purple-500 transition-colors dark:text-white dark:hover:text-purple-500">
                                 ID
                                 {% if sort_by == 'id' %}
-                                <svg class="w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"
-                                    xmlns="http://www.w3.org/2000/svg">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M8 9l4-4 4 4m0 6l-4 4-4-4"></path>
-        
                                     {% if direction == 'asc' %}
-                                    <path d="M5 15l7-7 7 7" />{% else %}
-                                    <path d="M19 9l-7 7-7-7" />{% endif %}
-                                </svg>
+                                        <svg class="w-5 h-5 ml-1 text-purple-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                            stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7" />
+                                        </svg>
+                                    {% else %}
+                                        <svg class="w-5 h-5 ml-1 text-purple-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                            stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                                        </svg>
+                                    {% endif %}
                                 {% endif %}
                             </a>
                         </th>
                         <th scope="col" class="px-6 py-3">
-                            <a href="#"
+                            <a href="{{ url_for('dashboard.view', sort_by='title', direction='desc' if sort_by == 'title' and direction == 'asc' else 'asc') }}"
                                 class="flex justify-center items-center hover:text-purple-500 transition-colors dark:text-white dark:hover:text-purple-500">
                                 Título
                                 {% if sort_by == 'title' %}
-                                <svg class="w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"
-                                    xmlns="http://www.w3.org/2000/svg">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M8 9l4-4 4 4m0 6l-4 4-4-4"></path>
-        
                                     {% if direction == 'asc' %}
-                                    <path d="M5 15l7-7 7 7" />{% else %}
-                                    <path d="M19 9l-7 7-7-7" />{% endif %}
-                                </svg>
+                                        <svg class="w-5 h-5 ml-1 text-purple-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                            stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7" />
+                                        </svg>
+                                    {% else %}
+                                        <svg class="w-5 h-5 ml-1 text-purple-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                            stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                                        </svg>
+                                    {% endif %}
                                 {% endif %}
                             </a>
                         </th>
                         <th scope="col" class="px-6 py-3">
-                            <a href="#"
+                            <a href=" {{ url_for('dashboard.view', sort_by='sector', direction='desc' if sort_by == 'sector' and direction == 'asc' else 'asc') }} "
                                 class="flex justify-center items-center hover:text-purple-500 transition-colors dark:text-white dark:hover:text-purple-500">
                                 Setor
-                                {% if sort_by == 'sector_id' %}
-                                <svg class="w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"
-                                    xmlns="http://www.w3.org/2000/svg">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M8 9l4-4 4 4m0 6l-4 4-4-4"></path>
-        
+                                {% if sort_by == 'sector' %}
                                     {% if direction == 'asc' %}
-                                    <path d="M5 15l7-7 7 7" />{% else %}
-                                    <path d="M19 9l-7 7-7-7" />{% endif %}
-                                </svg>
+                                        <svg class="w-5 h-5 ml-1 text-purple-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                            stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7" />
+                                        </svg>
+                                    {% else %}
+                                        <svg class="w-5 h-5 ml-1 text-purple-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                            stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                                        </svg>
+                                    {% endif %}
                                 {% endif %}
                             </a>
                         </th>
                         <th scope="col" class="px-6 py-3">
-                            <a href="#"
+                            <a href="{{ url_for('dashboard.view', sort_by='subject', direction='desc' if sort_by == 'subject' and direction == 'asc' else 'asc') }}"
                                 class="flex justify-center items-center hover:text-purple-500 transition-colors dark:text-white dark:hover:text-purple-500">
                                 Assunto
-                                {% if sort_by == 'subject_id' %}
-                                <svg class="w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"
-                                    xmlns="http://www.w3.org/2000/svg">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M8 9l4-4 4 4m0 6l-4 4-4-4"></path>
-        
+                                {% if sort_by == 'subject' %}
                                     {% if direction == 'asc' %}
-                                    <path d="M5 15l7-7 7 7" />{% else %}
-                                    <path d="M19 9l-7 7-7-7" />{% endif %}
-                                </svg>
+                                        <svg class="w-5 h-5 ml-1 text-purple-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                            stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7" />
+                                        </svg>
+                                    {% else %}
+                                        <svg class="w-5 h-5 ml-1 text-purple-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                            stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                                        </svg>
+                                    {% endif %}
                                 {% endif %}
                             </a>
                         </th>
                         <th scope="col" class="px-6 py-3">
-                            <a href="#"
+                            <a href="{{ url_for('dashboard.view', sort_by='creator', direction='desc' if sort_by == 'creator' and direction == 'asc' else 'asc') }}"
                                 class="flex justify-center items-center hover:text-purple-500 transition-colors dark:text-white dark:hover:text-purple-500">
                                 Criado por
-                                {% if sort_by == 'creator_id' %}
-                                <svg class="w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"
-                                    xmlns="http://www.w3.org/2000/svg">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M8 9l4-4 4 4m0 6l-4 4-4-4"></path>
-        
+                                {% if sort_by == 'creator' %}
                                     {% if direction == 'asc' %}
-                                    <path d="M5 15l7-7 7 7" />{% else %}
-                                    <path d="M19 9l-7 7-7-7" />{% endif %}
-                                </svg>
+                                        <svg class="w-5 h-5 ml-1 text-purple-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                            stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7" />
+                                        </svg>
+                                    {% else %}
+                                        <svg class="w-5 h-5 ml-1 text-purple-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                            stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                                        </svg>
+                                    {% endif %}
                                 {% endif %}
                             </a>
                         </th>
                         <th scope="col" class="px-6 py-3">
-                            <a href="#"
+                            <a href="{{ url_for('dashboard.view', sort_by='created_at', direction='desc' if sort_by == 'created_at' and direction == 'asc' else 'asc') }}"
                                 class="flex justify-center items-center hover:text-purple-500 transition-colors dark:text-white dark:hover:text-purple-500">
                                 Criado em
                                 {% if sort_by == 'created_at' %}
-                                <svg class="w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"
-                                    xmlns="http://www.w3.org/2000/svg">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M8 9l4-4 4 4m0 6l-4 4-4-4"></path>
-        
                                     {% if direction == 'asc' %}
-                                    <path d="M5 15l7-7 7 7" />{% else %}
-                                    <path d="M19 9l-7 7-7-7" />{% endif %}
-                                </svg>
+                                        <svg class="w-5 h-5 ml-1 text-purple-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                            stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7" />
+                                        </svg>
+                                    {% else %}
+                                        <svg class="w-5 h-5 ml-1 text-purple-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                            stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                                        </svg>
+                                    {% endif %}
                                 {% endif %}
                             </a>
                         </th>
                         <th scope="col" class="px-6 py-3">
-                            <a href="#"
+                            <a href=" {{ url_for('dashboard.view', sort_by='status', direction='desc' if sort_by == 'status' and direction == 'asc' else 'asc') }} "
                                 class="flex justify-center items-center hover:text-purple-500 transition-colors dark:text-white dark:hover:text-purple-500">
                                 Status
                                 {% if sort_by == 'status' %}
-                                <svg class="w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"
-                                    xmlns="http://www.w3.org/2000/svg">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M8 9l4-4 4 4m0 6l-4 4-4-4"></path>
-        
                                     {% if direction == 'asc' %}
-                                    <path d="M5 15l7-7 7 7" />{% else %}
-                                    <path d="M19 9l-7 7-7-7" />{% endif %}
-                                </svg>
+                                        <svg class="w-5 h-5 ml-1 text-purple-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                            stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7" />
+                                        </svg>
+                                    {% else %}
+                                        <svg class="w-5 h-5 ml-1 text-purple-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                            stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                                        </svg>
+                                    {% endif %}
                                 {% endif %}
                             </a>
                         </th>
@@ -318,121 +332,145 @@
                 <thead class="uppercase text-gray-700 dark:text-gray-400">
                     <tr>
                         <th scope="col" class="px-6 py-3">
-                            <a href="#"
+                            <a href="{{ url_for('dashboard.view', sort_by='id', direction='desc' if sort_by == 'id' and direction == 'asc' else 'asc') }}"
                                 class="flex justify-center items-center hover:text-purple-500 transition-colors dark:text-white dark:hover:text-purple-500">
+                        
                                 ID
+                        
                                 {% if sort_by == 'id' %}
-                                <svg class="w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"
-                                    xmlns="http://www.w3.org/2000/svg">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M8 9l4-4 4 4m0 6l-4 4-4-4"></path>
-        
                                     {% if direction == 'asc' %}
-                                    <path d="M5 15l7-7 7 7" />{% else %}
-                                    <path d="M19 9l-7 7-7-7" />{% endif %}
-                                </svg>
+                                        <svg class="w-5 h-5 ml-1 text-purple-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                            stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7" />
+                                        </svg>
+                                    {% else %}
+                                        <svg class="w-5 h-5 ml-1 text-purple-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                            stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                                        </svg>
+                                    {% endif %}
                                 {% endif %}
                             </a>
                         </th>
                         <th scope="col" class="px-6 py-3">
-                            <a href="#"
+                            <a href="{{ url_for('dashboard.view', sort_by='title', direction='desc' if sort_by == 'title' and direction == 'asc' else 'asc') }}"
                                 class="flex justify-center items-center hover:text-purple-500 transition-colors dark:text-white dark:hover:text-purple-500">
                                 Título
                                 {% if sort_by == 'title' %}
-                                <svg class="w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"
-                                    xmlns="http://www.w3.org/2000/svg">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M8 9l4-4 4 4m0 6l-4 4-4-4"></path>
-        
                                     {% if direction == 'asc' %}
-                                    <path d="M5 15l7-7 7 7" />{% else %}
-                                    <path d="M19 9l-7 7-7-7" />{% endif %}
-                                </svg>
+                                        <svg class="w-5 h-5 ml-1 text-purple-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                            stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7" />
+                                        </svg>
+                                    {% else %}
+                                        <svg class="w-5 h-5 ml-1 text-purple-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                            stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                                        </svg>
+                                    {% endif %}
                                 {% endif %}
                             </a>
                         </th>
                         <th scope="col" class="px-6 py-3">
-                            <a href="#"
+                            <a href="{{ url_for('dashboard.view', sort_by='sector', direction='desc' if sort_by == 'sector' and direction == 'asc' else 'asc') }}"
                                 class="flex justify-center items-center hover:text-purple-500 transition-colors dark:text-white dark:hover:text-purple-500">
+
                                 Setor
-                                {% if sort_by == 'sector_id' %}
-                                <svg class="w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"
-                                    xmlns="http://www.w3.org/2000/svg">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M8 9l4-4 4 4m0 6l-4 4-4-4"></path>
-        
+
+                                {% if sort_by == 'sector' %}
                                     {% if direction == 'asc' %}
-                                    <path d="M5 15l7-7 7 7" />{% else %}
-                                    <path d="M19 9l-7 7-7-7" />{% endif %}
-                                </svg>
+                                        <svg class="w-5 h-5 ml-1 text-purple-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                            stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7" />
+                                        </svg>
+                                    {% else %}
+                                        <svg class="w-5 h-5 ml-1 text-purple-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                            stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                                        </svg>
+                                    {% endif %}
                                 {% endif %}
                             </a>
                         </th>
                         <th scope="col" class="px-6 py-3">
-                            <a href="#"
+                            <a href="{{ url_for('dashboard.view', sort_by='subject', direction='desc' if sort_by == 'subject' and direction == 'asc' else 'asc') }}"
                                 class="flex justify-center items-center hover:text-purple-500 transition-colors dark:text-white dark:hover:text-purple-500">
+                        
                                 Assunto
-                                {% if sort_by == 'subject_id' %}
-                                <svg class="w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"
-                                    xmlns="http://www.w3.org/2000/svg">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M8 9l4-4 4 4m0 6l-4 4-4-4"></path>
-        
+                        
+                                {% if sort_by == 'subject' %}
                                     {% if direction == 'asc' %}
-                                    <path d="M5 15l7-7 7 7" />{% else %}
-                                    <path d="M19 9l-7 7-7-7" />{% endif %}
-                                </svg>
+                                        <svg class="w-5 h-5 ml-1 text-purple-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                            stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7" />
+                                        </svg>
+                                        {% else %}
+                                        <svg class="w-5 h-5 ml-1 text-purple-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                            stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                                        </svg>
+                                    {% endif %}
                                 {% endif %}
                             </a>
                         </th>
                         <th scope="col" class="px-6 py-3">
-                            <a href="#"
+                            <a href="{{ url_for('dashboard.view', sort_by='creator', direction='desc' if sort_by == 'creator' and direction == 'asc' else 'asc') }}"
                                 class="flex justify-center items-center hover:text-purple-500 transition-colors dark:text-white dark:hover:text-purple-500">
+
                                 Criado por
-                                {% if sort_by == 'creator_id' %}
-                                <svg class="w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"
-                                    xmlns="http://www.w3.org/2000/svg">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M8 9l4-4 4 4m0 6l-4 4-4-4"></path>
-        
+
+                                {% if sort_by == 'creator' %}
                                     {% if direction == 'asc' %}
-                                    <path d="M5 15l7-7 7 7" />{% else %}
-                                    <path d="M19 9l-7 7-7-7" />{% endif %}
-                                </svg>
+                                        <svg class="w-5 h-5 ml-1 text-purple-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                            stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7" />
+                                        </svg>
+                                    {% else %}
+                                        <svg class="w-5 h-5 ml-1 text-purple-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                            stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                                        </svg>
+                                    {% endif %}
                                 {% endif %}
                             </a>
                         </th>
                         <th scope="col" class="px-6 py-3">
-                            <a href="#"
+                            <a href="{{ url_for('dashboard.view', sort_by='created_at', direction='desc' if sort_by == 'created_at' and direction == 'asc' else 'asc') }}"
                                 class="flex justify-center items-center hover:text-purple-500 transition-colors dark:text-white dark:hover:text-purple-500">
+                                
                                 Criado em
+
                                 {% if sort_by == 'created_at' %}
-                                <svg class="w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"
-                                    xmlns="http://www.w3.org/2000/svg">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M8 9l4-4 4 4m0 6l-4 4-4-4"></path>
-        
                                     {% if direction == 'asc' %}
-                                    <path d="M5 15l7-7 7 7" />{% else %}
-                                    <path d="M19 9l-7 7-7-7" />{% endif %}
-                                </svg>
+                                        <svg class="w-5 h-5 ml-1 text-purple-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                            stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7" />
+                                        </svg>
+                                    {% else %}
+                                        <svg class="w-5 h-5 ml-1 text-purple-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                            stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                                        </svg>
+                                    {% endif %}
                                 {% endif %}
                             </a>
                         </th>
                         <th scope="col" class="px-6 py-3">
-                            <a href="#"
+                            <a href="{{ url_for('dashboard.view', sort_by='status', direction='desc' if sort_by == 'status' and direction == 'asc' else 'asc') }}"
                                 class="flex justify-center items-center hover:text-purple-500 transition-colors dark:text-white dark:hover:text-purple-500">
                                 Status
                                 {% if sort_by == 'status' %}
-                                <svg class="w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"
-                                    xmlns="http://www.w3.org/2000/svg">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M8 9l4-4 4 4m0 6l-4 4-4-4"></path>
-        
                                     {% if direction == 'asc' %}
-                                    <path d="M5 15l7-7 7 7" />{% else %}
-                                    <path d="M19 9l-7 7-7-7" />{% endif %}
-                                </svg>
+                                        <svg class="w-5 h-5 ml-1 text-purple-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                            stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7" />
+                                        </svg>
+                                    {% else %}
+                                        <svg class="w-5 h-5 ml-1 text-purple-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                            stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                                        </svg>
+                                    {% endif %}
                                 {% endif %}
                             </a>
                         </th>
@@ -514,7 +552,7 @@
                                         message: 'Tem certeza que deseja assumir este ticket?', 
                                         url: '{{ url_for('tickets.assign_ticket', ticket_id=ticket.id) }}' 
                                     })"
-                                    class="py-1 text-white rounded-md text-sm">
+                                    class="py-1 text-white rounded-md text-sm ">
                                     <a class="text-gray-600 dark:text-gray-400 hover:opacity-75" title="Atribuir chamado">
                                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
                                             class="w-5 h-5">
@@ -535,9 +573,6 @@
             </table>
         </div>
     </div>
-
-    
-
 </fieldset>
 {% endblock %}
 

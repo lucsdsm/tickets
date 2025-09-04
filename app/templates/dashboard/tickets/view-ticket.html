@@ -22,10 +22,10 @@
     </div>
 
     <!-- grid principal com duas colunas -->
-    <div class="grid grid-cols lg:grid-cols-2 gap-8 mb-2">
+    <div class="grid grid-cols lg:grid-cols-2 gap-8">
 
         <!-- primeira coluna do grid -->
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-6">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-4">
 
             <!-- título do ticket -->
             <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md flex flex-wrap items-center">
@@ -259,16 +259,69 @@
         </div>
 
         <!-- segunda coluna do grid -->
-        <div class="grid grid-cols-1 lg:grid-cols-1 gap-8 mb-6">
-            <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md flex flex-wrap items-center"> 
-                
+        <div class="grid grid-cols-1 lg:grid-cols-1 gap-8">
+            <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md flex flex-col overflow-y-auto" style="height: calc(100vh - 200px);">
+        
+            <!-- header do Chat -->
+            <div class="bg-purple-600 text-white p-4 rounded-t-lg flex-shrink-0">
+                <h3 class="font-semibold"> Mensagens do Ticket {{ ticket.id }} </h3>
+                <p class="text-sm opacity-90">{{ messages|length }} mensagens</p>
+            </div>
+        
+            <!-- área de mensagens -->
+            <div id="chat-messages" class="flex-1 overflow-y-auto p-4 space-y-3 bg-white dark:bg-gray-800">
+                {% for msg in messages %}
+                <div class="flex {% if msg.author.id == current_user.id %}justify-end{% else %}justify-start{% endif %}">
+                <div
+                    class="flex {% if msg.author.id == current_user.id %}flex-row-reverse{% else %}flex-row{% endif %} items-end max-w-xs lg:max-w-md">
+                    <!-- avatar -->
+                    <div
+                    class="flex-shrink-0 w-8 h-8 rounded-full bg-purple-500 flex items-center justify-center text-white text-sm font-semibold {% if msg.author.id == current_user.id %}ml-2{% else %}mr-2{% endif %}">
+                    {{ msg.author.first_name[0] }}{{ msg.author.last_name[0] }}
+                    </div>
+        
+                    <!-- mensagem -->
+                    <div
+                    class="{% if msg.author.id == current_user.id %}bg-purple-500 text-white rounded-tl-2xl rounded-tr-2xl rounded-bl-2xl rounded-br-none{% else %}bg-gray-200 dark:bg-gray-700 text-gray-900 dark:text-white rounded-tl-2xl rounded-tr-2xl rounded-br-2xl rounded-bl-none{% endif %} p-3 shadow-sm">
+                    <p class="text-sm break-words">{{ msg.message }}</p>
+                    <div
+                        class="flex {% if msg.author.id == current_user.id %}justify-start{% else %}justify-end{% endif %} mt-1">
+                        <span
+                        class="text-xs {% if msg.author.id == current_user.id %}text-purple-100{% else %}text-gray-500 dark:text-gray-400{% endif %}">
+                        <span class="msg-time" data-timestamp="{{ msg.created_at.isoformat() }}Z"></span>
+                        </span>
+                    </div>
+                    </div>
+                </div>
+                </div>
+                {% endfor %}
+            </div>
+        
+            <!-- formulário de envio -->
+            <div class="flex-shrink-0 p-4 bg-white dark:bg-gray-800 rounded-lg">
+                <form action="{{ url_for('tickets.chat', ticket_id=ticket.id) }}" method="POST"
+                class="flex items-center space-x-2">
+                <div class="flex-1 relative">
+                    <input type="text" name="message" placeholder="Mensagem" required
+                    class="w-full rounded-full px-4 py-2 pr-12 focus:outline-none focus:ring-2 focus:ring-purple-500 bg-gray-100 dark:bg-gray-700 dark:text-white">
+                </div>
+                <button type="submit"
+                    class="bg-purple-500 hover:bg-purple-600 text-white p-2 rounded-full transition-colors duration-200 flex-shrink-0">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                    stroke="currentColor" class="w-5 h-5">
+                    <path stroke-linecap="round" stroke-linejoin="round"
+                        d="M6 12 3.269 3.125A59.769 59.769 0 0 1 21.485 12 59.768 59.768 0 0 1 3.27 20.875L5.999 12Zm0 0h7.5" />
+                    </svg>
+                </button>
+                </form>
+            </div>
             </div>
         </div>
     </div>
-
-    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-2">
+        
+    <div class="grid grid-cols lg:grid-cols-1 gap-8">
         <!-- descrição do ticket -->
-        <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md flex flex-wrap items-center">
+        <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md flex flex-wrap items-center mb-6">
             <div class="bg-rose-100 dark:bg-rose-900 p-3 rounded-full flex-shrink-0">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                     stroke="currentColor" class="size-6">
@@ -282,16 +335,27 @@
                 <p class="text-md font-normal dark:text-white ml-4 break-words text-justify"> {{ ticket.description }} </p>
             </div>
         </div>
-
-        <!-- espaço para anexos -->
-        <div class="grid grid-cols-1 lg:grid-cols-1 gap-8">
-            <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md flex flex-wrap items-center"> 
-                
-            </div>
-        </div>
-        
-    </div> <br>
+    </div>
 
 </fieldset>
+
+<script>
+document.querySelectorAll(".msg-time").forEach(el => {
+    const date = new Date(el.dataset.timestamp); // ISO → Date local
+    el.textContent = date.toLocaleString("pt-BR", {
+        day: "2-digit",
+        month: "2-digit",
+        hour: "2-digit",
+        minute: "2-digit"
+    });
+});
+</script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const chat = document.getElementById("chat-messages");
+        chat.scrollTop = chat.scrollHeight; // rola até o final
+    });
+</script>
 
 {% endblock %}

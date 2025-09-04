@@ -15,71 +15,106 @@ dashboard = Blueprint('dashboard', __name__)
 @dashboard.route('/tickets')
 @login_required
 def view() -> Response:
-    """Exibe uma lista de tickets.
+    """Exibe uma lista de tickets com filtros e ordenação."""
 
-    Esta rota exibe uma lista de tickets com opções de pesquisa e ordenação.
-    Os tickets podem ser filtrados por nome, email e outros critérios.
-
-    Returns:
-        Response: Template de visualização de tickets.
-    """
-
-    # Chamados abertos pelo usuário atual.
-    ###
-    # Encontra os status que não são "Resolvido".
-    open_statuses = Status.query.filter(Status.name != 'Resolvido').all()
-    # Obtém os IDs dos status encontrados.
-    open_status_ids = [s.id for s in open_statuses]
-    # Faz a contagem de tickets abertos pelo usuário atual que tenham um desses status.
+    # ------------------------------
+    # contadores
+    # ------------------------------
+    open_status_ids = [s.id for s in Status.query.filter(Status.name != 'Resolvido').all()]
     open_user_tickets_count = Ticket.query.filter(
         Ticket.creator_id == current_user.id,
         Ticket.status_id.in_(open_status_ids)
     ).count()
-    ###
 
-    # Chamados atribuídos ao usuário atual.
-    ###
-    # Encontra o status "Em Progresso" e "Editado".
-    working_statuses = Status.query.filter(Status.name.in_(['Em Progresso', 'Editado'])).all()
-    # Obtém os IDs dos status encontrados.
-    working_status_ids = [s.id for s in working_statuses]
-    # Faz a contagem de tickets atribuídos ao usuário atual que tenham um desses status.
+    working_status_ids = [s.id for s in Status.query.filter(Status.name.in_(['Em Progresso', 'Editado'])).all()]
     assigned_user_tickets_count = Ticket.query.filter(
         Ticket.assignee_id == current_user.id,
         Ticket.status_id.in_(working_status_ids)
     ).count()
-    ###
 
-    # Chamados abertos no setor do usuário atual.
-    ###
-    # Obtém a lista ed Ids de todos os setores do usuário atual.
     user_sector_ids = [sector.id for sector in current_user.sectors]
-    # Encontra o status "Aberto" e "Aguardando".
-    open_statuses = Status.query.filter(Status.name.in_(['Aberto', 'Aguardando'])).all()
-    # Obtém os IDs dos status encontrados.
-    open_status_ids = [s.id for s in open_statuses]
-    # Faz a contagem dos tickets que pertencem a qualquer um desses setores.
+    open_sector_status_ids = [s.id for s in Status.query.filter(Status.name.in_(['Aberto', 'Aguardando'])).all()]
+
     sector_user_tickets_count = 0
-    # Só executa a query se o usuário pertencer a algum setor.
     if user_sector_ids:
         sector_user_tickets_count = Ticket.query.filter(
             Ticket.sector_id.in_(user_sector_ids),
-            Ticket.status_id.in_(open_status_ids)
+            Ticket.status_id.in_(open_sector_status_ids)
         ).count()
-    ###
 
-    tickets = db.session.query(Ticket).all()
+    # ------------------------------
+    # ordenação
+    # ------------------------------
+    sort_by = request.args.get('sort_by', 'id', type=str)
+    direction = request.args.get('direction', 'asc', type=str)
 
-    # Filtrar os tickets para incluir apenas àqueles criados ou aceitos pelo usuário.
-    user_tickets = [ticket for ticket in tickets if ticket.creator_id == current_user.id or ticket.assignee_id == current_user.id]
+    allowed_columns = ['id', 'title', 'sector', 'subject', 'creator', 'created_at', 'status']
+    if sort_by not in allowed_columns:
+        sort_by = 'id'
 
-    # Filtrar os tickets para incluir apenas aqueles do setor do usuário que estejam com status_id = 1 ou = 2:
-    sector_user_tickets = [ticket for ticket in tickets if ticket.sector_id in user_sector_ids and ticket.status_id in [1, 2]]
+    if direction not in ['asc', 'desc']:
+        direction = 'asc'
 
+    # Query base com ordenação
+    base_query = Ticket.query
+    if sort_by == 'sector':
+        base_query = base_query.join(Sector).order_by(
+            Sector.name.asc() if direction == 'asc' else Sector.name.desc()
+        )
 
-    return render_template("dashboard/main.html",
-                           user_tickets=user_tickets,
-                           sector_user_tickets=sector_user_tickets,
-                           open_user_tickets_count=open_user_tickets_count,
-                           assigned_user_tickets_count=assigned_user_tickets_count,
-                           sector_user_tickets_count=sector_user_tickets_count)
+    elif sort_by == 'subject':
+        base_query = base_query.join(Subject).order_by(
+            Subject.name.asc() if direction == 'asc' else Subject.name.desc()
+        )
+
+    elif sort_by == 'creator':
+        base_query = base_query.join(User, User.id == Ticket.creator_id).order_by(
+            User.first_name.asc() if direction == 'asc' else User.first_name.desc()
+        )
+        
+    elif sort_by == 'created_at':
+        base_query = base_query.order_by(
+            Ticket.created_at.asc() if direction == 'asc' else Ticket.created_at.desc()
+        )
+    
+    elif sort_by == 'status':
+        base_query = base_query.join(Status).order_by(
+            Status.name.asc() if direction == 'asc' else Status.name.desc()
+        )
+
+    else:
+        sort_column = getattr(Ticket, sort_by)
+        base_query = base_query.order_by(
+            sort_column.asc() if direction == 'asc' else sort_column.desc()
+        )
+
+    # ------------------------------
+    # queries finais (apenas filtros)
+    # ------------------------------
+
+    # filtro de tickets do usuário
+    user_tickets = base_query.filter(
+        (Ticket.creator_id == current_user.id) | (Ticket.assignee_id == current_user.id)
+    ).all()
+
+    # filtro de tickets do setor do usuário
+    sector_user_tickets = []
+    if user_sector_ids:
+        sector_user_tickets = base_query.filter(
+            Ticket.sector_id.in_(user_sector_ids),
+            Ticket.status_id.in_([1, 2])
+        ).all()
+
+    # ------------------------------
+    # render
+    # ------------------------------
+    return render_template(
+        "dashboard/main.html",
+        user_tickets=user_tickets,
+        sector_user_tickets=sector_user_tickets,
+        open_user_tickets_count=open_user_tickets_count,
+        assigned_user_tickets_count=assigned_user_tickets_count,
+        sector_user_tickets_count=sector_user_tickets_count,
+        sort_by=sort_by,
+        direction=direction
+    )

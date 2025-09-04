@@ -227,10 +227,10 @@ class="bg-gray-50 text-gray-800 flex flex-col min-h-screen dark:bg-gray-900 dark
                 <!-- rodapé do sidebar -->
                 <div class="dark:border-gray-700 p-4 flex-shrink-0">
                     <div class="flex items-center justify-center gap-4">
+                        <!-- ícone de perfil -->
                         <a href="{{ url_for('profile.view') }}" title="Ver Perfil" class="flex items-center space-x-3">
-                            <div class="w-10 h-10 rounded-full bg-gray-200 dark:bg-gray-700 flex items-center justify-center">
-                                <!-- ícone de perfil -->
-                                <svg class="w-10 h-10 text-gray-600 dark:text-gray-400" ...><path ... /></svg>
+                            <div class="flex-shrink-0 w-8 h-8 rounded-full bg-purple-500 flex items-center justify-center text-white text-sm font-semibold {% if current_user.id == current_user.id %}ml-2{% else %}mr-2{% endif %}">
+                                {{ current_user.first_name[0] }}{{ current_user.last_name[0] }}
                             </div>
                             <div>
                                 <p class="text-sm font-semibold dark:text-white"> {{ current_user.first_name }} {{ current_user.last_name }} </p>

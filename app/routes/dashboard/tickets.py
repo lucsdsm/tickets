@@ -10,6 +10,7 @@ from app.models import Sector
 from app.models import Subject
 from app.models import Status
 from app.models import Priority
+from app.models import TicketMessage
 
 tickets = Blueprint('tickets', __name__)
 
@@ -25,7 +26,8 @@ def view_ticket(ticket_id: int) -> Response:
         flash('Você não tem permissão para acessar este ticket.', 'danger')
         return redirect(url_for('dashboard.view'))
     
-    return render_template('dashboard/tickets/view-ticket.html', ticket=ticket)
+    messages = TicketMessage.query.filter_by(ticket_id=ticket.id).order_by(TicketMessage.created_at.asc()).all()
+    return render_template('dashboard/tickets/view-ticket.html', ticket=ticket, messages=messages)
 
 @tickets.route('/tickets/add', methods=['GET', 'POST'])
 @login_required
@@ -86,3 +88,32 @@ def assign_ticket(ticket_id: int) -> Response:
     db.session.commit()
     flash('Ticket atribuído com sucesso!', 'success')
     return redirect(url_for('dashboard.view'))
+
+@tickets.route('/tickets/<int:ticket_id>/chat', methods=['GET', 'POST'])
+@login_required
+def chat(ticket_id: int) -> Response:
+    """Exibe o chat de um ticket específico."""
+    ticket = Ticket.query.get_or_404(ticket_id)
+
+    # Verifica se o usuário tem permissão para acessar o chat
+    if ticket.creator_id != current_user.id and ticket.assignee_id != current_user.id and not current_user.is_admin:
+        flash('Você não tem permissão para acessar o chat deste ticket.', 'danger')
+        return redirect(url_for('dashboard.view'))
+
+    if request.method == 'POST':
+        message = request.form.get('message')
+        if message:
+            new_message = TicketMessage(
+                message=message,
+                ticket_id=ticket.id,
+                author_id=current_user.id
+            )
+            db.session.add(new_message)
+            db.session.commit()
+            flash('Mensagem enviada com sucesso!', 'success')
+        else:
+            flash('Mensagem não pode ser vazia.', 'danger')
+
+    messages = TicketMessage.query.filter_by(ticket_id=ticket.id).order_by(TicketMessage.created_at.asc()).all()
+
+    return render_template('dashboard/tickets/view-ticket.html', ticket=ticket, messages=messages)
