@@ -122,24 +122,6 @@ def login() -> 'Response':
     # se o método for GET, renderiza o template de login
     return render_template('auth/main.html')
 
-@auth.route('/logout')
-@login_required
-def logout() -> 'Response':
-    """Desconecta o usuário da sessão atual.
-
-    Esta rota é protegida por login_required, o que significa que o usuário
-    deve estar autenticado para acessar esta rota. Quando acessada, a sessão
-    do usuário é encerrada e o usuário é redirecionado para a página inicial
-    com uma mensagem de sucesso.
-
-    Returns:
-        Response: Um objeto de resposta do Flask que redireciona para a página inicial.
-    """
-
-    logout_user()
-    flash('Você foi desconectado.', 'info')
-    return redirect(url_for('main.home'))
-
 @auth.route('/google/login')
 def google_login() -> 'Response':
     """Inicia o processo de autenticação com a Google.
@@ -271,4 +253,22 @@ def complete_google_register() -> 'Response':
     # faz o login do novo usuário e redireciona
     login_user(user)
     flash(f'registro concluído com sucesso! Bem-vindo, {user.username}!', 'success')
+    return redirect(url_for('main.home'))
+
+@auth.route('/logout')
+@login_required
+def logout() -> 'Response':
+    """Desconecta o usuário da sessão atual.
+
+    Esta rota é protegida por login_required, o que significa que o usuário
+    deve estar autenticado para acessar esta rota. Quando acessada, a sessão
+    do usuário é encerrada e o usuário é redirecionado para a página inicial
+    com uma mensagem de sucesso.
+
+    Returns:
+        Response: Um objeto de resposta do Flask que redireciona para a página inicial.
+    """
+
+    logout_user()
+    flash('Você foi desconectado.', 'info')
     return redirect(url_for('main.home'))

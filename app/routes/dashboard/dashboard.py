@@ -12,9 +12,9 @@ from app.models import Priority
 
 dashboard = Blueprint('dashboard', __name__)
 
-@dashboard.route('/tickets')
+@dashboard.route('/user_tickets')
 @login_required
-def view() -> Response:
+def user_tickets() -> Response:
     """Exibe uma lista de tickets com filtros e ordenação."""
 
     # ------------------------------
@@ -32,6 +32,83 @@ def view() -> Response:
         Ticket.status_id.in_(working_status_ids)
     ).count()
 
+    user_sector_ids = [sector.id for sector in current_user.sectors]
+
+    # ------------------------------
+    # ordenação
+    # ------------------------------
+    sort_by = request.args.get('sort_by', 'id', type=str)
+    direction = request.args.get('direction', 'asc', type=str)
+
+    allowed_columns = ['id', 'title', 'sector', 'subject', 'creator', 'created_at', 'status']
+    if sort_by not in allowed_columns:
+        sort_by = 'id'
+
+    if direction not in ['asc', 'desc']:
+        direction = 'asc'
+
+    # Query base com ordenação
+    base_query = Ticket.query
+    if sort_by == 'sector':
+        base_query = base_query.join(Sector).order_by(
+            Sector.name.asc() if direction == 'asc' else Sector.name.desc()
+        )
+
+    elif sort_by == 'subject':
+        base_query = base_query.join(Subject).order_by(
+            Subject.name.asc() if direction == 'asc' else Subject.name.desc()
+        )
+
+    elif sort_by == 'creator':
+        base_query = base_query.join(User, User.id == Ticket.creator_id).order_by(
+            User.first_name.asc() if direction == 'asc' else User.first_name.desc()
+        )
+        
+    elif sort_by == 'created_at':
+        base_query = base_query.order_by(
+            Ticket.created_at.asc() if direction == 'asc' else Ticket.created_at.desc()
+        )
+    
+    elif sort_by == 'status':
+        base_query = base_query.join(Status).order_by(
+            Status.name.asc() if direction == 'asc' else Status.name.desc()
+        )
+
+    else:
+        sort_column = getattr(Ticket, sort_by)
+        base_query = base_query.order_by(
+            sort_column.asc() if direction == 'asc' else sort_column.desc()
+        )
+
+    # ------------------------------
+    # queries finais (apenas filtros)
+    # ------------------------------
+
+    # filtro de tickets do usuário
+    user_tickets = base_query.filter(
+        (Ticket.creator_id == current_user.id) | (Ticket.assignee_id == current_user.id)
+    ).all()
+
+    # ------------------------------
+    # render
+    # ------------------------------
+    return render_template(
+        "dashboard/user-tickets.html",
+        user_tickets=user_tickets,
+        open_user_tickets_count=open_user_tickets_count,
+        assigned_user_tickets_count=assigned_user_tickets_count,
+        sort_by=sort_by,
+        direction=direction
+    )
+
+@dashboard.route('/sector_user_tickets')
+@login_required
+def sector_user_tickets() -> Response:
+    """Exibe uma lista de tickets com filtros e ordenação."""
+
+    # ------------------------------
+    # contadores
+    # ------------------------------
     user_sector_ids = [sector.id for sector in current_user.sectors]
     open_sector_status_ids = [s.id for s in Status.query.filter(Status.name.in_(['Aberto', 'Aguardando'])).all()]
 
@@ -92,11 +169,6 @@ def view() -> Response:
     # queries finais (apenas filtros)
     # ------------------------------
 
-    # filtro de tickets do usuário
-    user_tickets = base_query.filter(
-        (Ticket.creator_id == current_user.id) | (Ticket.assignee_id == current_user.id)
-    ).all()
-
     # filtro de tickets do setor do usuário
     sector_user_tickets = []
     if user_sector_ids:
@@ -109,11 +181,8 @@ def view() -> Response:
     # render
     # ------------------------------
     return render_template(
-        "dashboard/main.html",
-        user_tickets=user_tickets,
+        "dashboard/sector-user-tickets.html",
         sector_user_tickets=sector_user_tickets,
-        open_user_tickets_count=open_user_tickets_count,
-        assigned_user_tickets_count=assigned_user_tickets_count,
         sector_user_tickets_count=sector_user_tickets_count,
         sort_by=sort_by,
         direction=direction

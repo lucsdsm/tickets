@@ -21,6 +21,9 @@
     <!-- alpine.js for interactivity -->
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 
+    <!-- tone.js for audio synthesis -->
+    <script src="https://unpkg.com/tone"></script>
+
     <style>
         input[type="password"]::-ms-reveal,
         input[type="password"]::-webkit-password-reveal-button {
@@ -92,8 +95,46 @@ class="bg-gray-50 text-gray-800 flex flex-col min-h-screen dark:bg-gray-900 dark
         {% with messages = get_flashed_messages(with_categories=true) %}
             {% if messages %}
                 {% for category, message in messages %}
-                    <div x-data="{ show: true }" 
-                         x-init="setTimeout(() => show = false, 5000)" 
+                    <div x-data="{ 
+                             show: true,
+                             playSound(category) {
+                                 try {
+                                     Tone.start().then(() => {
+                                         if (category === 'success') {
+                                             // som sutil de confirmação - duas notas suaves
+                                             const synth = new Tone.Synth({
+                                                 oscillator: { type: 'sine' },
+                                                 envelope: { attack: 0.01, decay: 0.2, sustain: 0.1, release: 0.3 }
+                                             }).toDestination();
+                                             synth.triggerAttackRelease('G5', '16n');
+                                             setTimeout(() => synth.triggerAttackRelease('C6', '16n'), 80);
+                                             setTimeout(() => synth.dispose(), 400);
+                                         } else if (category === 'danger') {
+                                             // som discreto de alerta - tom baixo único
+                                             const synth = new Tone.Synth({
+                                                 oscillator: { type: 'sine' },
+                                                 envelope: { attack: 0.02, decay: 0.3, sustain: 0.2, release: 0.4 }
+                                             }).toDestination();
+                                             synth.triggerAttackRelease('E4', '8n');
+                                             setTimeout(() => synth.dispose(), 600);
+                                         } else {
+                                             // som neutro de notificação - ping simples
+                                             const synth = new Tone.Synth({
+                                                 oscillator: { type: 'sine' },
+                                                 envelope: { attack: 0.005, decay: 0.15, sustain: 0.05, release: 0.2 }
+                                             }).toDestination();
+                                             synth.triggerAttackRelease('A5', '32n');
+                                             setTimeout(() => synth.dispose(), 300);
+                                         }
+                                     }).catch(() => {
+                                         // ignore if audio cannot start (user gesture required)
+                                     });
+                                 } catch (e) {
+                                     // ignore errors
+                                 }
+                             }
+                         }" 
+                         x-init="playSound('{{ category }}'); setTimeout(() => show = false, 5000)" 
                          x-show="show"
                          x-transition:enter="transform ease-out duration-300 transition"
                          x-transition:enter-start="translate-y-2 opacity-0 sm:translate-y-0 sm:translate-x-2"
@@ -105,7 +146,7 @@ class="bg-gray-50 text-gray-800 flex flex-col min-h-screen dark:bg-gray-900 dark
                         <div class="p-4">
                             <div class="flex items-start">
                                 <div class="flex-shrink-0">
-                                    <!-- sSucesso (verde) -->
+                                    <!-- sucesso (verde) -->
                                     {% if category == 'success' %}
                                     <svg class="h-6 w-6 text-green-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
                                         <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
@@ -142,10 +183,31 @@ class="bg-gray-50 text-gray-800 flex flex-col min-h-screen dark:bg-gray-900 dark
     </div>
 
     <!-- toasts de confirmação -->
-    <div x-data="{ showConfirm: false, confirmMessage: '', confirmUrl: '' }" @open-confirm.window="
+    <div x-data="{ 
+                showConfirm: false, 
+                confirmMessage: '', 
+                confirmUrl: '',
+                playSound() {
+                    try {
+                        Tone.start().then(() => {
+                            const synth = new Tone.Synth({
+                                oscillator: { type: 'sine' },
+                                envelope: { attack: 0.005, decay: 0.15, sustain: 0.05, release: 0.2 }
+                            }).toDestination();
+                            synth.triggerAttackRelease('A5', '32n');
+                            setTimeout(() => synth.dispose(), 300);
+                        }).catch(() => {
+                            // ignore if audio cannot start (user gesture required)
+                        });
+                    } catch (e) {
+                        // ignore errors
+                    }
+                }
+            }" @open-confirm.window="
                 showConfirm = true;
                 confirmMessage = $event.detail.message;
                 confirmUrl = $event.detail.url;
+                playSound();
             ">
         <template x-if="showConfirm">
             <div x-show="showConfirm"
@@ -212,6 +274,7 @@ class="bg-gray-50 text-gray-800 flex flex-col min-h-screen dark:bg-gray-900 dark
                             Página inicial
                         </a>
 
+                        {% if current_user.is_admin %}
                         <a href="{{ url_for('panel.view') }}" class="flex items-center px-4 py-2 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 font-medium">
                             <svg class="w-5 h-5 mr-3" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
                                 stroke="currentColor">
@@ -220,6 +283,37 @@ class="bg-gray-50 text-gray-800 flex flex-col min-h-screen dark:bg-gray-900 dark
                             </svg>
                             Painel de administração
                         </a>
+                        {% endif %}
+
+                        <!-- linha de separação com o nome tickets no meio -->
+                        <div class="flex items-center my-4">
+                            <hr class="flex-grow border-t border-gray-300 dark:border-gray-600">
+                            <span class="mx-4 text-sm text-gray-500 dark:text-gray-400 font-medium"> Tickets </span>
+                            <hr class="flex-grow border-t border-gray-300 dark:border-gray-600">
+                        </div>
+
+                        <a href="{{ url_for('dashboard.user_tickets') }}" class="flex items-center px-4 py-2 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 font-medium">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
+                                class="w-5 h-5 mr-3">
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                    d="M16.5 6v.75m0 3v.75m0 3v.75m0 3V18m-9-5.25h5.25M7.5 15h3M3.375 5.25c-.621 0-1.125.504-1.125 1.125v3.026a2.999 2.999 0 0 1 0 5.198v3.026c0 .621.504 1.125 1.125 1.125h17.25c.621 0 1.125-.504 1.125-1.125v-3.026a2.999 2.999 0 0 1 0-5.198V6.375c0-.621-.504-1.125-1.125-1.125H3.375Z" />
+                            </svg>
+                            Meus
+                        </a>
+
+                        <a href="{{ url_for('dashboard.sector_user_tickets') }}" class="flex items-center px-4 py-2 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 font-medium">
+                            <svg class="w-5 h-5 mr-3"
+                                xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                                <circle cx="12" cy="6" r="2" stroke-linecap="round" stroke-linejoin="round" />
+                                <path d="M12 8v3" stroke-linecap="round" stroke-linejoin="round" />
+                                <path d="M12 11H7" stroke-linecap="round" stroke-linejoin="round" />
+                                <path d="M12 11h5" stroke-linecap="round" stroke-linejoin="round" />
+                                <circle cx="7" cy="17" r="2" stroke-linecap="round" stroke-linejoin="round" />
+                                <circle cx="17" cy="17" r="2" stroke-linecap="round" stroke-linejoin="round" />
+                            </svg>
+                            Setor
+                        </a>
+
                     {% endif %}
 
                 </nav>

@@ -84,7 +84,6 @@ def create_app() -> Flask:
         from .routes.panel import panel
         app.register_blueprint(panel.panel, url_prefix='/panel')
 
-
         from .routes.panel.users import users
         app.register_blueprint(users.users, url_prefix='/users')
 

@@ -14,21 +14,21 @@ from app.models import TicketMessage
 
 tickets = Blueprint('tickets', __name__)
 
-@tickets.route('/tickets/<int:ticket_id>')
+@tickets.route('/view/<int:ticket_id>')
 @login_required
 def view_ticket(ticket_id: int) -> Response:
     """Exibe os detalhes de um ticket específico, apenas se o usuário tiver acesso."""
     ticket = Ticket.query.get_or_404(ticket_id)
 
-    # Verifica se o usuário tem permissão para acessar o ticket
-    ## Se o usuário não for o criador, o responsável ou um administrador, redireciona de volta para o dashboard com um erro.
+    # verifica se o usuário tem permissão para acessar o ticket
+    ## se o usuário não for o criador, o responsável ou um administrador, redireciona de volta para o dashboard com um erro.
     if ticket.creator_id != current_user.id and ticket.assignee_id != current_user.id and not current_user.is_admin:
-        # Verificar se o usuário está no setor do ticket ou é admin
+        # verificar se o usuário está no setor do ticket ou é admin
         if not current_user.is_admin:
             user_sectors = [sector.id for sector in current_user.sectors]
             if ticket.sector_id not in user_sectors:
                 flash('Você não tem permissão para acessar este ticket.', 'danger')
-                return redirect(url_for('dashboard.view'))
+                return redirect(url_for('dashboard.user_tickets'))
     
     messages = TicketMessage.query.filter_by(ticket_id=ticket.id).order_by(TicketMessage.created_at.asc()).all()
     return render_template('dashboard/tickets/view-ticket.html', ticket=ticket, messages=messages)
@@ -58,7 +58,7 @@ def add() -> Response:
         db.session.add(new_ticket)
         db.session.commit()
         flash('Ticket adicionado com sucesso!', 'success')
-        return redirect(url_for('dashboard.view'))
+        return redirect(url_for('dashboard.user_tickets'))
 
     all_sectors = Sector.query.order_by(Sector.name).all()
     all_priorities = Priority.query.order_by(Priority.id).all()
@@ -83,7 +83,7 @@ def assign_ticket(ticket_id: int) -> Response:
 
     if ticket.assignee_id is not None:
         flash('Este ticket já está atribuído.', 'warning')
-        return redirect(url_for('dashboard.view'))
+        return redirect(url_for('dashboard.user_tickets'))
     
     ticket.status_id = 3
     ticket.assignee_id = current_user.id
@@ -91,7 +91,7 @@ def assign_ticket(ticket_id: int) -> Response:
     ticket.updated_at = datetime.utcnow()
     db.session.commit()
     flash('Ticket atribuído com sucesso!', 'success')
-    return redirect(url_for('dashboard.view'))
+    return redirect(url_for('dashboard.user_tickets'))
 
 @tickets.route('/tickets/<int:ticket_id>/chat', methods=['GET', 'POST'])
 @login_required
@@ -101,12 +101,12 @@ def chat(ticket_id: int) -> Response:
     # pega o ticket ou retorna 404
     ticket = Ticket.query.get_or_404(ticket_id)
 
-    # Verifica se o usuário tem permissão
+    # verifica se o usuário tem permissão
     if ticket.creator_id != current_user.id and ticket.assignee_id != current_user.id and not current_user.is_admin:
         flash('Você não tem permissão para acessar o chat deste ticket.', 'danger')
-        return redirect(url_for('dashboard.view'))
+        return redirect(url_for('dashboard.user_tickets'))
 
-    # Se for POST, envia mensagem
+    # se for post, envia mensagem
     if request.method == 'POST':
         message = request.form.get('message')
         if message:
