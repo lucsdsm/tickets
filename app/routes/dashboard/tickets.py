@@ -1,9 +1,12 @@
-from app import db
+from app import db, socketio
 from flask import Blueprint, render_template, redirect, url_for, flash, request, session, Response, jsonify, abort
 from datetime import datetime
 from flask_login import login_user, logout_user, login_required, current_user
 from sqlalchemy import func, or_
 from app.decorators import admin_required
+
+from flask_socketio import join_room, emit
+
 from app.models import Ticket
 from app.models import User
 from app.models import Sector
@@ -13,6 +16,36 @@ from app.models import Priority
 from app.models import TicketMessage
 
 tickets = Blueprint('tickets', __name__)
+
+# quando um usuário se conecta ao chat de um ticket
+@socketio.on("join")
+def handle_join(data):
+    ticket_id = data.get("ticket_id")
+    join_room(f"ticket_{ticket_id}")
+
+@socketio.on("send_message")
+def handle_send_message(data):
+    ticket_id = data.get("ticket_id")
+    message = data.get("message")
+
+    # salva no banco
+    new_msg = TicketMessage(
+        message=message,
+        ticket_id=ticket_id,
+        author_id=current_user.id
+    )
+    db.session.add(new_msg)
+    db.session.commit()
+
+    # envia para todos no room
+    emit("new_message", {
+        "ticket_id": ticket_id,
+        "author_id": current_user.id,
+        "first_name": current_user.first_name,
+        "last_name": current_user.last_name,
+        "message": message,
+        "created_at": new_msg.created_at.isoformat()
+    }, room=f"ticket_{ticket_id}")
 
 @tickets.route('/view/<int:ticket_id>')
 @login_required
@@ -117,9 +150,15 @@ def chat(ticket_id: int) -> Response:
             )
             db.session.add(new_message)
             db.session.commit()
-            flash('Mensagem enviada com sucesso!', 'success')
-        else:
-            flash('Mensagem não pode ser vazia.', 'danger')
+
+            socketio.emit('new_message', {
+                'ticket_id': ticket.id,
+                'author_id': current_user.id,
+                'first_name': current_user.first_name,
+                'last_name': current_user.last_name,
+                'message': message,
+                'created_at': new_message.created_at.isoformat()
+            })
 
     # Carrega todas as mensagens do ticket
     messages = TicketMessage.query.filter_by(ticket_id=ticket.id).order_by(TicketMessage.created_at.asc()).all()

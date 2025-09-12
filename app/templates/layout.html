@@ -64,14 +64,14 @@
     </style>
 </head>
 <body 
-x-data="{ isSidebarOpen: false, isLoading: false }" @keydown.escape.window="isSidebarOpen = false"
-      @submit.window="isLoading = true"
-      @click.window="
+    x-data="{ isSidebarOpen: false, isLoading: false }" @keydown.escape.window="isSidebarOpen = false"
+    @click.window="
         const link = $event.target.closest('a');
         if (link && link.href && !link.href.startsWith(window.location.href + '#')) {
             isLoading = true;
         }
       "
+    @loading.window="isLoading = $event.detail"
 class="bg-gray-50 text-gray-800 flex flex-col min-h-screen dark:bg-gray-900 dark:text-gray-200" x-data="{ isLoading: false }">
 
     <!-- spinner de loading -->

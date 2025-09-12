@@ -7,6 +7,7 @@ from flask_bcrypt import Bcrypt
 from flask_login import LoginManager
 from authlib.integrations.flask_client import OAuth
 from werkzeug.middleware.proxy_fix import ProxyFix
+from flask_socketio import SocketIO
 
 # carrega variáveis de ambiente do arquivo .env
 load_dotenv()
@@ -22,6 +23,9 @@ login_manager.login_view = 'auth.login' # rota de login
 login_manager.login_message = 'Por favor, faça login para acessar esta página.' # mensagem de login
 login_manager.login_message_category = 'info' # categoria da mensagem de login
 
+# inicializa o SocketIO
+socketio = SocketIO()
+
 # cria a aplicação Flask
 def create_app() -> Flask:
     """Cria e configura a aplicação Flask."""
@@ -35,6 +39,9 @@ def create_app() -> Flask:
     app.config['SECRET_KEY'] = os.getenv('FLASK_SECRET_KEY')
     app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URL')
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+
+    # configura o SocketIO
+    # socketio = SocketIO(app, cors_allowed_origins="*", async_mode='eventlet')
 
     # inicializa as extensões com a aplicação
     db.init_app(app)
@@ -106,5 +113,8 @@ def create_app() -> Flask:
         app.cli.add_command(commands.seed_subjects)
         app.cli.add_command(commands.seed_statuses)
         app.cli.add_command(commands.seed_priorities)
+
+        # importa os eventos do SocketIO
+        socketio.init_app(app, cors_allowed_origins="*", async_mode='eventlet')
 
         return app

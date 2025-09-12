@@ -8,3 +8,7 @@ Flask-Login
 Authlib
 requests
 Faker
+flask-socketio
+python-socketio[client]
+eventlet
+gunicorn[eventlet]
