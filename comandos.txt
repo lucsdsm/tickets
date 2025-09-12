@@ -6,3 +6,4 @@ docker-compose -f docker/docker-compose.yml exec web flask db init # necessário
 docker-compose -f docker/docker-compose.yml exec web flask db migrate -m "mensagem da migração"
 docker-compose -f docker/docker-compose.yml exec web flask db upgrade
 docker-compose -f docker/docker-compose.yml exec web flask "nome-do-comando"
+
