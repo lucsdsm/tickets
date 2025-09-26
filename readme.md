@@ -43,13 +43,30 @@ Sistema de gerenciamento de tickets com autenticação local e via Google, desen
 
 5. **Crie as tabelas/migrações:**
    ```sh
-   docker-compose -f docker/docker-compose.yml exec web flask db migrate -m "mensagem da migração"
+   docker-compose -f docker/docker-compose.yml exec web flask db migrate -m "primeira migração"
    docker-compose -f docker/docker-compose.yml exec web flask db upgrade
    ```
 
 6. **Crie um usuário admin para testes:**
    ```sh
    docker-compose -f docker/docker-compose.yml exec web flask create-admin
+   ```
+
+7. **Popule as tabelas se achar necesário:**
+   ```sh
+   docker-compose -f docker/docker-compose.yml exec web flask seed-subjects
+   ```
+
+   ```sh
+   docker-compose -f docker/docker-compose.yml exec web flask seed-users
+   ```
+
+   ```sh
+   docker-compose -f docker/docker-compose.yml exec web flask seed-statuses
+   ```
+
+   ```sh
+   docker-compose -f docker/docker-compose.yml exec web flask seed-priorities
    ```
 
 7. **Acesse a aplicação:**  

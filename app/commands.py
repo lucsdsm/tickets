@@ -251,3 +251,4 @@ def seed_priorities() -> None:
 
     db.session.commit()
     print("Povoamento das prioridades concluído com sucesso.")
+
